@@ -1,0 +1,98 @@
+# Automation scope configuration for autonomous backlog management
+# This file defines what external operations are permitted
+
+version: "1.0"
+
+# Repository operations - always allowed
+repository:
+  allowed_paths:
+    - "./src/**"
+    - "./tests/**"
+    - "./docs/**"
+    - "./config/**"
+    - "./dashboards/**"
+    - "./examples/**"
+    - "*.yml"
+    - "*.yaml" 
+    - "*.md"
+    - "*.py"
+    - "*.toml"
+    - "Dockerfile"
+    - "docker-compose.yml"
+  
+  # Git operations that are allowed
+  git_operations:
+    - "add"
+    - "commit"
+    - "push"
+    - "pull"
+    - "status"
+    - "diff"
+    - "log"
+    - "config"  # For rerere setup
+  
+  # Branch operations
+  branches:
+    - "main"
+    - "terragon/*"
+    - "feature/*"
+    - "bugfix/*"
+    - "hotfix/*"
+
+# External services - explicitly whitelisted
+external:
+  github:
+    enabled: true
+    operations:
+      - "create_pr"
+      - "list_issues"
+      - "create_issue"
+      - "update_issue"
+    rate_limit: 100  # requests per hour
+  
+  monitoring:
+    prometheus:
+      enabled: false  # Disabled until configured
+    grafana:
+      enabled: false  # Disabled until configured
+
+# Security constraints
+security:
+  max_file_size: "10MB"
+  allowed_file_types:
+    - ".py"
+    - ".yml"
+    - ".yaml"
+    - ".md"
+    - ".json"
+    - ".toml"
+    - ".txt"
+    - ".sql"
+  
+  # Forbidden operations
+  forbidden:
+    - "rm -rf"
+    - "chmod +x"
+    - "sudo"
+    - "curl"
+    - "wget"
+    - "docker run"
+    - "docker exec"
+  
+  # Secret management
+  secrets:
+    env_vars_only: true
+    no_hardcoded_keys: true
+    scan_before_commit: true
+
+# Execution limits
+limits:
+  max_prs_per_day: 5
+  max_commits_per_hour: 10
+  max_execution_time: "30m"
+  
+  # Backoff on high failure rate
+  adaptive_throttle:
+    enabled: true
+    failure_threshold: 0.30  # 30%
+    throttle_prs_to: 2
