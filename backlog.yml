@@ -1,0 +1,183 @@
+backlog:
+  - id: "INFRA-001"
+    title: "Setup project structure and dependencies"
+    type: "infrastructure"
+    description: "Create Python project structure with Poetry, Docker compose, and basic CI/CD"
+    acceptance_criteria:
+      - "Poetry pyproject.toml with dependencies for OpenTelemetry, LangChain, FastAPI, asyncpg"
+      - "Docker compose with Postgres, Grafana, Prometheus, and OTEL collector"
+      - "Basic project directory structure (/src, /tests, /examples, /dashboards)"
+      - "GitHub Actions CI workflow for testing and linting"
+    effort: 5
+    value: 8
+    time_criticality: 8
+    risk_reduction: 5
+    status: "DONE"
+    risk_tier: "low"
+    created_at: "2025-01-26"
+    completed_at: "2025-01-26"
+    wsjf_score: 4.2
+    
+  - id: "CORE-001"
+    title: "Implement OpenTelemetry middleware for LangChain callbacks"
+    type: "feature"
+    description: "Create async middleware that hooks into LangChain's AsyncIteratorCallbackHandler to capture token usage, latency, and model data"
+    acceptance_criteria:
+      - "AsyncIteratorCallbackHandler implementation capturing token metrics"
+      - "OpenTelemetry span creation with custom attributes for LLM data"
+      - "Async middleware that doesn't block LangChain execution"
+      - "Unit tests with >90% coverage"
+    effort: 8
+    value: 13
+    time_criticality: 8
+    risk_reduction: 3
+    status: "NEW"
+    risk_tier: "medium"
+    created_at: "2025-01-26"
+    wsjf_score: 3.0
+    
+  - id: "CORE-002"
+    title: "Build OTLP data pipeline to Postgres"
+    type: "feature"
+    description: "Create OpenTelemetry collector configuration and Postgres schema for storing LLM metrics"
+    acceptance_criteria:
+      - "OTEL collector config with Postgres exporter"
+      - "Postgres schema for spans, metrics, and cost data"
+      - "Data retention and cleanup policies"
+      - "Performance optimized for high-throughput ingestion"
+    effort: 5
+    value: 8
+    time_criticality: 5
+    risk_reduction: 8
+    status: "NEW"
+    risk_tier: "low"
+    created_at: "2025-01-26"
+    wsjf_score: 4.2
+    
+  - id: "VIZ-001"
+    title: "Create Grafana dashboard for cost visualization"
+    type: "feature"
+    description: "Build comprehensive Grafana dashboard showing costs by application, model, and user"
+    acceptance_criteria:
+      - "Dashboard JSON file in /dashboards/llm-cost-dashboard.json"
+      - "Panels for cost trends, model usage, and user breakdowns"
+      - "Real-time data refresh with configurable time ranges"
+      - "Dashboard UID: llm-cost-dashboard as specified"
+    effort: 3
+    value: 5
+    time_criticality: 3
+    risk_reduction: 2
+    status: "DONE"
+    risk_tier: "low"
+    created_at: "2025-01-26"
+    completed_at: "2025-01-26"
+    wsjf_score: 3.3
+    
+  - id: "BUDGET-001"
+    title: "Implement budget rules engine with model swapping"
+    type: "feature"
+    description: "Create YAML-based rules engine that automatically switches to cost-effective models when thresholds are exceeded"
+    acceptance_criteria:
+      - "YAML configuration for monthly_budget and swap_threshold"
+      - "Integration with LiteLLM router for model switching"
+      - "Real-time budget monitoring and alerting"
+      - "Vellum price catalog integration for cost optimization"
+    effort: 13
+    value: 13
+    time_criticality: 5
+    risk_reduction: 8
+    status: "NEW"
+    risk_tier: "high"
+    created_at: "2025-01-26"
+    wsjf_score: 2.0
+    
+  - id: "ALERT-001"
+    title: "Setup Prometheus alerting for cost thresholds"
+    type: "feature"
+    description: "Configure Prometheus alerts with Slack/OpsGenie integration for cost overruns"
+    acceptance_criteria:
+      - "Prometheus alert rules for cost thresholds"
+      - "Alertmanager configuration for Slack/OpsGenie"
+      - "Alert templates with actionable information"
+      - "Alert testing and validation framework"
+    effort: 5
+    value: 8
+    time_criticality: 5
+    risk_reduction: 8
+    status: "NEW"
+    risk_tier: "medium"
+    created_at: "2025-01-26"
+    wsjf_score: 4.2
+    
+  - id: "DEMO-001"
+    title: "Create Streamlit demo application"
+    type: "example"
+    description: "Build working demo that showcases the cost tracking capabilities"
+    acceptance_criteria:
+      - "Streamlit app in /examples/streamlit_demo.py"
+      - "Demo generates sample LangChain traces"
+      - "Shows real-time cost visualization"
+      - "Clear documentation and setup instructions"
+    effort: 3
+    value: 5
+    time_criticality: 5
+    risk_reduction: 2
+    status: "DONE"
+    risk_tier: "low"
+    created_at: "2025-01-26"
+    completed_at: "2025-01-26"
+    wsjf_score: 4.0
+    
+  - id: "DOCS-001"
+    title: "Fix README placeholder references"
+    type: "maintenance"
+    description: "Replace placeholder GitHub username/org references in README badges and links"
+    acceptance_criteria:
+      - "All 'your-github-username-or-org' placeholders replaced"
+      - "Working badge links and repository references"  
+      - "Consistent GitHub organization naming"
+    effort: 1
+    value: 2
+    time_criticality: 3
+    risk_reduction: 1
+    status: "DONE"
+    risk_tier: "low"
+    created_at: "2025-01-26"
+    completed_at: "2025-01-26"
+    wsjf_score: 6.0
+    
+  - id: "SEC-001"
+    title: "Implement security best practices for API key handling"
+    type: "security"
+    description: "Ensure all API keys are properly secured using environment variables and encrypted storage"
+    acceptance_criteria:
+      - "No hardcoded API keys in source code"
+      - "Environment variable configuration for all secrets"
+      - "Encrypted proxy pattern implementation"
+      - "Security documentation and best practices guide"
+    effort: 3
+    value: 8
+    time_criticality: 8
+    risk_reduction: 13
+    status: "DONE"
+    risk_tier: "high"
+    created_at: "2025-01-26"
+    completed_at: "2025-01-26"
+    wsjf_score: 9.7
+
+metrics:
+  total_items: 9
+  by_status:
+    NEW: 7
+    READY: 2
+    REFINED: 0
+    DOING: 0
+    PR: 0
+    DONE: 0
+    BLOCKED: 0
+  by_risk_tier:
+    low: 5
+    medium: 2
+    high: 2
+  avg_wsjf_score: 4.5
+  last_updated: "2025-01-26T00:00:00Z"

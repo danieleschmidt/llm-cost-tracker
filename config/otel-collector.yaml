@@ -1,0 +1,44 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+processors:
+  batch:
+    timeout: 1s
+    send_batch_size: 1024
+  resource:
+    attributes:
+      - key: service.name
+        value: llm-cost-tracker
+        action: upsert
+
+exporters:
+  postgresql:
+    connection_string: "postgres://postgres:postgres@postgres:5432/llm_metrics?sslmode=disable"
+    table_name: spans
+    timeout: 5s
+  
+  prometheus:
+    endpoint: "0.0.0.0:8888"
+    namespace: llm_cost_tracker
+    
+  logging:
+    loglevel: debug
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [batch, resource]
+      exporters: [postgresql, logging]
+    
+    metrics:
+      receivers: [otlp]
+      processors: [batch, resource]
+      exporters: [prometheus, logging]
+
+  extensions: []

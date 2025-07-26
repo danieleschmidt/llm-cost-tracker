@@ -1,9 +1,8 @@
 # llm-cost-tracker
 
-<!-- IMPORTANT: Replace 'your-github-username-or-org' with your actual GitHub details -->
-[![Build Status](https://img.shields.io/github/actions/workflow/status/your-github-username-or-org/llm-cost-tracker/ci.yml?branch=main)](https://github.com/your-github-username-or-org/llm-cost-tracker/actions)
-[![Coverage Status](https://img.shields.io/coveralls/github/your-github-username-or-org/llm-cost-tracker)](https://coveralls.io/github/your-github-username-or-org/llm-cost-tracker)
-[![License](https://img.shields.io/github/license/your-github-username-or-org/llm-cost-tracker)](LICENSE)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/terragon-labs/llm-cost-tracker/ci.yml?branch=main)](https://github.com/terragon-labs/llm-cost-tracker/actions)
+[![Coverage Status](https://img.shields.io/coveralls/github/terragon-labs/llm-cost-tracker)](https://coveralls.io/github/terragon-labs/llm-cost-tracker)
+[![License](https://img.shields.io/github/license/terragon-labs/llm-cost-tracker)](LICENSE)
 [![Version](https://img.shields.io/badge/version-v0.1.0-blue)](https://semver.org)
 
 A self-hostable OpenTelemetry collector and rules engine designed to capture token, latency, and cost data from LangChain and LiteLLM callbacks. This tool streams the collected data to Postgres and visualizes it using Grafana. It combines proxying functionalities similar to Helicone with a budget-guard feature that can automatically switch to more cost-effective models by leveraging Vellum's price catalog.
@@ -26,7 +25,7 @@ LangChain ↔ Cost-Middleware → OpenTelemetry SDK → OTLP Collector → Postg
 Generated code
 ## ⚡ Quick Start
 
-1.  Clone the repository: `git clone https://github.com/your-github-username-or-org/llm-cost-tracker`
+1.  Clone the repository: `git clone https://github.com/terragon-labs/llm-cost-tracker`
 2.  Navigate to the project directory: `cd llm-cost-tracker`
 3.  Start the services: `docker compose up -d`
 4.  Install Python packages: `poetry install`

@@ -1,0 +1,47 @@
+budget_rules:
+  global:
+    monthly_budget: 1000.0  # USD
+    swap_threshold: 0.8     # 80% of budget
+    
+  applications:
+    - name: "default"
+      monthly_budget: 500.0
+      swap_threshold: 0.75
+      model_preferences:
+        primary: "gpt-4-turbo"
+        fallback: "gpt-3.5-turbo"
+        emergency: "claude-3-haiku"
+      
+    - name: "production"
+      monthly_budget: 2000.0
+      swap_threshold: 0.9
+      model_preferences:
+        primary: "gpt-4-turbo"
+        fallback: "gpt-4"
+        emergency: "gpt-3.5-turbo"
+
+  users:
+    - id: "power_user"
+      monthly_budget: 200.0
+      swap_threshold: 0.8
+      
+  model_costs:
+    # Per 1K tokens - input/output
+    "gpt-4-turbo":
+      input: 0.01
+      output: 0.03
+    "gpt-4":
+      input: 0.03
+      output: 0.06
+    "gpt-3.5-turbo":
+      input: 0.0015
+      output: 0.002
+    "claude-3-opus":
+      input: 0.015
+      output: 0.075
+    "claude-3-sonnet":
+      input: 0.003
+      output: 0.015
+    "claude-3-haiku":
+      input: 0.00025
+      output: 0.00125
