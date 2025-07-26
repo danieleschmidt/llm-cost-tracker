@@ -1,0 +1,71 @@
+name: Repository Hygiene Bot
+
+on:
+  schedule:
+    - cron: '0 8 * * 1'  # Weekly Monday 8 AM
+  workflow_dispatch:
+    inputs:
+      target_repo:
+        description: 'Target repository (leave empty for all owned repos)'
+        required: false
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+  repository-projects: write
+
+jobs:
+  repo-hygiene:
+    name: Repository Hygiene Check
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install dependencies
+      run: |
+        pip install requests pyyaml click rich
+        
+    - name: Run hygiene bot
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_USER: ${{ github.repository_owner }}
+        TARGET_REPO: ${{ github.event.inputs.target_repo }}
+      run: python scripts/repo_hygiene_bot.py
+      
+    - name: Create PR if changes exist
+      uses: peter-evans/create-pull-request@v5
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        commit-message: "✨ repo-hygiene-bot update"
+        title: "✨ repo-hygiene-bot update"
+        body: |
+          ## Repository Hygiene Updates
+          
+          This PR contains automated improvements to repository health and security:
+          
+          - 🔒 Security scanning configurations
+          - 📝 Community health files
+          - 🏷️ Repository metadata updates
+          - 📊 SBOM and supply chain security
+          - 🤖 Automated maintenance workflows
+          
+          These changes help maintain security, compliance, and developer experience standards.
+          
+          ---
+          🤖 Generated with [Claude Code](https://claude.ai/code)
+          
+          Co-Authored-By: Claude <noreply@anthropic.com>
+        branch: repo-hygiene-bot/updates
+        labels: |
+          automated-maintenance
+          security
+          repo-hygiene

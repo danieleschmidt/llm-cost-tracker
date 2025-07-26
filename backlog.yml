@@ -166,18 +166,18 @@ backlog:
     wsjf_score: 9.7
 
 metrics:
-  total_items: 9
+  total_items: 8
   by_status:
-    NEW: 7
-    READY: 2
+    NEW: 3
+    READY: 0
     REFINED: 0
     DOING: 0
     PR: 0
-    DONE: 0
+    DONE: 5
     BLOCKED: 0
   by_risk_tier:
     low: 5
     medium: 2
-    high: 2
-  avg_wsjf_score: 4.5
-  last_updated: "2025-01-26T00:00:00Z"
+    high: 1
+  avg_wsjf_score: 4.1
+  last_updated: "2025-01-26T12:00:00Z"
