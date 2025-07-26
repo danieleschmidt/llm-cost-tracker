@@ -1,0 +1,38 @@
+groups:
+- name: llm_cost_alerts
+  rules:
+  - alert: HighDailyCost
+    expr: increase(llm_cost_tracker_total_cost_usd[1d]) > 100
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "High daily LLM cost detected"
+      description: "Daily LLM costs have exceeded $100. Current increase: ${{ $value }}"
+
+  - alert: BudgetThresholdExceeded
+    expr: (llm_cost_tracker_budget_usage_ratio * 100) > 80
+    for: 2m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Budget threshold exceeded"
+      description: "Budget usage is at {{ $value }}% for application {{ $labels.application }}"
+
+  - alert: HighLatency
+    expr: histogram_quantile(0.95, rate(llm_cost_tracker_request_duration_seconds_bucket[5m])) > 30
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "High LLM request latency"
+      description: "95th percentile latency is {{ $value }}s for model {{ $labels.model }}"
+
+  - alert: ErrorRate
+    expr: rate(llm_cost_tracker_errors_total[5m]) > 0.1
+    for: 3m
+    labels:
+      severity: warning
+    annotations:
+      summary: "High error rate in LLM requests"
+      description: "Error rate is {{ $value }} errors/sec"
