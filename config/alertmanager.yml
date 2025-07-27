@@ -1,29 +1,164 @@
 global:
-  smtp_smarthost: '',
+  smtp_smarthost: '${SMTP_SMARTHOST}'
   smtp_from: 'alerts@terragonlabs.com'
+  smtp_auth_username: '${SMTP_USERNAME}'
+  smtp_auth_password: '${SMTP_PASSWORD}'
+  slack_api_url: '${SLACK_WEBHOOK_URL}'
 
+# Main routing tree
 route:
-  group_by: ['alertname']
+  group_by: ['alertname', 'application']
   group_wait: 10s
-  group_interval: 10s
-  repeat_interval: 1h
-  receiver: 'web.hook'
+  group_interval: 5m
+  repeat_interval: 12h
+  receiver: 'default'
+  
+  routes:
+  # Critical alerts go to multiple channels
+  - matchers:
+    - severity="critical"
+    receiver: 'critical-alerts'
+    group_wait: 5s
+    repeat_interval: 30m
+    
+  # Cost alerts go to ML ops team
+  - matchers:
+    - alertname=~".*Cost.*|.*Budget.*"
+    receiver: 'cost-alerts'
+    group_interval: 10m
+    repeat_interval: 2h
+    
+  # Performance alerts
+  - matchers:
+    - alertname=~".*Latency.*|.*Error.*"
+    receiver: 'performance-alerts'
+    
+  # Default routing for other alerts
+  - receiver: 'default'
 
 receivers:
-- name: 'web.hook'
+# Default webhook for testing
+- name: 'default'
   webhook_configs:
-  - url: 'http://localhost:5001/'
-    
-- name: 'slack-alerts'
-  slack_configs:
-  - api_url: '${SLACK_WEBHOOK_URL}'
-    channel: '#alerts'
-    title: 'LLM Cost Alert'
-    text: '{{ range .Alerts }}{{ .Annotations.summary }}: {{ .Annotations.description }}{{ end }}'
+  - url: 'http://llm-cost-tracker:8000/webhooks/alerts'
+    send_resolved: true
+    http_config:
+      basic_auth:
+        username: '${WEBHOOK_USERNAME}'
+        password: '${WEBHOOK_PASSWORD}'
 
+# Critical alerts - multiple notification channels
+- name: 'critical-alerts'
+  slack_configs:
+  - channel: '#critical-alerts'
+    username: 'LLM Cost Tracker'
+    icon_emoji: ':rotating_light:'
+    title: '🚨 CRITICAL LLM Alert'
+    title_link: 'http://grafana:3000/d/llm-cost-dashboard'
+    text: |
+      *Alert:* {{ range .Alerts }}{{ .Annotations.summary }}{{ end }}
+      *Severity:* {{ .GroupLabels.severity | toUpper }}
+      *Application:* {{ .GroupLabels.application | default "N/A" }}
+      
+      {{ range .Alerts }}
+      *Description:* {{ .Annotations.description }}
+      *Action Required:* {{ .Annotations.action }}
+      {{ if .Annotations.runbook_url }}*Runbook:* {{ .Annotations.runbook_url }}{{ end }}
+      {{ end }}
+    actions:
+    - type: button
+      text: 'View Dashboard'
+      url: 'http://grafana:3000/d/llm-cost-dashboard'
+    - type: button  
+      text: 'Acknowledge'
+      url: 'http://alertmanager:9093/#/alerts'
+      
+  email_configs:
+  - to: 'mlops-oncall@terragonlabs.com'
+    subject: '🚨 CRITICAL LLM Alert: {{ range .Alerts }}{{ .Annotations.summary }}{{ end }}'
+    body: |
+      Critical LLM Cost Tracker Alert
+      
+      Alert: {{ range .Alerts }}{{ .Annotations.summary }}{{ end }}
+      Severity: {{ .GroupLabels.severity | toUpper }}
+      Application: {{ .GroupLabels.application | default "N/A" }}
+      
+      {{ range .Alerts }}
+      Description: {{ .Annotations.description }}
+      Action Required: {{ .Annotations.action }}
+      {{ if .Annotations.runbook_url }}Runbook: {{ .Annotations.runbook_url }}{{ end }}
+      
+      Dashboard: http://grafana:3000/d/llm-cost-dashboard
+      Alertmanager: http://alertmanager:9093/#/alerts
+      {{ end }}
+
+# Cost-specific alerts
+- name: 'cost-alerts'
+  slack_configs:
+  - channel: '#ml-cost-optimization'
+    username: 'Cost Tracker'
+    icon_emoji: ':moneybag:'
+    title: '💰 LLM Cost Alert'
+    title_link: 'http://grafana:3000/d/llm-cost-dashboard'
+    text: |
+      *Alert:* {{ range .Alerts }}{{ .Annotations.summary }}{{ end }}
+      *Application:* {{ .GroupLabels.application | default "N/A" }}
+      
+      {{ range .Alerts }}
+      *Details:* {{ .Annotations.description }}
+      *Recommended Action:* {{ .Annotations.action }}
+      {{ end }}
+      
+      📊 <http://grafana:3000/d/llm-cost-dashboard|View Cost Dashboard>
+
+# Performance alerts  
+- name: 'performance-alerts'
+  slack_configs:
+  - channel: '#ml-performance'
+    username: 'Performance Monitor'
+    icon_emoji: ':chart_with_upwards_trend:'
+    title: '⚡ LLM Performance Alert'
+    text: |
+      *Alert:* {{ range .Alerts }}{{ .Annotations.summary }}{{ end }}
+      *Application:* {{ .GroupLabels.application | default "N/A" }}
+      
+      {{ range .Alerts }}
+      *Details:* {{ .Annotations.description }}
+      *Action:* {{ .Annotations.action }}
+      {{ end }}
+
+# PagerDuty integration for critical alerts (optional)
+- name: 'pagerduty-critical'
+  pagerduty_configs:
+  - routing_key: '${PAGERDUTY_INTEGRATION_KEY}'
+    description: '{{ range .Alerts }}{{ .Annotations.summary }}{{ end }}'
+    details:
+      application: '{{ .GroupLabels.application | default "N/A" }}'
+      severity: '{{ .GroupLabels.severity }}'
+      runbook: '{{ range .Alerts }}{{ .Annotations.runbook_url }}{{ end }}'
+
+# Inhibition rules - prevent spam from related alerts
 inhibit_rules:
-  - source_match:
-      severity: 'critical'
-    target_match:
-      severity: 'warning'
+  # Critical alerts inhibit warnings of the same type
+  - source_matchers:
+    - severity="critical"
+    target_matchers:
+    - severity="warning" 
     equal: ['alertname', 'application']
+    
+  # Budget exceeded inhibits budget warning
+  - source_matchers:
+    - alertname="BudgetThresholdExceeded"
+    target_matchers:
+    - alertname="BudgetThresholdWarning"
+    equal: ['application']
+    
+  # Critical daily cost inhibits high daily cost
+  - source_matchers:
+    - alertname="CriticalDailyCost"
+    target_matchers:
+    - alertname="HighDailyCost"
+
+# Templates for reusable alert formatting
+templates:
+- '/etc/alertmanager/templates/*.tmpl'

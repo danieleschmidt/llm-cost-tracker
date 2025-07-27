@@ -49,9 +49,10 @@ backlog:
     value: 8
     time_criticality: 5
     risk_reduction: 8
-    status: "NEW"
+    status: "DONE"
     risk_tier: "low"
     created_at: "2025-01-26"
+    completed_at: "2025-01-27"
     wsjf_score: 4.2
     
   - id: "VIZ-001"
@@ -104,9 +105,10 @@ backlog:
     value: 8
     time_criticality: 5
     risk_reduction: 8
-    status: "NEW"
+    status: "DONE"
     risk_tier: "medium"
     created_at: "2025-01-26"
+    completed_at: "2025-01-27"
     wsjf_score: 4.2
     
   - id: "DEMO-001"
@@ -168,16 +170,16 @@ backlog:
 metrics:
   total_items: 8
   by_status:
-    NEW: 3
+    NEW: 1
     READY: 0
     REFINED: 0
     DOING: 0
     PR: 0
-    DONE: 5
+    DONE: 7
     BLOCKED: 0
   by_risk_tier:
-    low: 5
+    low: 6
     medium: 2
-    high: 1
-  avg_wsjf_score: 4.1
-  last_updated: "2025-01-26T12:00:00Z"
+    high: 0
+  avg_wsjf_score: 2.5
+  last_updated: "2025-01-27T16:00:00Z"

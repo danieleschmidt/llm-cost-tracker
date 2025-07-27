@@ -7,7 +7,10 @@ from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
+from .alert_webhooks import router as alert_router
 from .config import get_redacted_config, get_settings
+from .database import db_manager
+from .otlp_ingestion import initialize_otlp_service, router as otlp_router
 from .security import RateLimiter, SecurityHeaders, validate_request_size
 
 # Configure logging
@@ -28,10 +31,17 @@ async def lifespan(app: FastAPI):
     logger.info("Starting LLM Cost Tracker")
     logger.info("Configuration: %s", get_redacted_config())
     
+    # Initialize database
+    await db_manager.initialize()
+    
+    # Initialize OTLP ingestion service
+    await initialize_otlp_service()
+    
     yield
     
     # Shutdown
     logger.info("Shutting down LLM Cost Tracker")
+    await db_manager.close()
 
 
 app = FastAPI(
@@ -51,6 +61,10 @@ app.add_middleware(
     allow_methods=["GET", "POST", "PUT", "DELETE"],
     allow_headers=["*"],
 )
+
+# Include routers
+app.include_router(otlp_router, tags=["otlp"])
+app.include_router(alert_router, tags=["alerts"])
 
 
 @app.middleware("http")
