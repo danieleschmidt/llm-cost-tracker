@@ -1,0 +1,62 @@
+# Codecov configuration
+# Coverage reporting and quality gates
+
+coverage:
+  precision: 2
+  round: down
+  range: "70...90"
+  
+  status:
+    project:
+      default:
+        target: 80%
+        threshold: 1%
+        base: auto
+        branches:
+          - main
+          - develop
+        if_ci_failed: error
+    patch:
+      default:
+        target: 80%
+        threshold: 5%
+        base: auto
+        branches:
+          - main
+          - develop
+        if_ci_failed: error
+
+parsers:
+  gcov:
+    branch_detection:
+      conditional: yes
+      loop: yes
+      method: no
+      macro: no
+
+comment:
+  layout: "reach,diff,flags,tree,reach"
+  behavior: default
+  require_changes: false
+  require_base: no
+  require_head: yes
+  branches:
+    - main
+    - develop
+
+flag_management:
+  default_rules:
+    carryforward: true
+    statuses:
+      - type: project
+        target: 80%
+      - type: patch
+        target: 80%
+
+ignore:
+  - "tests/"
+  - "docs/"
+  - "scripts/"
+  - "examples/"
+  - "**/conftest.py"
+  - "**/__init__.py"
