@@ -53,7 +53,7 @@ dmypy.json
 
 # IDEs
 .idea/
-.vscode/
+# .vscode/ - keep VSCode settings for development consistency
 
 # OS
 .DS_Store
@@ -78,3 +78,46 @@ logs/
 *.pfx
 api_keys.txt
 secrets.yml
+.env.local
+.env.production
+.env.staging
+
+# Docker
+.dockerignore
+
+# Build artifacts
+*.tar.gz
+*.zip
+*.deb
+*.rpm
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+*.ipynb
+
+# Documentation build
+docs/_build/
+site/
+
+# Dependency management
+poetry.lock.bak
+requirements.txt.bak
+
+# Performance profiling
+*.prof
+*.pstats
+
+# Database
+*.db-journal
+*.sqlite3-journal
+
+# Monitoring data
+grafana/data/
+prometheus/data/

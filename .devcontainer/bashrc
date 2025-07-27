@@ -1,0 +1,75 @@
+# Custom bashrc for LLM Cost Tracker development
+
+# Source the default bashrc
+if [ -f /etc/bash.bashrc ]; then
+    source /etc/bash.bashrc
+fi
+
+# Add Poetry to PATH
+export PATH="/home/vscode/.local/bin:$PATH"
+
+# Python environment
+export POETRY_VENV_IN_PROJECT=true
+export POETRY_CACHE_DIR=/tmp/poetry_cache
+
+# Development aliases
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
+alias ..='cd ..'
+alias ...='cd ../..'
+
+# Project-specific aliases
+alias pt='poetry run pytest'
+alias ptc='poetry run pytest --cov=src/llm_cost_tracker --cov-report=html'
+alias lint='poetry run flake8 src tests'
+alias fmt='poetry run black src tests && poetry run isort src tests'
+alias typecheck='poetry run mypy src'
+alias dev='poetry run uvicorn llm_cost_tracker.main:app --reload --host 0.0.0.0 --port 8000'
+alias demo='poetry run python examples/streamlit_demo.py'
+
+# Docker aliases
+alias dc='docker-compose'
+alias dcu='docker-compose up -d'
+alias dcd='docker-compose down'
+alias dcl='docker-compose logs -f'
+
+# Git aliases
+alias gs='git status'
+alias ga='git add'
+alias gc='git commit'
+alias gp='git push'
+alias gl='git log --oneline -10'
+alias gb='git branch'
+alias gco='git checkout'
+
+# Project helper functions
+function setup_env() {
+    echo "🔧 Setting up development environment..."
+    poetry install
+    poetry run pre-commit install
+    docker-compose up -d
+    echo "✅ Environment ready!"
+}
+
+function run_tests() {
+    echo "🧪 Running test suite..."
+    poetry run pytest --cov=src/llm_cost_tracker --cov-report=term --cov-report=html
+    echo "📊 Coverage report generated in htmlcov/"
+}
+
+function check_quality() {
+    echo "🔍 Running code quality checks..."
+    poetry run black --check src tests
+    poetry run isort --check-only src tests
+    poetry run flake8 src tests
+    poetry run mypy src
+    echo "✅ Code quality checks complete!"
+}
+
+# Welcome message
+echo "🚀 LLM Cost Tracker Development Environment"
+echo "📝 Type 'setup_env' to initialize the environment"
+echo "🧪 Type 'run_tests' to run the test suite"
+echo "🔍 Type 'check_quality' to run code quality checks"
+echo "📚 See aliases above for common commands"

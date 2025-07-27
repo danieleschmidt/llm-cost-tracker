@@ -1,29 +1,98 @@
 global:
   scrape_interval: 15s
   evaluation_interval: 15s
+  external_labels:
+    cluster: 'llm-cost-tracker'
+    environment: 'production'
 
 rule_files:
   - "alert-rules.yml"
+  - "recording-rules.yml"
 
 scrape_configs:
+  # Prometheus self-monitoring
   - job_name: 'prometheus'
     static_configs:
       - targets: ['localhost:9090']
+    scrape_interval: 15s
+    metrics_path: /metrics
 
+  # OpenTelemetry Collector metrics
   - job_name: 'otel-collector'
     static_configs:
       - targets: ['otel-collector:8888']
     scrape_interval: 10s
     metrics_path: /metrics
+    honor_labels: true
 
+  # LLM Cost Tracker application
   - job_name: 'llm-cost-tracker'
     static_configs:
       - targets: ['llm-cost-tracker:8000']
     scrape_interval: 30s
     metrics_path: /metrics
+    honor_labels: true
+    metric_relabel_configs:
+      - source_labels: [__name__]
+        regex: 'llm_.*'
+        target_label: service
+        replacement: 'llm-cost-tracker'
+
+  # Node Exporter for system metrics
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+    scrape_interval: 30s
+    
+  # PostgreSQL metrics
+  - job_name: 'postgres-exporter'
+    static_configs:
+      - targets: ['postgres-exporter:9187']
+    scrape_interval: 30s
+    
+  # Redis metrics
+  - job_name: 'redis-exporter'
+    static_configs:
+      - targets: ['redis-exporter:9121']
+    scrape_interval: 30s
+
+  # Grafana metrics
+  - job_name: 'grafana'
+    static_configs:
+      - targets: ['grafana:3000']
+    scrape_interval: 60s
+    metrics_path: /metrics
+
+  # Alertmanager metrics
+  - job_name: 'alertmanager'
+    static_configs:
+      - targets: ['alertmanager:9093']
+    scrape_interval: 30s
+
+  # Docker metrics (if available)
+  - job_name: 'docker'
+    static_configs:
+      - targets: ['docker-exporter:9323']
+    scrape_interval: 30s
 
 alerting:
   alertmanagers:
     - static_configs:
         - targets:
           - alertmanager:9093
+      timeout: 10s
+      api_version: v2
+
+# Remote write configuration for long-term storage
+remote_write:
+  - url: "http://victoria-metrics:8428/api/v1/write"
+    queue_config:
+      max_samples_per_send: 1000
+      batch_send_deadline: 5s
+      min_shards: 1
+      max_shards: 200
+
+# Remote read configuration
+remote_read:
+  - url: "http://victoria-metrics:8428/api/v1/read"
+    read_recent: true
