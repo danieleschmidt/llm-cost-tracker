@@ -57,9 +57,11 @@ This document summarizes the complete Software Development Lifecycle (SDLC) auto
 ### 5. CI/CD Pipeline (Templates)
 - **Pull Request Validation**: 7-job validation pipeline
 - **Security Scanning**: SAST, SCA, and secrets detection
-- **Automated Testing**: Multi-environment test execution
-- **Build Verification**: Multi-architecture Docker builds
-- **Deployment Automation**: Blue-green deployment support
+- **Automated Testing**: Multi-environment test execution (templates)
+- **Build Verification**: Multi-architecture Docker builds (templates)
+- **Deployment Automation**: Blue-green deployment support (templates)
+
+> **Note**: Due to GitHub security restrictions, workflow files are provided as templates in `.github/workflow-templates/` and require manual setup by repository administrators with `workflows` permissions.
 
 ### 6. Monitoring & Observability
 - **Metrics Collection**: Prometheus with recording rules
@@ -81,7 +83,10 @@ This document summarizes the complete Software Development Lifecycle (SDLC) auto
 
 ```
 ├── .devcontainer/           # Development environment
-├── .github/                 # CI/CD templates and community files
+├── .github/                 # Community files and workflow templates
+│   ├── workflow-templates/  # CI/CD workflow templates (manual setup required)
+│   ├── ISSUE_TEMPLATE/     # GitHub issue templates
+│   └── PULL_REQUEST_TEMPLATE/ # GitHub PR templates
 ├── .vscode/                 # IDE configuration
 ├── config/                  # Enhanced monitoring configuration
 ├── docs/                    # Documentation framework

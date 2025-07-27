@@ -1,8 +1,18 @@
-# GitHub Actions Workflows
+# GitHub Actions Workflow Templates
 
 This directory contains GitHub Actions workflow templates for the LLM Cost Tracker project. These workflows implement a comprehensive CI/CD pipeline with security, testing, and deployment automation.
 
-> **Note**: Due to security requirements, these workflows need to be manually reviewed and created by repository administrators with appropriate permissions.
+> **Important Security Note**: Due to GitHub security restrictions, workflow files cannot be created automatically by automated systems. These templates must be manually reviewed and copied to the `.github/workflows/` directory by repository administrators with appropriate `workflows` permissions.
+
+## 🔒 Manual Setup Required
+
+To implement these workflows:
+
+1. **Review Templates**: Carefully review each template file in this directory
+2. **Copy to Workflows**: Manually copy templates to `.github/workflows/` directory
+3. **Remove `.template` Extension**: Rename files from `.yml.template` to `.yml`
+4. **Configure Secrets**: Set up required repository secrets and variables
+5. **Test Workflows**: Trigger workflows manually to verify setup
 
 ## Workflow Overview
 
