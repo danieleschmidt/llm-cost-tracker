@@ -2,13 +2,13 @@
 
 ## ⚠️ Important Security Notice
 
-Due to GitHub security restrictions, workflow files cannot be created automatically by automated systems. The comprehensive CI/CD workflows have been created in the `.github/workflows/` directory but must be manually reviewed and committed by repository administrators with appropriate `workflows` permissions.
+Due to GitHub security restrictions, workflow files cannot be created automatically by automated systems. The comprehensive CI/CD workflows have been created in the `.github/workflow-templates/` directory but must be manually reviewed and copied to `.github/workflows/` by repository administrators with appropriate `workflows` permissions.
 
 ## 📋 Manual Setup Steps
 
 ### 1. Review Workflow Files
 
-The following workflow files are ready for deployment in `.github/workflows/`:
+The following workflow files are ready for deployment in `.github/workflow-templates/`:
 
 - **`pr-validation.yml`** - Comprehensive PR validation with 5-job pipeline
 - **`main-ci.yml`** - Main branch CI/CD with staging deployment
@@ -47,11 +47,12 @@ SLACK_CHANNEL           # Notification channel (optional)
 
 To activate workflows, a repository administrator must:
 
-1. **Review each workflow file** for security and compliance
-2. **Commit workflow files** to the repository
-3. **Configure branch protection rules** for main/develop branches
-4. **Test workflows** by triggering them manually
-5. **Monitor initial runs** to ensure proper configuration
+1. **Review each workflow file** in `.github/workflow-templates/` for security and compliance
+2. **Copy workflow files** from `.github/workflow-templates/` to `.github/workflows/`
+3. **Commit workflow files** to the repository
+4. **Configure branch protection rules** for main/develop branches
+5. **Test workflows** by triggering them manually
+6. **Monitor initial runs** to ensure proper configuration
 
 ### 5. Branch Protection Configuration
 
