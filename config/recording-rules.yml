@@ -1,0 +1,230 @@
+# Recording Rules for LLM Cost Tracker
+# These rules pre-compute commonly used metrics for better dashboard performance
+
+groups:
+  - name: llm_cost_tracker.rules
+    interval: 30s
+    rules:
+      # Cost per model over time
+      - record: llm:cost_per_model_5m
+        expr: |
+          sum(rate(llm_cost_total_usd[5m])) by (model, provider)
+
+      - record: llm:cost_per_model_1h
+        expr: |
+          sum(rate(llm_cost_total_usd[1h])) by (model, provider)
+
+      - record: llm:cost_per_model_24h
+        expr: |
+          sum(rate(llm_cost_total_usd[24h])) by (model, provider)
+
+      # Request rates
+      - record: llm:request_rate_5m
+        expr: |
+          sum(rate(llm_requests_total[5m])) by (model, provider, status)
+
+      - record: llm:request_rate_1h
+        expr: |
+          sum(rate(llm_requests_total[1h])) by (model, provider, status)
+
+      # Error rates
+      - record: llm:error_rate_5m
+        expr: |
+          sum(rate(llm_requests_total{status=~"4..|5.."}[5m])) by (model, provider) /
+          sum(rate(llm_requests_total[5m])) by (model, provider)
+
+      - record: llm:error_rate_1h
+        expr: |
+          sum(rate(llm_requests_total{status=~"4..|5.."}[1h])) by (model, provider) /
+          sum(rate(llm_requests_total[1h])) by (model, provider)
+
+      # Latency percentiles
+      - record: llm:latency_p50_5m
+        expr: |
+          histogram_quantile(0.50, sum(rate(llm_request_duration_seconds_bucket[5m])) by (le, model, provider))
+
+      - record: llm:latency_p95_5m
+        expr: |
+          histogram_quantile(0.95, sum(rate(llm_request_duration_seconds_bucket[5m])) by (le, model, provider))
+
+      - record: llm:latency_p99_5m
+        expr: |
+          histogram_quantile(0.99, sum(rate(llm_request_duration_seconds_bucket[5m])) by (le, model, provider))
+
+      # Token usage rates
+      - record: llm:tokens_per_second_5m
+        expr: |
+          sum(rate(llm_tokens_total[5m])) by (model, provider, token_type)
+
+      - record: llm:tokens_per_request_5m
+        expr: |
+          sum(rate(llm_tokens_total[5m])) by (model, provider, token_type) /
+          sum(rate(llm_requests_total[5m])) by (model, provider)
+
+      # Cost efficiency metrics
+      - record: llm:cost_per_token_5m
+        expr: |
+          sum(rate(llm_cost_total_usd[5m])) by (model, provider) /
+          sum(rate(llm_tokens_total[5m])) by (model, provider)
+
+      - record: llm:cost_per_request_5m
+        expr: |
+          sum(rate(llm_cost_total_usd[5m])) by (model, provider) /
+          sum(rate(llm_requests_total[5m])) by (model, provider)
+
+  - name: budget.rules
+    interval: 60s
+    rules:
+      # Daily budget burn rate
+      - record: budget:daily_burn_rate
+        expr: |
+          sum(rate(llm_cost_total_usd[24h])) by (application, user_id)
+
+      # Monthly projected spend
+      - record: budget:monthly_projected_spend
+        expr: |
+          sum(rate(llm_cost_total_usd[7d])) by (application, user_id) * 30
+
+      # Budget utilization percentage
+      - record: budget:utilization_percentage
+        expr: |
+          (sum(llm_cost_total_usd) by (application, user_id) / 
+           on(application) group_left budget_limit_usd) * 100
+
+      # Days remaining in budget
+      - record: budget:days_remaining
+        expr: |
+          (budget_limit_usd - sum(llm_cost_total_usd) by (application, user_id)) /
+          sum(rate(llm_cost_total_usd[24h])) by (application, user_id)
+
+  - name: system.rules
+    interval: 30s
+    rules:
+      # Application health score
+      - record: app:health_score
+        expr: |
+          (
+            (1 - llm:error_rate_5m) * 0.4 +
+            (1 - (llm:latency_p95_5m / 10)) * 0.3 +
+            (up{job="llm-cost-tracker"}) * 0.3
+          ) * 100
+
+      # Database connection pool utilization
+      - record: db:connection_utilization
+        expr: |
+          db_connections_active / db_connections_max * 100
+
+      # Memory utilization
+      - record: app:memory_utilization
+        expr: |
+          process_resident_memory_bytes / process_virtual_memory_max_bytes * 100
+
+      # CPU utilization
+      - record: app:cpu_utilization
+        expr: |
+          rate(process_cpu_seconds_total[5m]) * 100
+
+  - name: sla.rules
+    interval: 60s
+    rules:
+      # Availability SLA (99.9%)
+      - record: sla:availability_99_9
+        expr: |
+          (
+            sum(up{job="llm-cost-tracker"}) /
+            count(up{job="llm-cost-tracker"})
+          ) >= 0.999
+
+      # Response time SLA (95% < 2s)
+      - record: sla:response_time_95_2s
+        expr: |
+          llm:latency_p95_5m < 2
+
+      # Error rate SLA (< 1%)
+      - record: sla:error_rate_1_percent
+        expr: |
+          llm:error_rate_5m < 0.01
+
+      # Cost prediction accuracy (within 10%)
+      - record: sla:cost_prediction_accuracy
+        expr: |
+          abs(
+            (budget:monthly_projected_spend - budget_actual_monthly_spend) /
+            budget_actual_monthly_spend
+          ) < 0.1
+
+  - name: security.rules
+    interval: 300s
+    rules:
+      # Failed authentication rate
+      - record: security:auth_failure_rate_5m
+        expr: |
+          sum(rate(http_requests_total{status="401"}[5m])) /
+          sum(rate(http_requests_total[5m]))
+
+      # Suspicious request patterns
+      - record: security:suspicious_request_rate_5m
+        expr: |
+          sum(rate(http_requests_total{status=~"4.."}[5m])) by (remote_addr) > 10
+
+      # API key usage anomalies
+      - record: security:api_key_anomaly
+        expr: |
+          (
+            sum(rate(llm_requests_total[1h])) by (api_key_id) >
+            (avg_over_time(sum(rate(llm_requests_total[1h])) by (api_key_id)[7d]) * 3)
+          )
+
+  - name: performance.rules
+    interval: 30s
+    rules:
+      # Throughput (requests per second)
+      - record: perf:throughput_rps
+        expr: |
+          sum(rate(llm_requests_total[5m]))
+
+      # Data ingestion rate
+      - record: perf:ingestion_rate
+        expr: |
+          sum(rate(otlp_ingestion_total[5m]))
+
+      # Queue depth
+      - record: perf:queue_depth
+        expr: |
+          sum(queue_size) by (queue_name)
+
+      # Cache hit rate
+      - record: perf:cache_hit_rate
+        expr: |
+          sum(rate(cache_hits_total[5m])) /
+          (sum(rate(cache_hits_total[5m])) + sum(rate(cache_misses_total[5m])))
+
+  - name: business.rules
+    interval: 300s
+    rules:
+      # Revenue per user
+      - record: business:revenue_per_user
+        expr: |
+          sum(llm_cost_total_usd) by (user_id) /
+          count(distinct(llm_requests_total)) by (user_id)
+
+      # Most expensive models
+      - record: business:model_cost_ranking
+        expr: |
+          topk(10, sum(rate(llm_cost_total_usd[24h])) by (model))
+
+      # Cost trend (increasing/decreasing)
+      - record: business:cost_trend_7d
+        expr: |
+          (
+            sum(rate(llm_cost_total_usd[1d])) -
+            sum(rate(llm_cost_total_usd[1d] offset 7d))
+          ) / sum(rate(llm_cost_total_usd[1d] offset 7d)) * 100
+
+      # User growth rate
+      - record: business:user_growth_rate_7d
+        expr: |
+          (
+            count(count by (user_id)(llm_requests_total)) -
+            count(count by (user_id)(llm_requests_total offset 7d))
+          ) / count(count by (user_id)(llm_requests_total offset 7d)) * 100

@@ -1,0 +1,167 @@
+name: ✨ Feature Request
+description: Suggest a new feature or enhancement
+title: "[Feature]: "
+labels: ["enhancement", "needs-triage"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a new feature! ✨ We appreciate your input to make LLM Cost Tracker better.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement
+      description: What problem does this feature solve? Describe the pain point or limitation you're experiencing.
+      placeholder: "I'm frustrated when..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: Describe the feature you'd like to see implemented
+      placeholder: "I would like to see..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternative Solutions
+      description: Describe any alternative solutions or features you've considered
+      placeholder: "I have also considered..."
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Feature Category
+      description: Which area does this feature relate to?
+      options:
+        - "Cost Tracking & Analytics"
+        - "Budget Management"
+        - "Alerting & Notifications"
+        - "API & Integrations"
+        - "User Interface"
+        - "Performance & Scalability"
+        - "Security & Compliance"
+        - "Monitoring & Observability"
+        - "Developer Experience"
+        - "Documentation"
+        - "Other"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      description: How important is this feature to you?
+      options:
+        - "Low - Nice to have"
+        - "Medium - Would be helpful"
+        - "High - Important for my use case"
+        - "Critical - Blocking my adoption"
+    validations:
+      required: true
+
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Use Case Description
+      description: Describe your specific use case and how this feature would help
+      placeholder: |
+        - Who would use this feature?
+        - In what scenarios would it be used?
+        - What's the expected workflow?
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance Criteria
+      description: Define what "done" looks like for this feature
+      placeholder: |
+        - [ ] As a user, I can...
+        - [ ] The feature should...
+        - [ ] The system should handle...
+      render: markdown
+
+  - type: textarea
+    id: technical-considerations
+    attributes:
+      label: Technical Considerations
+      description: Any technical requirements, constraints, or implementation thoughts?
+      placeholder: |
+        - API design considerations
+        - Database schema changes
+        - Performance requirements
+        - Integration requirements
+        - Security considerations
+
+  - type: dropdown
+    id: complexity
+    attributes:
+      label: Estimated Complexity
+      description: How complex do you think this feature might be to implement?
+      options:
+        - "Small - Can be implemented in a few hours/days"
+        - "Medium - Requires some design and development effort"
+        - "Large - Significant feature requiring multiple weeks"
+        - "XL - Major feature requiring significant architectural changes"
+        - "Unknown - Need technical analysis"
+
+  - type: checkboxes
+    id: implementation
+    attributes:
+      label: Implementation Willingness
+      description: Are you willing to help implement this feature?
+      options:
+        - label: I am willing to submit a pull request for this feature
+          required: false
+        - label: I can help with testing this feature
+          required: false
+        - label: I can help with documentation for this feature
+          required: false
+        - label: I can provide feedback during development
+          required: false
+
+  - type: textarea
+    id: mockups
+    attributes:
+      label: Mockups or Examples
+      description: If applicable, provide mockups, wireframes, or examples from other tools
+      placeholder: |
+        - Screenshots or sketches
+        - References to similar features in other tools
+        - API examples or configuration examples
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Pre-submission Checklist
+      description: Please confirm the following
+      options:
+        - label: I have searched existing issues to ensure this feature hasn't been requested
+          required: true
+        - label: I have provided a clear problem statement and proposed solution
+          required: true
+        - label: I have considered the impact on existing functionality
+          required: true
+        - label: I understand this is a request and may not be implemented immediately
+          required: true
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Add any other context, references, or information about the feature request
+      placeholder: |
+        - Links to relevant documentation
+        - References to industry standards
+        - Related features or dependencies
+        - Timeline considerations

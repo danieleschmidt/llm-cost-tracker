@@ -1,0 +1,86 @@
+# Docker Compose configuration for testing
+version: '3.8'
+
+services:
+  postgres-test:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: llm_metrics_test
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_test_data:/var/lib/postgresql/data
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis-test:
+    image: redis:7-alpine
+    ports:
+      - "6380:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  otel-collector-test:
+    image: otel/opentelemetry-collector-contrib:latest
+    command: ["--config=/etc/otel-collector-config.yaml"]
+    volumes:
+      - ./config/otel-collector.yaml:/etc/otel-collector-config.yaml:ro
+    ports:
+      - "4318:4317"  # OTLP gRPC receiver
+      - "8889:8888"  # Prometheus metrics
+    depends_on:
+      - postgres-test
+
+  prometheus-test:
+    image: prom/prometheus:latest
+    ports:
+      - "9091:9090"
+    volumes:
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=1h'  # Short retention for tests
+      - '--web.enable-lifecycle'
+
+  app-test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres-test:5432/llm_metrics_test
+      - REDIS_URL=redis://redis-test:6379/0
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector-test:4317
+      - DEBUG=true
+      - LOG_LEVEL=DEBUG
+    ports:
+      - "8001:8000"
+    depends_on:
+      postgres-test:
+        condition: service_healthy
+      redis-test:
+        condition: service_healthy
+      otel-collector-test:
+        condition: service_started
+    volumes:
+      - .:/app
+    command: ["uvicorn", "llm_cost_tracker.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+
+volumes:
+  postgres_test_data:
+
+networks:
+  default:
+    name: llm-cost-tracker-test

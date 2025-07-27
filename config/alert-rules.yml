@@ -1,53 +1,294 @@
 groups:
 - name: llm_cost_alerts
+  interval: 30s
   rules:
   # Cost threshold alerts
   - alert: HighDailyCost
-    expr: increase(llm_cost_tracker_total_cost_usd[1d]) > 100
+    expr: llm:cost_per_model_24h > 100
     for: 5m
     labels:
       severity: warning
       team: "ml-ops"
+      category: "cost"
     annotations:
       summary: "High daily LLM cost detected"
-      description: "Daily LLM costs have exceeded $100. Current increase: ${{ $value | printf \"%.2f\" }}"
+      description: "Daily LLM costs have exceeded $100 for model {{ $labels.model }}. Current rate: ${{ $value | printf \"%.2f\" }}/day"
       runbook_url: "https://runbooks.terragonlabs.com/llm-cost-alerts"
       action: "Review high-cost applications and consider model optimization"
+      dashboard: "https://grafana.terragonlabs.com/d/llm-costs"
 
   - alert: CriticalDailyCost
-    expr: increase(llm_cost_tracker_total_cost_usd[1d]) > 500
+    expr: llm:cost_per_model_24h > 500
     for: 2m
     labels:
       severity: critical
       team: "ml-ops"
+      category: "cost"
+      priority: "p1"
     annotations:
       summary: "CRITICAL: Daily LLM costs exceeded $500"
-      description: "Immediate attention required! Daily costs: ${{ $value | printf \"%.2f\" }}"
+      description: "Immediate attention required! Daily costs for {{ $labels.model }}: ${{ $value | printf \"%.2f\" }}"
       runbook_url: "https://runbooks.terragonlabs.com/llm-cost-emergency"
       action: "Immediately review and implement cost controls or circuit breakers"
+      escalation: "Page on-call engineer"
 
   - alert: BudgetThresholdWarning
-    expr: (llm_cost_tracker_budget_usage_ratio * 100) > 70
+    expr: budget:utilization_percentage > 70
     for: 5m
     labels:
       severity: warning
       team: "ml-ops"
+      category: "budget"
     annotations:
       summary: "Budget threshold warning"
       description: "Budget usage is at {{ $value | printf \"%.1f\" }}% for application {{ $labels.application }}"
       action: "Review application usage patterns and consider optimization"
+      days_remaining: "{{ budget:days_remaining | printf \"%.1f\" }} days remaining"
 
   - alert: BudgetThresholdExceeded
-    expr: (llm_cost_tracker_budget_usage_ratio * 100) > 90
+    expr: budget:utilization_percentage > 90
     for: 2m
     labels:
       severity: critical
       team: "ml-ops"
+      category: "budget"
+      priority: "p1"
     annotations:
       summary: "Budget threshold critically exceeded"
       description: "Budget usage is at {{ $value | printf \"%.1f\" }}% for application {{ $labels.application }}"
       runbook_url: "https://runbooks.terragonlabs.com/budget-exceeded"
       action: "Enable automatic model switching or implement throttling"
+      escalation: "Notify finance team and application owners"
+
+  - alert: UnexpectedCostSpike
+    expr: |
+      (
+        llm:cost_per_model_1h > 
+        (avg_over_time(llm:cost_per_model_1h[24h]) * 3)
+      ) and llm:cost_per_model_1h > 10
+    for: 10m
+    labels:
+      severity: warning
+      team: "ml-ops"
+      category: "anomaly"
+    annotations:
+      summary: "Unexpected cost spike detected"
+      description: "Cost spike for {{ $labels.model }}: ${{ $value | printf \"%.2f\" }}/hour (3x normal)"
+      action: "Investigate potential abuse or misconfiguration"
+
+- name: performance_alerts
+  interval: 30s
+  rules:
+  - alert: HighErrorRate
+    expr: llm:error_rate_5m > 0.05
+    for: 5m
+    labels:
+      severity: warning
+      team: "sre"
+      category: "reliability"
+    annotations:
+      summary: "High error rate detected"
+      description: "Error rate is {{ $value | printf \"%.2f\" }}% for {{ $labels.model }}"
+      action: "Check application logs and LLM provider status"
+
+  - alert: CriticalErrorRate
+    expr: llm:error_rate_5m > 0.20
+    for: 2m
+    labels:
+      severity: critical
+      team: "sre"
+      category: "reliability"
+      priority: "p1"
+    annotations:
+      summary: "CRITICAL: Error rate exceeded 20%"
+      description: "Error rate is {{ $value | printf \"%.2f\" }}% for {{ $labels.model }}"
+      runbook_url: "https://runbooks.terragonlabs.com/high-error-rate"
+      action: "Immediate investigation required - potential service degradation"
+
+  - alert: HighLatency
+    expr: llm:latency_p95_5m > 10
+    for: 5m
+    labels:
+      severity: warning
+      team: "sre"
+      category: "performance"
+    annotations:
+      summary: "High latency detected"
+      description: "95th percentile latency is {{ $value | printf \"%.2f\" }}s for {{ $labels.model }}"
+      action: "Check LLM provider performance and network connectivity"
+
+  - alert: ServiceDown
+    expr: up{job="llm-cost-tracker"} == 0
+    for: 1m
+    labels:
+      severity: critical
+      team: "sre"
+      category: "availability"
+      priority: "p0"
+    annotations:
+      summary: "LLM Cost Tracker service is down"
+      description: "Service {{ $labels.instance }} has been down for over 1 minute"
+      runbook_url: "https://runbooks.terragonlabs.com/service-down"
+      action: "Immediate investigation and restart required"
+      escalation: "Page on-call engineer immediately"
+
+- name: resource_alerts
+  interval: 60s
+  rules:
+  - alert: HighMemoryUsage
+    expr: app:memory_utilization > 85
+    for: 5m
+    labels:
+      severity: warning
+      team: "sre"
+      category: "resources"
+    annotations:
+      summary: "High memory usage"
+      description: "Memory usage is {{ $value | printf \"%.1f\" }}% on {{ $labels.instance }}"
+      action: "Monitor for memory leaks and consider scaling"
+
+  - alert: HighCPUUsage
+    expr: app:cpu_utilization > 80
+    for: 10m
+    labels:
+      severity: warning
+      team: "sre"
+      category: "resources"
+    annotations:
+      summary: "High CPU usage"
+      description: "CPU usage is {{ $value | printf \"%.1f\" }}% on {{ $labels.instance }}"
+      action: "Check for inefficient queries or consider scaling"
+
+  - alert: DatabaseConnectionPoolExhausted
+    expr: db:connection_utilization > 90
+    for: 2m
+    labels:
+      severity: critical
+      team: "sre"
+      category: "database"
+    annotations:
+      summary: "Database connection pool nearly exhausted"
+      description: "Connection pool utilization is {{ $value | printf \"%.1f\" }}%"
+      action: "Increase connection pool size or investigate connection leaks"
+
+  - alert: DiskSpaceRunningLow
+    expr: (node_filesystem_avail_bytes / node_filesystem_size_bytes) * 100 < 20
+    for: 5m
+    labels:
+      severity: warning
+      team: "sre"
+      category: "storage"
+    annotations:
+      summary: "Disk space running low"
+      description: "Disk space is {{ $value | printf \"%.1f\" }}% full on {{ $labels.instance }}"
+      action: "Clean up logs or expand storage"
+
+- name: security_alerts
+  interval: 60s
+  rules:
+  - alert: HighAuthenticationFailureRate
+    expr: security:auth_failure_rate_5m > 0.10
+    for: 5m
+    labels:
+      severity: warning
+      team: "security"
+      category: "authentication"
+    annotations:
+      summary: "High authentication failure rate"
+      description: "Authentication failure rate is {{ $value | printf \"%.2f\" }}%"
+      action: "Investigate potential brute force attacks"
+
+  - alert: SuspiciousRequestPattern
+    expr: security:suspicious_request_rate_5m > 0
+    for: 2m
+    labels:
+      severity: warning
+      team: "security"
+      category: "abuse"
+    annotations:
+      summary: "Suspicious request patterns detected"
+      description: "High error rate from IP {{ $labels.remote_addr }}"
+      action: "Consider rate limiting or blocking suspicious IPs"
+
+  - alert: APIKeyAnomalyDetected
+    expr: security:api_key_anomaly > 0
+    for: 5m
+    labels:
+      severity: warning
+      team: "security"
+      category: "anomaly"
+    annotations:
+      summary: "API key usage anomaly detected"
+      description: "API key {{ $labels.api_key_id }} usage is 3x above normal"
+      action: "Verify API key usage and check for potential compromise"
+
+- name: business_alerts
+  interval: 300s
+  rules:
+  - alert: NegativeCostTrend
+    expr: business:cost_trend_7d < -20
+    for: 15m
+    labels:
+      severity: info
+      team: "business"
+      category: "trend"
+    annotations:
+      summary: "Significant cost reduction detected"
+      description: "Costs have decreased by {{ $value | printf \"%.1f\" }}% over the past week"
+      action: "Verify if this is expected or indicates reduced usage"
+
+  - alert: RapidUserGrowth
+    expr: business:user_growth_rate_7d > 50
+    for: 30m
+    labels:
+      severity: info
+      team: "business"
+      category: "growth"
+    annotations:
+      summary: "Rapid user growth detected"
+      description: "User base has grown by {{ $value | printf \"%.1f\" }}% in the past week"
+      action: "Ensure infrastructure can handle increased load"
+
+- name: sla_alerts
+  interval: 60s
+  rules:
+  - alert: AvailabilitySLABreach
+    expr: sla:availability_99_9 == 0
+    for: 5m
+    labels:
+      severity: critical
+      team: "sre"
+      category: "sla"
+      priority: "p1"
+    annotations:
+      summary: "Availability SLA breach (99.9%)"
+      description: "Service availability has fallen below 99.9% SLA"
+      action: "Immediate action required to restore service"
+      impact: "Customer-facing service degradation"
+
+  - alert: ResponseTimeSLABreach
+    expr: sla:response_time_95_2s == 0
+    for: 10m
+    labels:
+      severity: warning
+      team: "sre"
+      category: "sla"
+    annotations:
+      summary: "Response time SLA breach"
+      description: "95th percentile response time exceeds 2 second SLA"
+      action: "Investigate performance bottlenecks"
+
+  - alert: ErrorRateSLABreach
+    expr: sla:error_rate_1_percent == 0
+    for: 5m
+    labels:
+      severity: warning
+      team: "sre"
+      category: "sla"
+    annotations:
+      summary: "Error rate SLA breach"
+      description: "Error rate exceeds 1% SLA threshold"
+      action: "Investigate and fix error sources"
 
   # Model-specific cost alerts
   - alert: ExpensiveModelOveruse
