@@ -1,0 +1,79 @@
+{
+  "branches": [
+    "main",
+    {
+      "name": "develop",
+      "prerelease": "beta"
+    }
+  ],
+  "plugins": [
+    [
+      "@semantic-release/commit-analyzer",
+      {
+        "preset": "conventionalcommits",
+        "releaseRules": [
+          {"type": "docs", "scope": "README", "release": "patch"},
+          {"type": "refactor", "release": "patch"},
+          {"type": "style", "release": "patch"},
+          {"type": "chore", "scope": "deps", "release": "patch"},
+          {"scope": "no-release", "release": false}
+        ]
+      }
+    ],
+    [
+      "@semantic-release/release-notes-generator",
+      {
+        "preset": "conventionalcommits",
+        "presetConfig": {
+          "types": [
+            {"type": "feat", "section": "🚀 Features"},
+            {"type": "fix", "section": "🐛 Bug Fixes"},
+            {"type": "perf", "section": "⚡ Performance Improvements"},
+            {"type": "revert", "section": "⏪ Reverts"},
+            {"type": "docs", "section": "📚 Documentation"},
+            {"type": "style", "section": "💎 Styles"},
+            {"type": "refactor", "section": "♻️ Code Refactoring"},
+            {"type": "test", "section": "🧪 Tests"},
+            {"type": "build", "section": "🏗️ Build System"},
+            {"type": "ci", "section": "⚙️ Continuous Integration"},
+            {"type": "chore", "section": "🔧 Chores", "hidden": true}
+          ]
+        }
+      }
+    ],
+    [
+      "@semantic-release/changelog",
+      {
+        "changelogFile": "CHANGELOG.md",
+        "changelogTitle": "# Changelog\n\nAll notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines."
+      }
+    ],
+    [
+      "@semantic-release/exec",
+      {
+        "prepareCmd": "poetry version ${nextRelease.version}",
+        "publishCmd": "echo 'Version updated to ${nextRelease.version}'"
+      }
+    ],
+    [
+      "@semantic-release/git",
+      {
+        "assets": [
+          "CHANGELOG.md",
+          "pyproject.toml"
+        ],
+        "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+      }
+    ],
+    [
+      "@semantic-release/github",
+      {
+        "successComment": "🎉 This ${issue.pull_request ? 'PR is included' : 'issue has been resolved'} in version ${nextRelease.version} :tada:",
+        "failTitle": "❌ The automated release is failing 🚨",
+        "failComment": "The release from branch `${branch.name}` had an error. Please check the logs.",
+        "labels": ["released"],
+        "releasedLabels": ["released<%= nextRelease.channel ? ` on @\${nextRelease.channel}` : \"\" %> from <%= branch.name %>"]
+      }
+    ]
+  ]
+}
