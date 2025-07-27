@@ -17,24 +17,31 @@ processors:
         action: upsert
 
 exporters:
-  postgresql:
-    connection_string: "postgres://postgres:postgres@postgres:5432/llm_metrics?sslmode=disable"
-    table_name: spans
-    timeout: 5s
+  # Use OTLP HTTP to send to our custom ingestion service
+  otlphttp:
+    endpoint: "http://llm-cost-tracker:8000/v1/traces"
+    timeout: 10s
+    retry_on_failure:
+      enabled: true
+      initial_interval: 5s
+      max_interval: 30s
+      max_elapsed_time: 300s
+    headers:
+      "Content-Type": "application/x-protobuf"
   
   prometheus:
     endpoint: "0.0.0.0:8888"
     namespace: llm_cost_tracker
     
   logging:
-    loglevel: debug
+    loglevel: info
 
 service:
   pipelines:
     traces:
       receivers: [otlp]
       processors: [batch, resource]
-      exporters: [postgresql, logging]
+      exporters: [otlphttp, logging]
     
     metrics:
       receivers: [otlp]

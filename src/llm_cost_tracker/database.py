@@ -226,3 +226,10 @@ class DatabaseManager:
 
 # Global database manager instance
 db_manager = DatabaseManager()
+
+
+async def get_database_pool() -> Optional[Pool]:
+    """Get the database connection pool."""
+    if not db_manager.pool:
+        await db_manager.initialize()
+    return db_manager.pool
