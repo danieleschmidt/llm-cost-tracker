@@ -1,0 +1,273 @@
+# Release Pipeline
+# Automated release process with semantic versioning
+
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g., v1.0.0)'
+        required: true
+        type: string
+
+env:
+  PYTHON_VERSION: "3.11"
+  POETRY_VERSION: "1.7.1"
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  # Job 1: Validate Release
+  validate:
+    name: Validate Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: ${{ env.POETRY_VERSION }}
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Validate version
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            VERSION="${{ github.event.inputs.version }}"
+          else
+            VERSION="${{ github.ref_name }}"
+          fi
+          echo "Release version: $VERSION"
+          
+          # Validate version format
+          if [[ ! $VERSION =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "❌ Invalid version format: $VERSION"
+            exit 1
+          fi
+
+      - name: Run full test suite
+        run: poetry run pytest tests/ -v --cov=src/llm_cost_tracker
+
+      - name: Run security checks
+        run: |
+          poetry run bandit -r src/
+          poetry run safety check
+
+  # Job 2: Build Release Artifacts
+  build:
+    name: Build Release
+    runs-on: ubuntu-latest
+    needs: [validate]
+    permissions:
+      contents: read
+      packages: write
+
+    outputs:
+      image: ${{ steps.image.outputs.image }}
+      version: ${{ steps.version.outputs.version }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set version
+        id: version
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            VERSION="${{ github.event.inputs.version }}"
+          else
+            VERSION="${{ github.ref_name }}"
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=tag
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=raw,value=latest
+
+      - name: Build and push Docker image
+        id: build
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Generate SBOM
+        uses: anchore/sbom-action@v0
+        with:
+          image: ${{ steps.meta.outputs.tags }}
+          format: spdx-json
+          output-file: sbom-${{ env.VERSION }}.spdx.json
+
+      - name: Sign container image
+        run: |
+          # Install cosign
+          curl -O -L "https://github.com/sigstore/cosign/releases/latest/download/cosign-linux-amd64"
+          sudo mv cosign-linux-amd64 /usr/local/bin/cosign
+          sudo chmod +x /usr/local/bin/cosign
+          
+          # Sign the image
+          cosign sign --yes ${{ steps.meta.outputs.tags }}
+
+      - name: Output image
+        id: image
+        run: |
+          echo "image=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}" >> $GITHUB_OUTPUT
+
+  # Job 3: Security Scan
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    needs: [build]
+    permissions:
+      security-events: write
+
+    steps:
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ needs.build.outputs.image }}
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: Upload Trivy scan results
+        uses: github/codeql-action/upload-sarif@v2
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+      - name: Check for critical vulnerabilities
+        run: |
+          # Fail if critical vulnerabilities found
+          trivy image --severity CRITICAL --exit-code 1 ${{ needs.build.outputs.image }}
+
+  # Job 4: Deploy to Production
+  deploy:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [build, security]
+    environment:
+      name: production
+      url: ${{ vars.PRODUCTION_URL }}
+
+    steps:
+      - name: Deploy to production
+        run: |
+          echo "Deploying ${{ needs.build.outputs.image }} to production"
+          # Add your production deployment logic here
+
+      - name: Run health checks
+        run: |
+          echo "Running health checks"
+          # Add health check commands here
+
+  # Job 5: Create GitHub Release
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    needs: [deploy]
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          # Generate changelog from commits
+          PREVIOUS_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+          if [[ -n "$PREVIOUS_TAG" ]]; then
+            CHANGELOG=$(git log --pretty=format:"- %s (%an)" $PREVIOUS_TAG..HEAD)
+          else
+            CHANGELOG=$(git log --pretty=format:"- %s (%an)" HEAD)
+          fi
+          
+          echo "CHANGELOG<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ needs.build.outputs.version }}
+          release_name: Release ${{ needs.build.outputs.version }}
+          body: |
+            ## Changes
+            ${{ steps.changelog.outputs.CHANGELOG }}
+            
+            ## Container Image
+            ```
+            docker pull ${{ needs.build.outputs.image }}
+            ```
+            
+            ## Verification
+            The container image has been signed with cosign and can be verified:
+            ```
+            cosign verify ${{ needs.build.outputs.image }}
+            ```
+          draft: false
+          prerelease: false
+
+  # Job 6: Notification
+  notify:
+    name: Notify Release
+    runs-on: ubuntu-latest
+    if: always()
+    needs: [release]
+
+    steps:
+      - name: Notify on success
+        if: needs.release.result == 'success'
+        run: |
+          echo "🚀 Release ${{ needs.build.outputs.version }} deployed successfully"
+          # Add success notification here
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "❌ Release ${{ needs.build.outputs.version }} failed"
+          # Add failure notification here
