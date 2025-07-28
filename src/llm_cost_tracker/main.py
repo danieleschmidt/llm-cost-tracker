@@ -2,6 +2,7 @@
 
 import logging
 from contextlib import asynccontextmanager
+from datetime import datetime
 
 from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
@@ -92,12 +93,84 @@ async def security_middleware(request: Request, call_next):
 
 @app.get("/health")
 async def health_check() -> JSONResponse:
-    """Health check endpoint."""
+    """Basic health check endpoint."""
     return JSONResponse({
         "status": "healthy", 
         "service": "llm-cost-tracker",
-        "version": "0.1.0"
+        "version": "0.1.0",
+        "timestamp": datetime.utcnow().isoformat() + "Z"
     })
+
+
+@app.get("/health/ready")
+async def readiness_check() -> JSONResponse:
+    """Readiness check endpoint for Kubernetes."""
+    try:
+        # Check database connection
+        db_healthy = await db_manager.check_health()
+        
+        if not db_healthy:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "status": "not_ready",
+                    "service": "llm-cost-tracker",
+                    "reason": "database_unavailable"
+                }
+            )
+        
+        return JSONResponse({
+            "status": "ready",
+            "service": "llm-cost-tracker",
+            "version": "0.1.0",
+            "checks": {
+                "database": "healthy"
+            }
+        })
+    except Exception as e:
+        logger.error(f"Readiness check failed: {e}")
+        return JSONResponse(
+            status_code=503,
+            content={
+                "status": "not_ready",
+                "service": "llm-cost-tracker",
+                "error": str(e)
+            }
+        )
+
+
+@app.get("/health/live")
+async def liveness_check() -> JSONResponse:
+    """Liveness check endpoint for Kubernetes."""
+    return JSONResponse({
+        "status": "alive",
+        "service": "llm-cost-tracker",
+        "version": "0.1.0",
+        "uptime_seconds": app.state.uptime if hasattr(app.state, 'uptime') else 0
+    })
+
+
+@app.get("/metrics")
+async def metrics_endpoint() -> JSONResponse:
+    """Prometheus metrics endpoint."""
+    try:
+        # Get basic metrics summary
+        metrics_summary = await db_manager.get_metrics_summary()
+        
+        return JSONResponse({
+            "service": "llm-cost-tracker",
+            "metrics": metrics_summary,
+            "timestamp": datetime.utcnow().isoformat() + "Z"
+        })
+    except Exception as e:
+        logger.error(f"Metrics endpoint failed: {e}")
+        return JSONResponse(
+            status_code=500,
+            content={
+                "error": "metrics_unavailable",
+                "message": str(e)
+            }
+        )
 
 
 @app.get("/")

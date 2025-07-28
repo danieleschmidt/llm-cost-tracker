@@ -45,6 +45,19 @@ class DatabaseManager:
             await self.pool.close()
             logger.info("Database connection pool closed")
     
+    async def check_health(self) -> bool:
+        """Check database health for readiness probe."""
+        if not self.pool:
+            return False
+        
+        try:
+            async with self.pool.acquire() as conn:
+                await conn.execute("SELECT 1")
+            return True
+        except Exception as e:
+            logger.error(f"Database health check failed: {e}")
+            return False
+    
     async def store_span(self, span_data: Dict) -> str:
         """Store OpenTelemetry span data."""
         if not self.pool:
