@@ -61,7 +61,7 @@ Since this repository already achieved **85% SDLC maturity**, our autonomous sys
 
 **Software Bill of Materials (SBOM)**
 - Created `scripts/generate-sbom.sh` for comprehensive SBOM generation
-- Implemented GitHub workflow for automated SBOM creation
+- Provided GitHub workflow template for automated SBOM creation
 - Added SPDX and CycloneDX format support
 - Integrated vulnerability scanning with Grype
 - SLSA provenance attestation generation
@@ -139,8 +139,8 @@ Since this repository already achieved **85% SDLC maturity**, our autonomous sys
 │   ├── docker-compose.yml                 # Development services
 │   ├── Dockerfile                         # Dev environment image
 │   └── post-create.sh                     # Setup automation
-└── .github/workflows/
-    └── sbom-generation.yml                # Supply chain security
+└── .github/workflow-templates/
+    └── sbom-generation.yml                # Supply chain security workflow template
 ```
 
 ### **Enhanced Files:**
@@ -212,9 +212,10 @@ Since this repository already achieved **85% SDLC maturity**, our autonomous sys
 
 ### **Immediate Actions**
 1. **Review Configurations:** Validate all new configurations meet requirements
-2. **Test Workflows:** Verify automated processes work correctly
+2. **Setup GitHub Workflow:** Copy `.github/workflow-templates/sbom-generation.yml` to `.github/workflows/` (requires workflows permission)
 3. **Enable Renovate:** Activate dependency automation in repository settings
 4. **Configure Secrets:** Add required API keys and tokens for full automation
+5. **Test Workflows:** Verify automated processes work correctly
 
 ### **Medium-term Enhancements**
 1. **Performance Baselines:** Establish performance benchmarks and alerts
