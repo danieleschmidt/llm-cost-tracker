@@ -1,0 +1,156 @@
+{
+  "base_url": "http://localhost:8000",
+  "database_url": "postgresql://postgres:postgres@localhost:5432/llm_metrics",
+  "api_endpoints": [
+    {
+      "path": "/health",
+      "method": "GET",
+      "requests": 200,
+      "description": "Health check endpoint"
+    },
+    {
+      "path": "/health/ready",
+      "method": "GET", 
+      "requests": 100,
+      "description": "Readiness check endpoint"
+    },
+    {
+      "path": "/health/live",
+      "method": "GET",
+      "requests": 100,
+      "description": "Liveness check endpoint"
+    },
+    {
+      "path": "/metrics",
+      "method": "GET",
+      "requests": 100,
+      "description": "Prometheus metrics endpoint"
+    },
+    {
+      "path": "/api/v1/spans",
+      "method": "GET",
+      "requests": 150,
+      "description": "Get spans data"
+    },
+    {
+      "path": "/api/v1/metrics/cost",
+      "method": "GET",
+      "requests": 100,
+      "description": "Get cost metrics"
+    }
+  ],
+  "database_queries": [
+    {
+      "name": "health_check",
+      "query": "SELECT 1 as health",
+      "iterations": 200,
+      "description": "Basic database connectivity test"
+    },
+    {
+      "name": "count_spans",
+      "query": "SELECT COUNT(*) FROM spans",
+      "iterations": 100,
+      "description": "Count total spans in database"
+    },
+    {
+      "name": "recent_spans",
+      "query": "SELECT * FROM spans WHERE created_at > NOW() - INTERVAL '1 hour' LIMIT 10",
+      "iterations": 50,
+      "description": "Fetch recent spans"
+    },
+    {
+      "name": "cost_aggregation",
+      "query": "SELECT model, SUM(cost) as total_cost FROM spans WHERE created_at > NOW() - INTERVAL '24 hours' GROUP BY model",
+      "iterations": 30,
+      "description": "Aggregate daily costs by model"
+    },
+    {
+      "name": "token_metrics",
+      "query": "SELECT AVG(prompt_tokens) as avg_prompt, AVG(completion_tokens) as avg_completion FROM spans WHERE created_at > NOW() - INTERVAL '1 hour'",
+      "iterations": 50,
+      "description": "Calculate average token usage"
+    }
+  ],
+  "load_scenarios": [
+    {
+      "name": "health_check_load",
+      "endpoint": "/health",
+      "concurrent_users": 20,
+      "duration": 60,
+      "description": "Sustained load on health endpoint"
+    },
+    {
+      "name": "metrics_load",
+      "endpoint": "/metrics", 
+      "concurrent_users": 10,
+      "duration": 45,
+      "description": "Load test for metrics scraping"
+    },
+    {
+      "name": "api_mixed_load",
+      "endpoint": "/api/v1/spans",
+      "concurrent_users": 15,
+      "duration": 30,
+      "description": "Mixed API load testing"
+    },
+    {
+      "name": "high_concurrency_burst",
+      "endpoint": "/health",
+      "concurrent_users": 50,
+      "duration": 20,
+      "description": "High concurrency burst test"
+    },
+    {
+      "name": "cost_metrics_load",
+      "endpoint": "/api/v1/metrics/cost",
+      "concurrent_users": 8,
+      "duration": 40,
+      "description": "Load test for cost metrics endpoint"
+    }
+  ],
+  "performance_thresholds": {
+    "api_response_time_ms": {
+      "excellent": 50,
+      "good": 200,
+      "acceptable": 500,
+      "poor": 1000
+    },
+    "database_query_time_ms": {
+      "excellent": 10,
+      "good": 50,
+      "acceptable": 200,
+      "poor": 500
+    },
+    "requests_per_second": {
+      "minimum": 100,
+      "target": 500,
+      "excellent": 1000
+    },
+    "error_rate_percent": {
+      "excellent": 0.1,
+      "acceptable": 1.0,
+      "poor": 5.0
+    },
+    "memory_usage_percent": {
+      "good": 70,
+      "acceptable": 85,
+      "critical": 95
+    },
+    "cpu_usage_percent": {
+      "good": 60,
+      "acceptable": 80,
+      "critical": 95
+    }
+  },
+  "monitoring": {
+    "memory_sampling_interval_seconds": 0.5,
+    "cpu_sampling_interval_seconds": 0.5,
+    "profiling_duration_seconds": 30
+  },
+  "reporting": {
+    "include_raw_data": false,
+    "include_charts": true,
+    "export_formats": ["json", "markdown", "html"],
+    "performance_grades": true
+  }
+}

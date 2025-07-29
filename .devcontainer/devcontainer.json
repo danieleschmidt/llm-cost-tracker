@@ -1,99 +1,288 @@
 {
-  "name": "LLM Cost Tracker Development",
-  "image": "mcr.microsoft.com/devcontainers/python:3.11-bullseye",
+  "name": "LLM Cost Tracker Development Environment",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "development",
+  "workspaceFolder": "/workspace",
+  "shutdownAction": "stopCompose",
+  
   "features": {
-    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
-    "ghcr.io/devcontainers/features/git:1": {},
-    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": true,
+      "configureZshAsDefaultShell": true,
+      "installOhMyZsh": true,
+      "installOhMyZshConfig": true,
+      "upgradePackages": true
+    },
+    "ghcr.io/devcontainers/features/git:1": {
+      "ppa": true,
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/git-lfs:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {
+      "installDirectly": true,
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
+      "moby": true,
+      "dockerDashComposeVersion": "v2"
+    },
+    "ghcr.io/devcontainers/features/python:1": {
+      "version": "3.11",
+      "installTools": true,
+      "optimize": true,
+      "installJupyterlab": false,
+      "configureGitAliasesAndUser": true
+    },
     "ghcr.io/devcontainers/features/node:1": {
-      "version": "18"
+      "nodeGypDependencies": true,
+      "version": "18",
+      "nvmVersion": "latest"
     }
   },
+
   "customizations": {
     "vscode": {
       "extensions": [
+        // Python Development
         "ms-python.python",
+        "ms-python.flake8",
         "ms-python.black-formatter",
         "ms-python.isort",
-        "ms-python.flake8",
         "ms-python.mypy-type-checker",
-        "ms-vscode.vscode-typescript-next",
-        "redhat.vscode-yaml",
+        "ms-python.pylint",
+        "charliermarsh.ruff",
+        
+        // FastAPI and Web Development
+        "ms-python.autopep8",
         "ms-vscode.vscode-json",
+        "redhat.vscode-yaml",
+        "ms-vscode.vscode-typescript-next",
+        
+        // Database
+        "ms-mssql.mssql",
+        "cweijan.vscode-postgresql-client2",
+        
+        // Docker and Containers
+        "ms-vscode-remote.remote-containers",
         "ms-azuretools.vscode-docker",
+        
+        // Git and Version Control
+        "eamodio.gitlens",
         "github.vscode-pull-request-github",
-        "ms-vscode.test-adapter-converter",
-        "ms-python.pytest",
-        "tamasfe.even-better-toml",
-        "davidanson.vscode-markdownlint",
-        "streetsidesoftware.code-spell-checker",
         "github.copilot",
         "github.copilot-chat",
-        "ms-vscode-remote.remote-containers"
+        
+        // Testing
+        "ms-python.pytest",
+        "hbenl.vscode-test-explorer",
+        "littlefoxteam.vscode-python-test-adapter",
+        
+        // Documentation
+        "yzhang.markdown-all-in-one",
+        "davidanson.vscode-markdownlint",
+        "bierner.markdown-mermaid",
+        
+        // Code Quality and Security
+        "ms-vscode.vscode-security",
+        "snyk-security.snyk-vulnerability-scanner",
+        "github.vscode-github-actions",
+        
+        // DevOps and Infrastructure
+        "hashicorp.terraform",
+        "ms-kubernetes-tools.vscode-kubernetes-tools",
+        "redhat.vscode-openshift-connector",
+        
+        // Productivity
+        "gruntfuggly.todo-tree",
+        "aaron-bond.better-comments",
+        "bradlc.vscode-tailwindcss",
+        "formulahendry.auto-rename-tag",
+        "christian-kohler.path-intellisense",
+        "visualstudioexptteam.vscodeintellicode",
+        
+        // Themes and UI
+        "github.github-vscode-theme",  
+        "pkief.material-icon-theme",
+        "ms-vscode.vscode-icons"
       ],
+      
       "settings": {
-        "python.defaultInterpreterPath": "/usr/local/bin/python",
-        "python.formatting.provider": "black",
-        "python.formatting.blackArgs": ["--line-length=88"],
-        "python.sortImports.args": ["--profile", "black"],
+        // Python Configuration
+        "python.defaultInterpreterPath": "/workspace/.venv/bin/python",
+        "python.terminal.activateEnvironment": true,
         "python.linting.enabled": true,
         "python.linting.flake8Enabled": true,
         "python.linting.mypyEnabled": true,
+        "python.linting.banditEnabled": true,
+        "python.formatting.provider": "black",
+        "python.formatting.blackArgs": ["--line-length=88"],
+        "python.sortImports.args": ["--profile=black"],
         "python.testing.pytestEnabled": true,
         "python.testing.unittestEnabled": false,
         "python.testing.pytestArgs": ["tests"],
+        "python.analysis.autoImportCompletions": true,
+        "python.analysis.typeCheckingMode": "strict",
+        
+        // Editor Configuration
         "editor.formatOnSave": true,
+        "editor.formatOnPaste": true,
         "editor.codeActionsOnSave": {
-          "source.organizeImports": true
+          "source.organizeImports": true,
+          "source.fixAll": true
         },
+        "editor.rulers": [88, 120],
+        "editor.wordWrap": "wordWrapColumn",
+        "editor.wordWrapColumn": 88,
+        "editor.tabSize": 4,
+        "editor.insertSpaces": true,
+        "editor.detectIndentation": false,
+        
+        // File Configuration
+        "files.autoSave": "onFocusChange",
+        "files.trimTrailingWhitespace": true,
+        "files.insertFinalNewline": true,
+        "files.trimFinalNewlines": true,
         "files.exclude": {
+          "**/__pycache__": true,
+          "**/*.pyc": true,
+          "**/.pytest_cache": true,
+          "**/.mypy_cache": true,
+          "**/node_modules": true,
+          "**/.git": false
+        },
+        
+        // Terminal Configuration
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "terminal.integrated.fontFamily": "MesloLGS NF",
+        "terminal.integrated.fontSize": 14,
+        "terminal.integrated.cursorBlinking": true,
+        "terminal.integrated.cursorStyle": "block",
+        
+        // Git Configuration
+        "git.enableSmartCommit": true,
+        "git.confirmSync": false,
+        "git.autofetch": true,
+        "git.enableCommitSigning": true,
+        "gitlens.currentLine.enabled": true,
+        "gitlens.codeLens.enabled": true,
+        "gitlens.hovers.currentLine.over": "line",
+        
+        // Language-specific Settings
+        "[python]": {
+          "editor.defaultFormatter": "ms-python.black-formatter",
+          "editor.formatOnSave": true,
+          "editor.codeActionsOnSave": {
+            "source.organizeImports": true
+          }
+        },
+        "[json]": {
+          "editor.defaultFormatter": "vscode.json-language-features"
+        },
+        "[yaml]": {
+          "editor.defaultFormatter": "redhat.vscode-yaml",
+          "editor.tabSize": 2
+        },
+        "[markdown]": {
+          "editor.defaultFormatter": "yzhang.markdown-all-in-one",
+          "editor.wordWrap": "wordWrapColumn",
+          "editor.wordWrapColumn": 100
+        },
+        
+        // Theme and UI
+        "workbench.colorTheme": "GitHub Dark Default",
+        "workbench.iconTheme": "material-icon-theme",
+        "workbench.startupEditor": "readme",
+        "workbench.editor.enablePreview": false,
+        "workbench.editor.enablePreviewFromQuickOpen": false,
+        
+        // Search Configuration
+        "search.exclude": {
+          "**/node_modules": true,
+          "**/bower_components": true,
+          "**/*.code-search": true,
           "**/__pycache__": true,
           "**/.pytest_cache": true,
           "**/.mypy_cache": true,
-          "**/htmlcov": true,
-          "**/.coverage": true
+          "**/htmlcov": true
         },
-        "yaml.schemas": {
-          "https://json.schemastore.org/github-workflow.json": ".github/workflows/*.yml",
-          "https://json.schemastore.org/docker-compose.json": "docker-compose*.yml"
+        
+        // Security and Privacy
+        "telemetry.telemetryLevel": "error",
+        "update.showReleaseNotes": false,
+        "extensions.ignoreRecommendations": false,
+        
+        // Development Server
+        "liveServer.settings.donotShowInfoMsg": true,
+        "liveServer.settings.donotVerifyTags": true,
+        
+        // Docker
+        "docker.showStartPage": false,
+        
+        // Testing
+        "python.testing.autoTestDiscoverOnSaveEnabled": true,
+        "testing.openTesting": "neverOpen",
+        
+        // Copilot (if available)
+        "github.copilot.enable": {
+          "*": true,
+          "yaml": false,
+          "plaintext": false,
+          "markdown": true
         }
       }
     }
   },
-  "forwardPorts": [3000, 9090, 9093, 5432, 8080, 8000],
+
+  "forwardPorts": [
+    8000,  // FastAPI application
+    3000,  // Grafana
+    5432,  // PostgreSQL
+    9090,  // Prometheus
+    6379,  // Redis
+    8080,  // Alternative web port
+    8501   // Streamlit demo
+  ],
+
   "portsAttributes": {
-    "3000": {
-      "label": "Grafana Dashboard",
+    "8000": {
+      "label": "FastAPI App",
       "onAutoForward": "notify"
     },
-    "9090": {
-      "label": "Prometheus",
-      "onAutoForward": "silent"
-    },
-    "9093": {
-      "label": "Alertmanager",
+    "3000": {
+      "label": "Grafana Dashboard",
       "onAutoForward": "silent"
     },
     "5432": {
-      "label": "PostgreSQL",
+      "label": "PostgreSQL Database",
       "onAutoForward": "silent"
     },
-    "8080": {
-      "label": "OTEL Collector",
+    "9090": {
+      "label": "Prometheus Metrics",
       "onAutoForward": "silent"
     },
-    "8000": {
-      "label": "FastAPI Application",
+    "8501": {
+      "label": "Streamlit Demo",
       "onAutoForward": "notify"
     }
   },
-  "postCreateCommand": "bash .devcontainer/setup.sh",
+
+  "postCreateCommand": "/workspace/.devcontainer/post-create.sh",
+  "postStartCommand": "/workspace/.devcontainer/post-start.sh",
+  
   "remoteUser": "vscode",
-  "containerEnv": {
-    "POETRY_VENV_IN_PROJECT": "true",
-    "POETRY_CACHE_DIR": "/tmp/poetry_cache"
-  },
+  "containerUser": "vscode",
+  
   "mounts": [
-    "source=${localWorkspaceFolder}/.devcontainer/bashrc,target=/home/vscode/.bashrc,type=bind,consistency=cached"
-  ]
+    "source=${localWorkspaceFolder}/.devcontainer/bashrc,target=/home/vscode/.bashrc,type=bind,consistency=cached",
+    "source=${localWorkspaceFolder}/.devcontainer/zshrc,target=/home/vscode/.zshrc,type=bind,consistency=cached"
+  ],
+
+  "initializeCommand": ".devcontainer/initialize.sh",
+  "onCreateCommand": ".devcontainer/on-create.sh",
+  
+  "hostRequirements": {
+    "cpus": 4,
+    "memory": "8gb",
+    "storage": "32gb"
+  }
 }

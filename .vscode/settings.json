@@ -1,23 +1,16 @@
 {
-    "python.defaultInterpreterPath": "./venv/bin/python",
+    "python.defaultInterpreterPath": "./.venv/bin/python",
+    "python.terminal.activateEnvironment": true,
+    "python.linting.enabled": true,
+    "python.linting.flake8Enabled": true,
+    "python.linting.mypyEnabled": true,
+    "python.linting.banditEnabled": true,
     "python.formatting.provider": "black",
     "python.formatting.blackArgs": [
         "--line-length=88"
     ],
     "python.sortImports.args": [
-        "--profile",
-        "black"
-    ],
-    "python.linting.enabled": true,
-    "python.linting.flake8Enabled": true,
-    "python.linting.flake8Args": [
-        "--max-line-length=88",
-        "--extend-ignore=E203,W503"
-    ],
-    "python.linting.mypyEnabled": true,
-    "python.linting.mypyArgs": [
-        "--ignore-missing-imports",
-        "--follow-imports=silent"
+        "--profile=black"
     ],
     "python.testing.pytestEnabled": true,
     "python.testing.unittestEnabled": false,
@@ -26,33 +19,134 @@
         "--cov=src/llm_cost_tracker",
         "--cov-report=html"
     ],
+    "python.analysis.autoImportCompletions": true,
+    "python.analysis.typeCheckingMode": "strict",
+    "python.analysis.autoSearchPaths": true,
+    "python.analysis.diagnosticMode": "workspace",
     "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
     "editor.codeActionsOnSave": {
         "source.organizeImports": true,
-        "source.fixAll.flake8": true
+        "source.fixAll": true,
+        "source.sortImports": true
     },
-    "editor.rulers": [88],
+    "editor.rulers": [88, 120],
+    "editor.wordWrap": "wordWrapColumn",
+    "editor.wordWrapColumn": 88,
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
+    "editor.detectIndentation": false,
+    "editor.trimAutoWhitespace": true,
+    "editor.renderWhitespace": "boundary",
+    "editor.showUnused": true,
+    "editor.suggestSelection": "first",
+    "files.autoSave": "onFocusChange",
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true,
+    "files.trimFinalNewlines": true,
+    "files.eol": "\n",
     "files.exclude": {
+        "**/__pycache__": true,
+        "**/*.pyc": true,
+        "**/.pytest_cache": true,
+        "**/.mypy_cache": true,
+        "**/node_modules": true,
+        "**/.git": false,
+        "**/htmlcov": true,
+        "**/.coverage": true,
+        "**/dist": true,
+        "**/build": true,
+        "**/*.egg-info": true,
+        "**/.venv": true,
+        "**/venv": true,
+        "**/.env": true,
+        "**/logs": true,
+        "**/sbom": true
+    },
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": true
+        },
+        "editor.tabSize": 4
+    },
+    "[json]": {
+        "editor.defaultFormatter": "vscode.json-language-features",
+        "editor.tabSize": 2
+    },
+    "[jsonc]": {
+        "editor.defaultFormatter": "vscode.json-language-features",
+        "editor.tabSize": 2
+    },
+    "[yaml]": {
+        "editor.defaultFormatter": "redhat.vscode-yaml",
+        "editor.tabSize": 2,
+        "editor.insertSpaces": true
+    },
+    "[markdown]": {
+        "editor.defaultFormatter": "yzhang.markdown-all-in-one",
+        "editor.wordWrap": "wordWrapColumn",
+        "editor.wordWrapColumn": 100
+    },
+    "[dockerfile]": {
+        "editor.defaultFormatter": "ms-azuretools.vscode-docker",
+        "editor.tabSize": 4
+    },
+    "git.enableSmartCommit": true,
+    "git.confirmSync": false,
+    "git.autofetch": true,
+    "git.enableCommitSigning": true,
+    "git.rebaseWhenSync": true,
+    "git.pruneOnFetch": true,
+    "gitlens.currentLine.enabled": true,
+    "gitlens.codeLens.enabled": true,
+    "gitlens.hovers.currentLine.over": "line",
+    "gitlens.statusBar.enabled": true,
+    "terminal.integrated.defaultProfile.linux": "bash",
+    "terminal.integrated.fontFamily": "MesloLGS NF, 'Courier New', monospace",
+    "terminal.integrated.fontSize": 14,
+    "terminal.integrated.cursorBlinking": true,
+    "terminal.integrated.cursorStyle": "block",
+    "terminal.integrated.env.linux": {
+        "POETRY_VENV_IN_PROJECT": "true"
+    },
+    "python.testing.autoTestDiscoverOnSaveEnabled": true,
+    "python.testing.promptToConfigure": false,
+    "testing.automaticallyOpenPeekView": "never",
+    "testing.openTesting": "neverOpen",
+    "search.exclude": {
+        "**/node_modules": true,
+        "**/bower_components": true,
+        "**/*.code-search": true,
         "**/__pycache__": true,
         "**/.pytest_cache": true,
         "**/.mypy_cache": true,
         "**/htmlcov": true,
-        "**/.coverage": true,
-        "**/*.pyc": true,
+        "**/dist": true,
+        "**/build": true,
+        "**/*.egg-info": true,
         "**/.venv": true,
         "**/venv": true,
-        "**/.env": true
+        "**/logs": true,
+        "**/sbom": true
     },
-    "files.associations": {
-        "*.yml": "yaml",
-        "*.yaml": "yaml",
-        "Dockerfile*": "dockerfile",
-        "docker-compose*.yml": "yaml"
-    },
+    "workbench.colorTheme": "GitHub Dark Default",
+    "workbench.iconTheme": "material-icon-theme", 
+    "workbench.startupEditor": "readme",
+    "workbench.editor.enablePreview": false,
+    "workbench.editor.enablePreviewFromQuickOpen": false,
+    "telemetry.telemetryLevel": "error",
+    "update.showReleaseNotes": false,
+    "extensions.ignoreRecommendations": false,
     "yaml.schemas": {
         "https://json.schemastore.org/github-workflow.json": ".github/workflows/*.yml",
-        "https://json.schemastore.org/docker-compose.json": "docker-compose*.yml",
-        "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/schemas/v3.0/schema.json": "**/openapi.yml"
+        "https://json.schemastore.org/docker-compose.json": [
+            "docker-compose*.yml",
+            "docker-compose*.yaml"
+        ],
+        "https://json.schemastore.org/prometheus.json": "config/prometheus.yml",
+        "https://json.schemastore.org/renovate.json": "renovate.json"
     },
     "yaml.format.enable": true,
     "yaml.validate": true,
@@ -60,38 +154,50 @@
         "MD013": false,
         "MD033": false
     },
-    "git.enableSmartCommit": true,
-    "git.confirmSync": false,
-    "git.autofetch": true,
-    "search.exclude": {
-        "**/node_modules": true,
-        "**/bower_components": true,
-        "**/*.code-search": true,
-        "**/.venv": true,
-        "**/venv": true,
-        "**/__pycache__": true,
-        "**/.pytest_cache": true,
-        "**/htmlcov": true,
-        "**/dist": true,
-        "**/.mypy_cache": true
-    },
-    "terminal.integrated.env.linux": {
-        "POETRY_VENV_IN_PROJECT": "true"
-    },
     "cSpell.words": [
+        "asyncio",
         "asyncpg",
+        "autoreload",
+        "backlog",
+        "bandit",
+        "cyclonedx",
         "fastapi",
         "grafana",
+        "jaeger",
         "langchain",
         "litellm",
+        "mypy",
         "opentelemetry",
         "otlp",
+        "postgres",
         "prometheus",
         "pydantic",
         "pytest",
+        "renovate",
+        "sbom",
+        "slsa",
+        "spdx",
         "streamlit",
         "terragon",
+        "typer",
         "uvicorn",
         "vellum"
-    ]
+    ],
+    "github.copilot.enable": {
+        "*": true,
+        "yaml": false,
+        "plaintext": false,
+        "markdown": true
+    },
+    "github.copilot.editor.enableAutoCompletions": true,
+    "files.associations": {
+        "*.yml": "yaml",
+        "*.yaml": "yaml",
+        "Dockerfile*": "dockerfile",
+        ".env*": "dotenv",
+        "*.toml": "toml",
+        "requirements*.txt": "pip-requirements",
+        "pyproject.toml": "toml",
+        "docker-compose*.yml": "yaml"
+    }
 }
