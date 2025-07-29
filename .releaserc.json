@@ -1,9 +1,16 @@
 {
   "branches": [
+    "+([0-9])?(.{+([0-9]),x}).x",
     "main",
+    "next",
+    "next-major",
     {
-      "name": "develop",
-      "prerelease": "beta"
+      "name": "beta",
+      "prerelease": true
+    },
+    {
+      "name": "alpha",
+      "prerelease": true
     }
   ],
   "plugins": [
@@ -12,12 +19,43 @@
       {
         "preset": "conventionalcommits",
         "releaseRules": [
-          {"type": "docs", "scope": "README", "release": "patch"},
-          {"type": "refactor", "release": "patch"},
-          {"type": "style", "release": "patch"},
-          {"type": "chore", "scope": "deps", "release": "patch"},
-          {"scope": "no-release", "release": false}
-        ]
+          {
+            "type": "docs",
+            "scope": "README",
+            "release": "patch"
+          },
+          {
+            "type": "refactor",
+            "release": "patch"
+          },
+          {
+            "type": "style",
+            "release": false
+          },
+          {
+            "type": "chore",
+            "release": false
+          },
+          {
+            "type": "perf",
+            "release": "patch"
+          },
+          {
+            "type": "build",
+            "release": "patch"
+          },
+          {
+            "scope": "no-release",
+            "release": false
+          }
+        ],
+        "parserOpts": {
+          "noteKeywords": [
+            "BREAKING CHANGE",
+            "BREAKING CHANGES",
+            "BREAKING"
+          ]
+        }
       }
     ],
     [
@@ -26,17 +64,62 @@
         "preset": "conventionalcommits",
         "presetConfig": {
           "types": [
-            {"type": "feat", "section": "🚀 Features"},
-            {"type": "fix", "section": "🐛 Bug Fixes"},
-            {"type": "perf", "section": "⚡ Performance Improvements"},
-            {"type": "revert", "section": "⏪ Reverts"},
-            {"type": "docs", "section": "📚 Documentation"},
-            {"type": "style", "section": "💎 Styles"},
-            {"type": "refactor", "section": "♻️ Code Refactoring"},
-            {"type": "test", "section": "🧪 Tests"},
-            {"type": "build", "section": "🏗️ Build System"},
-            {"type": "ci", "section": "⚙️ Continuous Integration"},
-            {"type": "chore", "section": "🔧 Chores", "hidden": true}
+            {
+              "type": "feat",
+              "section": "🚀 Features"
+            },
+            {
+              "type": "fix",
+              "section": "🐛 Bug Fixes"
+            },
+            {
+              "type": "perf",
+              "section": "⚡ Performance Improvements"
+            },
+            {
+              "type": "revert",
+              "section": "⏪ Reverts"
+            },
+            {
+              "type": "docs",
+              "section": "📚 Documentation"
+            },
+            {
+              "type": "style",
+              "section": "💄 Styles",
+              "hidden": true
+            },
+            {
+              "type": "chore",
+              "section": "🔧 Maintenance",
+              "hidden": true
+            },
+            {
+              "type": "refactor",
+              "section": "♻️ Code Refactoring"
+            },
+            {
+              "type": "test",
+              "section": "🧪 Tests"
+            },
+            {
+              "type": "build",
+              "section": "🏗️ Build System"
+            },
+            {
+              "type": "ci",
+              "section": "🔄 Continuous Integration"
+            },
+            {
+              "type": "security",
+              "section": "🔒 Security"
+            }
+          ]
+        },
+        "writerOpts": {
+          "commitsSort": [
+            "subject",
+            "scope"
           ]
         }
       }
@@ -45,7 +128,7 @@
       "@semantic-release/changelog",
       {
         "changelogFile": "CHANGELOG.md",
-        "changelogTitle": "# Changelog\n\nAll notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines."
+        "changelogTitle": "# Changelog\n\nAll notable changes to this project will be documented in this file.\n\nThe format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),\nand this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)."
       }
     ],
     [
@@ -53,6 +136,35 @@
       {
         "prepareCmd": "poetry version ${nextRelease.version}",
         "publishCmd": "echo 'Version updated to ${nextRelease.version}'"
+      }
+    ],
+    [
+      "@semantic-release/github",
+      {
+        "assets": [
+          {
+            "path": "dist/*.tar.gz",
+            "label": "Python Package (${nextRelease.gitTag})"
+          },
+          {
+            "path": "dist/*.whl",
+            "label": "Python Wheel (${nextRelease.gitTag})"
+          },
+          {
+            "path": "CHANGELOG.md",
+            "label": "Changelog"
+          }
+        ],
+        "discussionCategoryName": "Announcements",
+        "failComment": false,
+        "failTitle": false,
+        "labels": [
+          "release"
+        ],
+        "releasedLabels": [
+          "released"
+        ],
+        "addReleases": "bottom"
       }
     ],
     [
@@ -64,16 +176,12 @@
         ],
         "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
       }
-    ],
-    [
-      "@semantic-release/github",
-      {
-        "successComment": "🎉 This ${issue.pull_request ? 'PR is included' : 'issue has been resolved'} in version ${nextRelease.version} :tada:",
-        "failTitle": "❌ The automated release is failing 🚨",
-        "failComment": "The release from branch `${branch.name}` had an error. Please check the logs.",
-        "labels": ["released"],
-        "releasedLabels": ["released<%= nextRelease.channel ? ` on @\${nextRelease.channel}` : \"\" %> from <%= branch.name %>"]
-      }
     ]
-  ]
+  ],
+  "preset": "conventionalcommits",
+  "tagFormat": "v${version}",
+  "repositoryUrl": "https://github.com/terragon-labs/llm-cost-tracker.git",
+  "debug": false,
+  "ci": true,
+  "dryRun": false
 }
