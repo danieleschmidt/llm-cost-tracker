@@ -185,19 +185,21 @@
     ],
     "github.copilot.enable": {
         "*": true,
-        "yaml": false,
+        "yaml": true,
         "plaintext": false,
-        "markdown": true
+        "markdown": true,
+        "python": true,
+        "dockerfile": true
     },
-    "github.copilot.editor.enableAutoCompletions": true,
-    "files.associations": {
-        "*.yml": "yaml",
-        "*.yaml": "yaml",
-        "Dockerfile*": "dockerfile",
-        ".env*": "dotenv",
-        "*.toml": "toml",
-        "requirements*.txt": "pip-requirements",
-        "pyproject.toml": "toml",
-        "docker-compose*.yml": "yaml"
-    }
+    "github.copilot.inlineSuggest.enable": true,
+    "github.copilot.chat.enabled": true,
+    "github.copilot.advanced": {
+        "length": 500,
+        "temperature": 0.1,
+        "top_p": 1,
+        "indentation": true
+    },
+    "ai.codeCompletion.enabled": true,
+    "workbench.colorTheme": "GitHub Dark",
+    "security.workspace.trust.enabled": false
 }
