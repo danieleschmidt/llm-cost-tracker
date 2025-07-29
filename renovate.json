@@ -1,0 +1,167 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:base",
+    "security:openssf-scorecard",
+    ":dependencyDashboard",
+    ":semanticCommits",
+    ":separatePatchReleases"
+  ],
+  "timezone": "UTC",
+  "schedule": ["before 6am on Monday"],
+  "prConcurrentLimit": 3,
+  "prHourlyLimit": 2,
+  "stabilityDays": 3,
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "schedule": "at any time"
+  },
+  "osvVulnerabilityAlerts": true,
+  "configWarningReuseIssue": false,
+  "dependencyDashboard": true,
+  "dependencyDashboardTitle": "🔄 Dependency Dashboard",
+  "dependencyDashboardAutoclose": true,
+  "packageRules": [
+    {
+      "matchManagers": ["poetry"],
+      "rangeStrategy": "bump",
+      "separateMajorReleases": true,
+      "separateMinorReleases": true,
+      "separateMultipleMajorReleases": true
+    },
+    {
+      "matchDepTypes": ["devDependencies"],
+      "automerge": true,
+      "platformAutomerge": true,
+      "automergeType": "pr"
+    },
+    {
+      "matchPackageNames": ["python"],
+      "enabled": false
+    },
+    {
+      "matchManagers": ["docker-compose", "dockerfile"],
+      "pinDigests": true,
+      "separateMajorReleases": true
+    },
+    {
+      "matchManagers": ["pre-commit"],
+      "automerge": true,
+      "platformAutomerge": true,
+      "schedule": ["before 6am on Monday"],
+      "commitMessagePrefix": "chore(pre-commit): "
+    },
+    {
+      "matchPackagePatterns": ["^pytest"],
+      "groupName": "pytest packages",
+      "automerge": true,
+      "platformAutomerge": true
+    },
+    {
+      "matchPackagePatterns": ["^flake8"],
+      "groupName": "flake8 packages",
+      "automerge": true,
+      "platformAutomerge": true
+    },
+    {
+      "matchPackageNames": [
+        "black",
+        "isort",
+        "mypy",
+        "bandit",
+        "safety"
+      ],
+      "groupName": "code quality tools",
+      "automerge": true,
+      "platformAutomerge": true,
+      "schedule": ["before 6am on Monday"]
+    },
+    {
+      "matchPackageNames": [
+        "fastapi",
+        "uvicorn",
+        "pydantic",
+        "asyncpg"
+      ],
+      "groupName": "core web framework",
+      "separateMajorReleases": true,
+      "stabilityDays": 7
+    },
+    {
+      "matchPackagePatterns": ["^opentelemetry"],
+      "groupName": "OpenTelemetry packages",
+      "separateMajorReleases": true,
+      "stabilityDays": 5
+    },
+    {
+      "matchPackageNames": [
+        "langchain",
+        "langchain-core"
+      ],
+      "groupName": "LangChain packages",
+      "separateMajorReleases": true,
+      "stabilityDays": 7
+    },
+    {
+      "matchUpdateTypes": ["major"],
+      "dependencyDashboardApproval": true,
+      "stabilityDays": 7,
+      "commitMessagePrefix": "feat!: "
+    },
+    {
+      "matchUpdateTypes": ["minor"],
+      "automerge": false,
+      "stabilityDays": 3,
+      "commitMessagePrefix": "feat: "
+    },
+    {
+      "matchUpdateTypes": ["patch"],
+      "automerge": true,
+      "platformAutomerge": true,
+      "commitMessagePrefix": "fix: "
+    },
+    {
+      "matchDepTypes": ["action"],
+      "pinDigests": true,
+      "automerge": true,
+      "platformAutomerge": true,
+      "commitMessagePrefix": "ci: "
+    }
+  ],
+  "regexManagers": [
+    {
+      "fileMatch": ["^Dockerfile$", "^docker-compose\\.ya?ml$"],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s.*?[= ](?<currentValue>.*)\\s"
+      ]
+    },
+    {
+      "fileMatch": ["^\\.pre-commit-config\\.ya?ml$"],
+      "matchStrings": [
+        "rev: [\"']?(?<currentValue>[^\"'\\s]+)[\"']?"
+      ],
+      "datasourceTemplate": "github-tags",
+      "depNameTemplate": "{{{replace 'https://github.com/' '' packageFileDir}}}"
+    }
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": ["^pyproject\\.toml$"],
+      "matchStrings": [
+        "python = \"\\^(?<currentValue>.*?)\""
+      ],
+      "depNameTemplate": "python",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.*)$"
+    }
+  ],
+  "labels": ["dependencies", "renovate"],
+  "assignees": ["@terragon-labs/maintainers"],
+  "reviewers": ["@terragon-labs/maintainers"],
+  "prBodyTemplate": "This PR contains the following updates:\n\n| Package | Change | Age | Adoption | Passing | Confidence |\n|---|---|---|---|---|---|\n{{#each upgrades as |upgrade|}}\n| {{upgrade.depName}} | {{upgrade.currentVersion}} → {{upgrade.newVersion}} | [![age](https://badges.renovateapi.com/packages/{{upgrade.datasource}}/{{upgrade.depName}}/{{upgrade.newVersion}}/age-slim)](https://docs.renovatebot.com/merge-confidence/) | [![adoption](https://badges.renovateapi.com/packages/{{upgrade.datasource}}/{{upgrade.depName}}/{{upgrade.newVersion}}/adoption-slim)](https://docs.renovatebot.com/merge-confidence/) | [![passing](https://badges.renovateapi.com/packages/{{upgrade.datasource}}/{{upgrade.depName}}/{{upgrade.newVersion}}/compatibility-slim/{{upgrade.currentVersion}})](https://docs.renovatebot.com/merge-confidence/) | [![confidence](https://badges.renovateapi.com/packages/{{upgrade.datasource}}/{{upgrade.depName}}/{{upgrade.newVersion}}/confidence-slim/{{upgrade.currentVersion}})](https://docs.renovatebot.com/merge-confidence/) |\n{{/each}}\n\n---\n\n### Configuration\n\n📅 **Schedule**: {{schedule}}\n\n🚦 **Automerge**: {{#if automerge}}Enabled{{else}}Disabled{{/if}}\n\n♻ **Rebasing**: {{#if rebaseWhen}}{{rebaseWhen}}{{else}}Whenever PR becomes conflicted{{/if}}\n\n🔕 **Ignore**: Close this PR and you won't be reminded about {{#if isSingleUpdate}}this update{{else}}these updates{{/if}} again.\n\n---\n\n{{#if hasReleaseNotes}}\n{{#each upgrades as |upgrade|}}\n{{#if upgrade.hasReleaseNotes}}\n<details>\n<summary>Release notes for {{upgrade.depName}}</summary>\n{{upgrade.releaseNotes}}\n</details>\n{{/if}}\n{{/each}}\n{{/if}}\n\n---\n\nThis PR has been generated by [Renovate Bot](https://github.com/renovatebot/renovate).",
+  "prFooter": "🤖 This dependency update was automatically created by Renovate Bot.",
+  "gitAuthor": "Renovate Bot <bot@renovateapp.com>",
+  "commitBodyTable": true,
+  "suppressNotifications": ["prIgnoreNotification"]
+}
