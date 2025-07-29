@@ -93,5 +93,24 @@
         "terragon",
         "uvicorn",
         "vellum"
-    ]
+    ],
+    "github.copilot.enable": {
+        "*": true,
+        "yaml": true,
+        "plaintext": false,
+        "markdown": true,
+        "python": true,
+        "dockerfile": true
+    },
+    "github.copilot.inlineSuggest.enable": true,
+    "github.copilot.chat.enabled": true,
+    "github.copilot.advanced": {
+        "length": 500,
+        "temperature": 0.1,
+        "top_p": 1,
+        "indentation": true
+    },
+    "ai.codeCompletion.enabled": true,
+    "workbench.colorTheme": "GitHub Dark",
+    "security.workspace.trust.enabled": false
 }
