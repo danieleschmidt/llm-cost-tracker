@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: "LLM Cost Tracker"
+version: "0.1.0"
+date-released: "2024-01-01"
+url: "https://github.com/terragon-labs/llm-cost-tracker"
+repository-code: "https://github.com/terragon-labs/llm-cost-tracker"
+authors:
+  - family-names: "Terragon Labs"
+    email: "contact@terragonlabs.com"
+    affiliation: "Terragon Labs"
+abstract: "A self-hostable OpenTelemetry collector and rules engine designed to capture token, latency, and cost data from LangChain and LiteLLM callbacks. This tool streams the collected data to Postgres and visualizes it using Grafana. It combines proxying functionalities similar to Helicone with a budget-guard feature that can automatically switch to more cost-effective models by leveraging Vellum's price catalog."
+keywords:
+  - "LLM"
+  - "cost tracking"
+  - "OpenTelemetry"
+  - "observability"
+  - "monitoring"
+  - "budget management"
+  - "LangChain"
+  - "machine learning"
+  - "artificial intelligence"
+license: "Apache-2.0"
+license-url: "https://github.com/terragon-labs/llm-cost-tracker/blob/main/LICENSE"

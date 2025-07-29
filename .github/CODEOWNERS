@@ -1,0 +1,42 @@
+# Global code ownership for LLM Cost Tracker
+# These owners will be requested for review when anyone opens a pull request.
+
+# Default owners for everything in the repo
+* @terragon-labs/core-team
+
+# Core application code
+/src/llm_cost_tracker/ @terragon-labs/backend-team
+
+# Security-related files
+/SECURITY.md @terragon-labs/security-team
+/.pre-commit-config.yaml @terragon-labs/security-team
+/scripts/generate-sbom.sh @terragon-labs/security-team
+
+# Infrastructure and deployment
+/docker-compose*.yml @terragon-labs/devops-team
+/Dockerfile @terragon-labs/devops-team
+/config/ @terragon-labs/devops-team
+/.env.example @terragon-labs/devops-team
+
+# Documentation
+/docs/ @terragon-labs/documentation-team
+/README.md @terragon-labs/documentation-team
+/CONTRIBUTING.md @terragon-labs/documentation-team
+
+# Testing
+/tests/ @terragon-labs/qa-team
+/pytest.ini @terragon-labs/qa-team
+
+# Dependencies and build configuration
+/pyproject.toml @terragon-labs/core-team
+/requirements*.txt @terragon-labs/core-team
+/renovate.json @terragon-labs/devops-team
+
+# Monitoring and observability
+/dashboards/ @terragon-labs/sre-team
+/config/prometheus.yml @terragon-labs/sre-team
+/config/grafana-datasources.yml @terragon-labs/sre-team
+
+# Scripts and automation
+/scripts/ @terragon-labs/devops-team
+/Makefile @terragon-labs/devops-team
