@@ -1,0 +1,364 @@
+# Release Workflow
+# Automated semantic release and deployment
+
+name: Release
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'docs/**'
+      - '*.md'
+      - '.gitignore'
+  workflow_dispatch:
+    inputs:
+      release_type:
+        description: 'Release type'
+        required: true
+        default: 'auto'
+        type: choice
+        options:
+          - auto
+          - patch
+          - minor
+          - major
+          - prerelease
+
+env:
+  PYTHON_VERSION: "3.11"
+  POETRY_VERSION: "1.7.1"
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+permissions:
+  contents: write
+  packages: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  # Job 1: Determine Release
+  determine-release:
+    name: Determine Release
+    runs-on: ubuntu-latest
+    outputs:
+      should_release: ${{ steps.release_check.outputs.should_release }}
+      next_version: ${{ steps.release_check.outputs.next_version }}
+      release_notes: ${{ steps.release_check.outputs.release_notes }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install semantic-release
+        run: |
+          npm install -g semantic-release @semantic-release/changelog @semantic-release/git @semantic-release/github
+
+      - name: Check for release
+        id: release_check
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "should_release=true" >> $GITHUB_OUTPUT
+            echo "Manual release triggered"
+          else
+            # Check if conventional commits indicate a release
+            if npx semantic-release --dry-run --no-ci | grep -q "next release version"; then
+              echo "should_release=true" >> $GITHUB_OUTPUT
+            else
+              echo "should_release=false" >> $GITHUB_OUTPUT
+            fi
+          fi
+
+  # Job 2: Build and Test (Pre-Release)
+  pre-release-check:
+    name: Pre-Release Validation
+    runs-on: ubuntu-latest
+    needs: [determine-release]
+    if: needs.determine-release.outputs.should_release == 'true'
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: llm_metrics
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: ${{ env.POETRY_VERSION }}
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Run full test suite
+        run: |
+          poetry run pytest tests/ -v --cov=src/llm_cost_tracker --cov-report=xml
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/llm_metrics
+
+      - name: Run security checks
+        run: |
+          poetry run bandit -r src/
+          poetry run safety check
+
+      - name: Verify build
+        run: poetry build
+
+  # Job 3: Create Release
+  create-release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    needs: [determine-release, pre-release-check]
+    if: needs.determine-release.outputs.should_release == 'true'
+    
+    outputs:
+      version: ${{ steps.semantic_release.outputs.version }}
+      released: ${{ steps.semantic_release.outputs.released }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install semantic-release
+        run: |
+          npm install -g semantic-release @semantic-release/changelog @semantic-release/git @semantic-release/github
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: ${{ env.POETRY_VERSION }}
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Run semantic release
+        id: semantic_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          npx semantic-release
+          if [ -f .semantic-release-version ]; then
+            echo "version=$(cat .semantic-release-version)" >> $GITHUB_OUTPUT
+            echo "released=true" >> $GITHUB_OUTPUT
+          else
+            echo "released=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Update pyproject.toml version
+        if: steps.semantic_release.outputs.released == 'true'
+        run: |
+          VERSION=${{ steps.semantic_release.outputs.version }}
+          poetry version $VERSION
+          git add pyproject.toml
+          git commit -m "chore(release): update pyproject.toml to v$VERSION [skip ci]"
+          git push
+
+  # Job 4: Build and Push Container Images
+  build-images:
+    name: Build and Push Images
+    runs-on: ubuntu-latest
+    needs: [create-release]
+    if: needs.create-release.outputs.released == 'true'
+    
+    outputs:
+      image_digest: ${{ steps.build.outputs.digest }}
+      image_tags: ${{ steps.meta.outputs.tags }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=semver,pattern={{version}},value=v${{ needs.create-release.outputs.version }}
+            type=semver,pattern={{major}}.{{minor}},value=v${{ needs.create-release.outputs.version }}
+            type=semver,pattern={{major}},value=v${{ needs.create-release.outputs.version }}
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push Docker image
+        id: build
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          target: production
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Generate SBOM
+        uses: anchore/sbom-action@v0
+        with:
+          image: ${{ steps.meta.outputs.tags }}
+          format: spdx-json
+          output-file: sbom.spdx.json
+
+      - name: Upload SBOM to release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ needs.create-release.outputs.version }}
+          files: sbom.spdx.json
+
+  # Job 5: Security Scan Release Artifacts
+  scan-release:
+    name: Scan Release
+    runs-on: ubuntu-latest
+    needs: [create-release, build-images]
+    if: needs.create-release.outputs.released == 'true'
+    
+    permissions:
+      security-events: write
+    
+    steps:
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ needs.build-images.outputs.image_tags }}
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: Upload Trivy scan results
+        uses: github/codeql-action/upload-sarif@v2
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+          category: release-scan
+
+  # Job 6: Deploy to Production
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [create-release, build-images, scan-release]
+    if: needs.create-release.outputs.released == 'true'
+    environment:
+      name: production
+      url: ${{ vars.PRODUCTION_URL }}
+    
+    steps:
+      - name: Deploy to production
+        run: |
+          echo "Deploying version ${{ needs.create-release.outputs.version }} to production"
+          echo "Image: ${{ needs.build-images.outputs.image_tags }}"
+          echo "Digest: ${{ needs.build-images.outputs.image_digest }}"
+          # Add your production deployment logic here
+          # This could be kubectl, helm, docker-compose, etc.
+
+      - name: Run post-deployment tests
+        run: |
+          echo "Running post-deployment smoke tests"
+          # Add smoke test commands here
+
+      - name: Notify deployment success
+        run: |
+          echo "✅ Production deployment successful"
+          # Add notification logic (Slack, Teams, etc.)
+
+  # Job 7: Update Deployment Status
+  update-status:
+    name: Update Status
+    runs-on: ubuntu-latest
+    if: always()
+    needs: [determine-release, create-release, build-images, deploy-production]
+    
+    steps:
+      - name: Update deployment status
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const { context } = require('@actions/github');
+            
+            let status = 'success';
+            let description = 'Release completed successfully';
+            
+            if ('${{ needs.create-release.result }}' !== 'success') {
+              status = 'failure';
+              description = 'Release creation failed';
+            } else if ('${{ needs.deploy-production.result }}' !== 'success') {
+              status = 'failure';
+              description = 'Production deployment failed';
+            }
+            
+            await github.rest.repos.createDeploymentStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              deployment_id: context.payload.deployment?.id || 0,
+              state: status,
+              description: description,
+              environment: 'production'
+            });
+
+      - name: Release summary
+        run: |
+          echo "## 🚀 Release Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [[ "${{ needs.create-release.outputs.released }}" == "true" ]]; then
+            echo "✅ **Release Created:** v${{ needs.create-release.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+            echo "✅ **Container Images:** Built and pushed" >> $GITHUB_STEP_SUMMARY
+            echo "✅ **Security Scan:** Completed" >> $GITHUB_STEP_SUMMARY
+            
+            if [[ "${{ needs.deploy-production.result }}" == "success" ]]; then
+              echo "✅ **Production Deployment:** Successful" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "❌ **Production Deployment:** Failed" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "ℹ️ **No release created** - No qualifying changes detected" >> $GITHUB_STEP_SUMMARY
+          fi

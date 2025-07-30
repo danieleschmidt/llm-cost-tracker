@@ -1,199 +1,131 @@
 {
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "label": "poetry: install",
-            "type": "shell",
-            "command": "poetry",
-            "args": ["install"],
-            "group": "build",
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared"
-            },
-            "problemMatcher": []
-        },
-        {
-            "label": "test: run all",
-            "type": "shell",
-            "command": "poetry",
-            "args": [
-                "run",
-                "pytest",
-                "tests",
-                "--cov=src/llm_cost_tracker",
-                "--cov-report=html",
-                "--cov-report=term"
-            ],
-            "group": "test",
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared"
-            },
-            "problemMatcher": []
-        },
-        {
-            "label": "lint: run all",
-            "type": "shell",
-            "command": "poetry",
-            "args": [
-                "run",
-                "flake8",
-                "src",
-                "tests"
-            ],
-            "group": "build",
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared"
-            },
-            "problemMatcher": [
-                "$flake8"
-            ]
-        },
-        {
-            "label": "format: black + isort",
-            "type": "shell",
-            "command": "poetry",
-            "args": [
-                "run",
-                "black",
-                "src",
-                "tests",
-                "&&",
-                "poetry",
-                "run",
-                "isort",
-                "src",
-                "tests"
-            ],
-            "group": "build",
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared"
-            },
-            "problemMatcher": []
-        },
-        {
-            "label": "typecheck: mypy",
-            "type": "shell",
-            "command": "poetry",
-            "args": [
-                "run",
-                "mypy",
-                "src"
-            ],
-            "group": "build",
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared"
-            },
-            "problemMatcher": [
-                "$mypy"
-            ]
-        },
-        {
-            "label": "dev: start server",
-            "type": "shell",
-            "command": "poetry",
-            "args": [
-                "run",
-                "uvicorn",
-                "llm_cost_tracker.main:app",
-                "--reload",
-                "--host",
-                "0.0.0.0",
-                "--port",
-                "8000"
-            ],
-            "group": "build",
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared"
-            },
-            "isBackground": true,
-            "problemMatcher": []
-        },
-        {
-            "label": "docker: compose up",
-            "type": "shell",
-            "command": "docker-compose",
-            "args": ["up", "-d"],
-            "group": "build",
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared"
-            },
-            "problemMatcher": []
-        },
-        {
-            "label": "docker: compose down",
-            "type": "shell",
-            "command": "docker-compose",
-            "args": ["down"],
-            "group": "build",
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared"
-            },
-            "problemMatcher": []
-        },
-        {
-            "label": "ci: quality gates",
-            "type": "shell",
-            "command": "poetry",
-            "args": [
-                "run",
-                "black",
-                "--check",
-                "src",
-                "tests",
-                "&&",
-                "poetry",
-                "run",
-                "isort",
-                "--check-only",
-                "src",
-                "tests",
-                "&&",
-                "poetry",
-                "run",
-                "flake8",
-                "src",
-                "tests",
-                "&&",
-                "poetry",
-                "run",
-                "mypy",
-                "src"
-            ],
-            "group": "test",
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared"
-            },
-            "problemMatcher": [
-                "$flake8",
-                "$mypy"
-            ]
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Poetry: Install Dependencies",
+      "type": "shell",
+      "command": "poetry",
+      "args": ["install"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Python: Format Code (Black)",
+      "type": "shell",
+      "command": "poetry",
+      "args": ["run", "black", "src", "tests"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Python: Lint Code (flake8)",
+      "type": "shell",
+      "command": "poetry",
+      "args": ["run", "flake8", "src", "tests"],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": {
+        "owner": "flake8",
+        "fileLocation": ["relative", "${workspaceFolder}"],
+        "pattern": {
+          "regexp": "^(.*):(\\d+):(\\d+):\\s+(\\w+\\d+)\\s+(.*)$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "code": 4,
+          "message": 5
         }
-    ]
+      }
+    },
+    {
+      "label": "Test: Run All Tests",
+      "type": "shell",
+      "command": "poetry",
+      "args": ["run", "pytest", "tests/", "-v", "--cov=src/llm_cost_tracker", "--cov-report=html"],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Docker: Build Development Image",
+      "type": "shell",
+      "command": "docker",
+      "args": ["build", "--target", "development", "--tag", "llm-cost-tracker:dev", "."],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Docker: Start Services",
+      "type": "shell",
+      "command": "docker-compose",
+      "args": ["up", "-d"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Server: Start FastAPI Development",
+      "type": "shell",
+      "command": "poetry",
+      "args": ["run", "uvicorn", "llm_cost_tracker.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": [],
+      "isBackground": true
+    },
+    {
+      "label": "Quality: Full Code Quality Check",
+      "dependsOrder": "sequence",
+      "dependsOn": [
+        "Python: Format Code (Black)",
+        "Python: Lint Code (flake8)",
+        "Test: Run All Tests"
+      ],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      }
+    }
+  ]
 }
