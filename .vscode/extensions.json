@@ -1,28 +1,84 @@
 {
-    "recommendations": [
-        "ms-python.python",
-        "ms-python.black-formatter",
-        "ms-python.isort",
-        "ms-python.flake8",
-        "ms-python.mypy-type-checker",
-        "ms-python.pytest",
-        "ms-vscode.vscode-typescript-next",
-        "redhat.vscode-yaml",
-        "ms-vscode.vscode-json",
-        "ms-azuretools.vscode-docker",
-        "github.vscode-pull-request-github",
-        "github.copilot",
-        "github.copilot-chat",
-        "tamasfe.even-better-toml",
-        "davidanson.vscode-markdownlint",
-        "streetsidesoftware.code-spell-checker",
-        "ms-vscode-remote.remote-containers",
-        "ms-vscode.test-adapter-converter",
-        "formulahendry.auto-rename-tag",
-        "bradlc.vscode-tailwindcss",
-        "ms-vscode.vscode-typescript-next"
-    ],
-    "unwantedRecommendations": [
-        "ms-python.pylint"
-    ]
+  "recommendations": [
+    // Python Development
+    "ms-python.python",
+    "ms-python.flake8",
+    "ms-python.black-formatter",
+    "ms-python.isort",
+    "ms-python.mypy-type-checker",
+    "ms-python.pylint",
+    "charliermarsh.ruff",
+
+    // Testing & Coverage
+    "littlefoxteam.vscode-python-test-adapter",
+    "ryanluker.vscode-coverage-gutters",
+
+    // Docker & Containers
+    "ms-azuretools.vscode-docker",
+    "ms-vscode-remote.remote-containers",
+
+    // Git & Version Control
+    "eamodio.gitlens",
+    "github.vscode-pull-request-github",
+    "github.vscode-github-actions",
+    "github.codespaces",
+    "github.copilot",
+    "github.copilot-chat",
+
+    // YAML & Configuration
+    "redhat.vscode-yaml",
+    "ms-kubernetes-tools.vscode-kubernetes-tools",
+    "hashicorp.terraform",
+
+    // Markdown & Documentation
+    "yzhang.markdown-all-in-one",
+    "davidanson.vscode-markdownlint",
+    "bierner.markdown-mermaid",
+    "shd101wyy.markdown-preview-enhanced",
+
+    // Code Quality & Security
+    "ms-vscode.vscode-json",
+    "tamasfe.even-better-toml",
+    "formulahendry.code-runner",
+    "streetsidesoftware.code-spell-checker",
+    "sonarsource.sonarlint-vscode",
+
+    // REST API Testing
+    "humao.rest-client",
+    "rangav.vscode-thunder-client",
+
+    // Database
+    "cweijan.vscode-postgresql-client2",
+    "mtxr.sqltools",
+    "mtxr.sqltools-driver-pg",
+
+    // Productivity & UI
+    "pkief.material-icon-theme",
+    "github.github-vscode-theme",
+    "ms-vscode.vscode-typescript-next",
+    "ms-vscode.live-server",
+    "formulahendry.auto-rename-tag",
+    "bradlc.vscode-tailwindcss",
+
+    // Remote Development
+    "ms-vscode-remote.remote-ssh",
+    "ms-vscode-remote.remote-wsl",
+
+    // DevOps & Monitoring
+    "ms-vscode.vscode-json",
+    "redhat.vscode-commons",
+    "ms-vscode.vscode-node-azure-pack",
+
+    // Performance & Debugging
+    "ms-python.debugpy",
+    "ms-vscode.vscode-js-profile-flame"
+  ],
+  
+  "unwantedRecommendations": [
+    // Extensions that might conflict or are not needed
+    "ms-python.anaconda-extension-pack",
+    "ms-toolsai.jupyter",
+    "wholroyd.jinja",
+    "donjayamanne.python-extension-pack"
+  ]
 }
