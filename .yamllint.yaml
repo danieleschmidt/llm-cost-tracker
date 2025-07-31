@@ -1,0 +1,54 @@
+# YAML linting configuration
+# https://yamllint.readthedocs.io/en/stable/configuration.html
+
+extends: default
+
+rules:
+  # Line length
+  line-length:
+    max: 120
+    level: warning
+
+  # Comments
+  comments:
+    require-starting-space: true
+    ignore-shebangs: true
+    min-spaces-from-content: 2
+
+  # Document markers
+  document-start:
+    present: false
+
+  # Indentation
+  indentation:
+    spaces: 2
+    indent-sequences: true
+
+  # Key ordering
+  key-ordering: disable
+
+  # Truthy values
+  truthy:
+    allowed-values: ['true', 'false', 'yes', 'no']
+    check-keys: false
+
+  # Octal values
+  octal-values:
+    forbid-implicit-octal: true
+    forbid-explicit-octal: true
+
+  # Empty values
+  empty-values:
+    forbid-in-block-mappings: true
+    forbid-in-flow-mappings: true
+
+# File-specific overrides
+ignore: |
+  # Ignore auto-generated files
+  .github/workflows/
+  docker-compose*.yml
+  # Ignore templates that might have different formatting requirements
+  **/templates/**
+  # Ignore configuration files that have specific formatting needs
+  config/prometheus.yml
+  config/grafana-datasources.yml
