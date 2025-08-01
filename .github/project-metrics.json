@@ -1,0 +1,374 @@
+{
+  "project": {
+    "name": "LLM Cost Tracker",
+    "description": "Self-hostable OpenTelemetry collector and rules engine for LLM cost tracking",
+    "repository": "terragon-labs/llm-cost-tracker",
+    "maintainers": ["@tech-lead", "@senior-developer"],
+    "version": "0.1.0",
+    "created": "2024-01-15T00:00:00Z",
+    "last_updated": "2024-01-15T00:00:00Z"
+  },
+  "metrics": {
+    "code_quality": {
+      "coverage_threshold": 85,
+      "complexity_threshold": 10,
+      "maintainability_index_threshold": 70,
+      "technical_debt_ratio_threshold": 5.0,
+      "code_duplication_threshold": 3.0,
+      "security_hotspots_threshold": 0
+    },
+    "performance": {
+      "build_time_threshold_minutes": 10,
+      "test_execution_threshold_minutes": 5,
+      "docker_build_threshold_minutes": 8,
+      "deployment_time_threshold_minutes": 15,
+      "startup_time_threshold_seconds": 30
+    },
+    "reliability": {
+      "uptime_sla": 99.9,
+      "error_rate_threshold": 0.1,
+      "response_time_p95_threshold_ms": 2000,
+      "response_time_p99_threshold_ms": 5000,
+      "mean_time_to_recovery_hours": 4
+    },
+    "security": {
+      "critical_vulnerabilities_threshold": 0,
+      "high_vulnerabilities_threshold": 2,
+      "medium_vulnerabilities_threshold": 10,
+      "dependency_age_threshold_days": 365,
+      "security_scan_frequency_days": 1
+    },
+    "business": {
+      "cost_per_request_threshold_cents": 5,
+      "monthly_budget_utilization_threshold": 80,
+      "user_satisfaction_threshold": 4.0,
+      "feature_adoption_threshold": 70
+    }
+  },
+  "tracking": {
+    "data_sources": {
+      "github": {
+        "api_endpoint": "https://api.github.com",
+        "metrics": [
+          "commits_per_week",
+          "pull_requests_merged",
+          "issues_closed",
+          "contributors_active",
+          "code_frequency",
+          "security_alerts"
+        ]
+      },
+      "prometheus": {
+        "endpoint": "http://prometheus:9090",
+        "metrics": [
+          "application_uptime",
+          "request_rate",
+          "error_rate",
+          "response_time_percentiles",
+          "resource_utilization"
+        ]
+      },
+      "sonarqube": {
+        "endpoint": "https://sonarcloud.io",
+        "project_key": "terragon-labs_llm-cost-tracker",
+        "metrics": [
+          "coverage",
+          "duplicated_lines_density",
+          "maintainability_rating",
+          "reliability_rating",
+          "security_rating",
+          "technical_debt"
+        ]
+      },
+      "codecov": {
+        "endpoint": "https://codecov.io",
+        "metrics": [
+          "coverage_percentage",
+          "coverage_trend",
+          "uncovered_lines"
+        ]
+      }
+    },
+    "collection_frequency": {
+      "real_time": ["error_rate", "response_time", "uptime"],
+      "hourly": ["request_rate", "resource_utilization"],
+      "daily": ["coverage", "security_scan_results", "cost_metrics"],
+      "weekly": ["code_quality", "technical_debt", "contributor_activity"],
+      "monthly": ["business_metrics", "trend_analysis"]
+    },
+    "retention": {
+      "raw_metrics_days": 90,
+      "aggregated_daily_days": 365,
+      "aggregated_weekly_days": 1095,
+      "aggregated_monthly_days": 2555
+    }
+  },
+  "alerts": {
+    "critical": {
+      "conditions": [
+        "security.critical_vulnerabilities > 0",
+        "reliability.uptime < 99.0",
+        "performance.response_time_p99 > 10000",
+        "business.cost_per_request > 10"
+      ],
+      "notification_channels": ["pagerduty", "slack-critical"],
+      "escalation_time_minutes": 15
+    },
+    "warning": {
+      "conditions": [
+        "code_quality.coverage < 80",
+        "security.high_vulnerabilities > 5",
+        "performance.build_time > 15",
+        "business.monthly_budget_utilization > 90"
+      ],
+      "notification_channels": ["slack-alerts", "email"],
+      "escalation_time_minutes": 60
+    },
+    "info": {
+      "conditions": [
+        "tracking.github.contributors_active < 5",
+        "code_quality.technical_debt_ratio > 7.0",
+        "performance.test_execution > 8"
+      ],
+      "notification_channels": ["slack-info"],
+      "escalation_time_minutes": 240
+    }
+  },
+  "dashboards": {
+    "overview": {
+      "name": "Project Health Overview",
+      "panels": [
+        {
+          "title": "Service Health",
+          "metrics": ["uptime", "error_rate", "response_time_p95"],
+          "visualization": "stat"
+        },
+        {
+          "title": "Development Velocity",
+          "metrics": ["commits_per_week", "pull_requests_merged", "deployment_frequency"],
+          "visualization": "graph"
+        },
+        {
+          "title": "Code Quality",
+          "metrics": ["coverage", "technical_debt", "security_rating"],
+          "visualization": "gauge"
+        },
+        {
+          "title": "Cost Metrics",
+          "metrics": ["cost_per_request", "monthly_budget_utilization", "cost_trend"],
+          "visualization": "graph"
+        }
+      ]
+    },
+    "technical": {
+      "name": "Technical Metrics Deep Dive",
+      "panels": [
+        {
+          "title": "Performance Metrics",
+          "metrics": ["response_time_percentiles", "throughput", "resource_utilization"],
+          "visualization": "graph"
+        },
+        {
+          "title": "Error Analysis",
+          "metrics": ["error_rate_by_type", "error_frequency", "error_trends"],
+          "visualization": "graph"
+        },
+        {
+          "title": "Infrastructure Health",
+          "metrics": ["cpu_usage", "memory_usage", "disk_usage", "network_io"],
+          "visualization": "graph"
+        }
+      ]
+    },
+    "business": {
+      "name": "Business & Product Metrics",
+      "panels": [
+        {
+          "title": "Cost Analysis",
+          "metrics": ["cost_per_model", "cost_trends", "budget_utilization"],
+          "visualization": "graph"
+        },
+        {
+          "title": "Usage Patterns",
+          "metrics": ["active_users", "request_volume", "feature_adoption"],
+          "visualization": "graph"
+        },
+        {
+          "title": "Efficiency Metrics",
+          "metrics": ["cost_per_user", "value_delivered", "roi_metrics"],
+          "visualization": "stat"
+        }
+      ]
+    }
+  },
+  "automation": {
+    "dependency_updates": {
+      "enabled": true,
+      "frequency": "weekly",
+      "auto_merge": {
+        "patch": true,
+        "minor": false,
+        "major": false
+      },
+      "security_updates": {
+        "auto_merge": true,
+        "notification_channels": ["slack-security"]
+      }
+    },
+    "security_scanning": {
+      "enabled": true,
+      "frequency": "daily",
+      "tools": ["bandit", "safety", "semgrep", "trivy"],
+      "fail_on_high": true,
+      "fail_on_critical": true
+    },
+    "performance_monitoring": {
+      "enabled": true,
+      "benchmarks": {
+        "frequency": "on_pr",
+        "regression_threshold": "20%",
+        "baseline_update_frequency": "weekly"
+      }
+    },
+    "code_quality": {
+      "enabled": true,
+      "tools": ["sonarqube", "codecov", "codeclimate"],
+      "quality_gates": {
+        "coverage_minimum": 85,
+        "maintainability_rating": "A",
+        "reliability_rating": "A",
+        "security_rating": "A"
+      }
+    },
+    "deployment": {
+      "staging": {
+        "auto_deploy": true,
+        "triggers": ["main_branch_push"],
+        "rollback_on_failure": true
+      },
+      "production": {
+        "auto_deploy": false,
+        "requires_approval": true,
+        "approvers": ["@tech-lead", "@senior-developer"],
+        "deployment_window": "business_hours"
+      }
+    }
+  },
+  "reporting": {
+    "weekly_summary": {
+      "enabled": true,
+      "recipients": ["engineering-team@terragonlabs.com"],
+      "includes": [
+        "development_velocity",
+        "code_quality_trends",
+        "security_status",
+        "performance_metrics",
+        "cost_analysis"
+      ]
+    },
+    "monthly_executive": {
+      "enabled": true,
+      "recipients": ["leadership-team@terragonlabs.com"],
+      "includes": [
+        "project_health_summary",
+        "business_metrics",
+        "roi_analysis",
+        "risk_assessment",
+        "roadmap_progress"
+      ]
+    },
+    "quarterly_review": {
+      "enabled": true,
+      "recipients": ["all-stakeholders@terragonlabs.com"],
+      "includes": [
+        "comprehensive_project_review",
+        "technical_debt_analysis",
+        "security_posture_review",
+        "performance_trends",
+        "business_impact_analysis",
+        "future_planning"
+      ]
+    }
+  },
+  "integrations": {
+    "github": {
+      "enabled": true,
+      "features": [
+        "issue_tracking",
+        "pr_metrics",
+        "contributor_analytics",
+        "security_alerts",
+        "actions_metrics"
+      ]
+    },
+    "slack": {
+      "enabled": true,
+      "channels": {
+        "alerts": "#alerts",
+        "deployments": "#deployments",
+        "metrics": "#metrics",
+        "security": "#security"
+      },
+      "bot_token": "encrypted_in_secrets"
+    },
+    "jira": {
+      "enabled": false,
+      "project_key": "LCT",
+      "sync_issues": true,
+      "sync_epics": true
+    },
+    "pagerduty": {
+      "enabled": true,
+      "service_key": "encrypted_in_secrets",
+      "escalation_policy": "engineering-on-call"
+    }
+  },
+  "compliance": {
+    "frameworks": [
+      "SOC2",
+      "ISO27001",
+      "GDPR"
+    ],
+    "audit_requirements": {
+      "log_retention_days": 365,
+      "access_review_frequency_days": 90,
+      "security_training_frequency_days": 365,
+      "vulnerability_remediation_sla_days": 30
+    },
+    "data_governance": {
+      "data_classification": "confidential",
+      "encryption_at_rest": true,
+      "encryption_in_transit": true,
+      "access_logging": true,
+      "data_retention_policy": "7_years"
+    }
+  },
+  "goals": {
+    "2024": {
+      "q1": {
+        "coverage_target": 90,
+        "performance_improvement": "20%",
+        "security_rating": "A",
+        "deployment_frequency": "daily"
+      },
+      "q2": {
+        "uptime_target": 99.95,
+        "cost_optimization": "15%",
+        "feature_delivery": "monthly",
+        "team_satisfaction": 4.5
+      },
+      "q3": {
+        "scalability_target": "10x_current_load",
+        "automation_coverage": "80%",
+        "documentation_coverage": "95%",
+        "community_engagement": "active"
+      },
+      "q4": {
+        "market_readiness": "production",
+        "compliance_certification": "SOC2",
+        "partnership_integrations": 3,
+        "user_adoption": "1000_active_users"
+      }
+    }
+  }
+}
