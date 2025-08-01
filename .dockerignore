@@ -1,0 +1,190 @@
+# Git and version control
+.git
+.gitignore
+.gitattributes
+
+# Documentation
+README.md
+CHANGELOG.md
+docs/
+*.md
+!pyproject.toml
+
+# Development and testing
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.tox/
+.venv/
+venv/
+env/
+ENV/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Temporary files
+*.tmp
+*.temp
+tmp/
+temp/
+
+# Logs
+*.log
+logs/
+
+# Local configuration
+.env
+.env.local
+.env.*.local
+
+# Test files (excluding necessary test configs)
+tests/
+*.test
+test_*.py
+*_test.py
+
+# CI/CD files (keep workflows for reference but don't include in image)
+.github/
+.pre-commit-config.yaml
+.yamllint.yaml
+
+# Performance and profiling
+*.prof
+profile.stats
+
+# Security scanning results
+.trivyignore
+trivy-results.json
+sbom/
+
+# Development tools
+.devcontainer/
+Makefile.local
+docker-compose.override.yml
+
+# Backup files
+*.bak
+*.backup
+
+# Node modules (if any frontend tooling)
+node_modules/
+npm-debug.log*
+
+# Python specific
+*.so
+.Python
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Coverage reports
+coverage.xml
+*.cover
+.hypothesis/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# Local development overrides
+docker-compose.override.yml
+docker-compose.local.yml
+
+# Performance benchmarks
+benchmark-results/
+*.benchmark
+
+# Security files that shouldn't be in containers
+*.pem
+*.key
+*.crt
+*.p12
+*.jks
+
+# Autonomous system files (development only)
+autonomous_*
+demo_*
+test_autonomous_*
+
+# Workflow configurations (these are templates, not runtime)
+workflow-configs-ready-to-deploy/
+
+# Large data files
+*.csv
+*.json.gz
+*.parquet
+
+# Cache directories
+.cache/
+.npm/
+.yarn/
+
+# Editor configurations
+.editorconfig
+
+# Linting configurations
+.flake8
+.isort.cfg
+setup.cfg
+tox.ini
+
+# Semantic release
+.releaserc.json
+
+# Dependency management
+poetry.lock
+requirements-dev.txt
+Pipfile*
+
+# Local scripts and utilities
+scripts/dev-*
+scripts/local-*
+
+# Renovate configuration
+renovate.json
