@@ -56,6 +56,7 @@ psutil = "^5.9.0"
 
 [tool.poetry.scripts]
 backlog = "llm_cost_tracker.cli:app"
+llm-cost-tracker = "llm_cost_tracker.main:app"
 
 [build-system]
 requires = ["poetry-core"]
