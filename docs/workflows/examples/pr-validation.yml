@@ -1,0 +1,645 @@
+# Pull Request Validation Workflow
+# Comprehensive validation for all pull requests
+
+name: PR Validation
+
+on:
+  pull_request:
+    branches: [main, develop]
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+
+env:
+  PYTHON_VERSION: "3.11"
+  POETRY_VERSION: "1.7.1"
+
+# Security: limit permissions for PR validation
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+  security-events: write
+
+jobs:
+  # Job 1: Validate PR metadata and structure
+  pr-validation:
+    name: PR Validation
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    
+    steps:
+      - name: Validate PR title
+        uses: amannn/action-semantic-pull-request@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          types: |
+            feat
+            fix
+            docs
+            style
+            refactor
+            perf
+            test
+            build
+            ci
+            chore
+            revert
+          scopes: |
+            api
+            core
+            ui
+            db
+            auth
+            config
+            deps
+            release
+          requireScope: false
+          subjectPattern: ^(?![A-Z]).+$
+          subjectPatternError: |
+            The subject must start with a lowercase letter.
+
+      - name: Check PR size
+        uses: pascalgn/size-label-action@v0.4.3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          sizes: |
+            {
+              "0": "XS",
+              "20": "S", 
+              "50": "M",
+              "200": "L",
+              "800": "XL",
+              "2000": "XXL"
+            }
+
+      - name: Validate branch naming
+        run: |
+          branch_name="${{ github.head_ref }}"
+          if [[ ! $branch_name =~ ^(feature|bugfix|hotfix|release|docs|chore)/.+ ]]; then
+            echo "❌ Branch name must follow pattern: (feature|bugfix|hotfix|release|docs|chore)/description"
+            echo "Current branch: $branch_name"
+            exit 1
+          fi
+          echo "✅ Branch name follows convention: $branch_name"
+
+  # Job 2: Code quality and linting
+  code-quality:
+    name: Code Quality
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Checkout PR code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: ${{ env.POETRY_VERSION }}
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: .venv
+          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Run Black formatter check
+        run: poetry run black --check src tests
+        continue-on-error: true
+        
+      - name: Run isort import sorting check
+        run: poetry run isort --check-only src tests
+        continue-on-error: true
+
+      - name: Run flake8 linting
+        run: poetry run flake8 src tests --format=github
+        continue-on-error: true
+
+      - name: Run mypy type checking
+        run: poetry run mypy src --show-error-codes
+        continue-on-error: true
+
+      - name: Generate code quality report
+        if: always()
+        run: |
+          echo "## 📊 Code Quality Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Black check
+          if poetry run black --check src tests; then
+            echo "✅ **Black formatting**: Passed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **Black formatting**: Failed - Run \`poetry run black src tests\` to fix" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          # isort check  
+          if poetry run isort --check-only src tests; then
+            echo "✅ **Import sorting**: Passed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **Import sorting**: Failed - Run \`poetry run isort src tests\` to fix" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          # flake8 check
+          if poetry run flake8 src tests; then
+            echo "✅ **Linting**: Passed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **Linting**: Failed - Check flake8 output above" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          # mypy check
+          if poetry run mypy src; then
+            echo "✅ **Type checking**: Passed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **Type checking**: Failed - Check mypy output above" >> $GITHUB_STEP_SUMMARY
+          fi
+
+  # Job 3: Test execution with coverage
+  test:
+    name: Test Suite
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: llm_metrics
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+      redis:
+        image: redis:7
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    strategy:
+      matrix:
+        test-type: [unit, integration, e2e]
+        
+    steps:
+      - name: Checkout PR code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: ${{ env.POETRY_VERSION }}
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: .venv
+          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Run unit tests
+        if: matrix.test-type == 'unit'
+        run: |
+          poetry run pytest tests/unit/ -v \
+            --cov=src/llm_cost_tracker \
+            --cov-report=xml \
+            --cov-report=html \
+            --cov-fail-under=80 \
+            --junitxml=test-results-unit.xml
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/llm_metrics
+
+      - name: Run integration tests
+        if: matrix.test-type == 'integration'
+        run: |
+          poetry run pytest tests/integration/ -v \
+            --junitxml=test-results-integration.xml
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/llm_metrics
+          REDIS_URL: redis://localhost:6379
+
+      - name: Run e2e tests
+        if: matrix.test-type == 'e2e'
+        run: |
+          poetry run pytest tests/e2e/ -v \
+            --junitxml=test-results-e2e.xml
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/llm_metrics
+          REDIS_URL: redis://localhost:6379
+
+      - name: Upload test results
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: Test Results (${{ matrix.test-type }})
+          path: test-results-${{ matrix.test-type }}.xml
+          reporter: java-junit
+
+      - name: Upload coverage to Codecov
+        if: matrix.test-type == 'unit'
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage.xml
+          flags: ${{ matrix.test-type }}
+          name: codecov-${{ matrix.test-type }}
+
+  # Job 4: Security scanning
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    permissions:
+      security-events: write
+      contents: read
+
+    steps:
+      - name: Checkout PR code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: ${{ env.POETRY_VERSION }}
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Run Bandit security scan
+        run: |
+          poetry run bandit -r src/ -f sarif -o bandit-results.sarif
+        continue-on-error: true
+
+      - name: Run Safety dependency scan
+        run: |
+          poetry run safety check --json --output safety-results.json
+        continue-on-error: true
+
+      - name: Run Semgrep security scan
+        uses: returntocorp/semgrep-action@v1
+        with:
+          config: auto
+          generateSarif: "1"
+        continue-on-error: true
+
+      - name: Upload Bandit results to GitHub Security
+        uses: github/codeql-action/upload-sarif@v2
+        if: always()
+        with:
+          sarif_file: bandit-results.sarif
+          category: bandit
+
+      - name: Upload Semgrep results to GitHub Security  
+        uses: github/codeql-action/upload-sarif@v2
+        if: always()
+        with:
+          sarif_file: semgrep.sarif
+          category: semgrep
+
+      - name: Check for secrets with TruffleHog
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: ${{ github.event.repository.default_branch }}
+          head: HEAD
+          extra_args: --debug --only-verified
+
+  # Job 5: Documentation validation
+  documentation:
+    name: Documentation
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Checkout PR code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Check documentation links
+        uses: gaurav-nelson/github-action-markdown-link-check@v1
+        with:
+          use-quiet-mode: 'yes'
+          use-verbose-mode: 'yes'
+          config-file: '.github/mlc_config.json'
+
+      - name: Validate YAML files
+        run: |
+          pip install yamllint
+          yamllint -c .yamllint.yaml .
+
+      - name: Check for TODO comments
+        run: |
+          echo "## 📝 TODO Comments Found" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Find TODO comments in code
+          todos=$(grep -r -n -i "todo\|fixme\|hack" src/ tests/ --include="*.py" || true)
+          
+          if [ -n "$todos" ]; then
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            echo "$todos" >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "ℹ️ Consider addressing these TODO items before merging." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ No TODO comments found in code." >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Spell check documentation
+        uses: streetsidesoftware/cspell-action@v5
+        with:
+          files: "**/*.md"
+          config: ".cspell.json"
+          inline: warning
+
+  # Job 6: Performance regression check  
+  performance:
+    name: Performance Check
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: llm_metrics
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - name: Checkout PR code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: ${{ env.POETRY_VERSION }}
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Run performance benchmarks
+        run: |
+          poetry run pytest tests/performance/ \
+            --benchmark-json=benchmark.json \
+            --benchmark-only
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/llm_metrics
+
+      - name: Store benchmark results
+        uses: benchmark-action/github-action-benchmark@v1
+        with:
+          tool: 'pytest'
+          output-file-path: benchmark.json
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          auto-push: false
+          comment-on-alert: true
+          alert-threshold: '150%'
+          fail-on-alert: true
+
+  # Job 7: Dependency analysis
+  dependencies:
+    name: Dependencies
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Checkout PR code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: ${{ env.POETRY_VERSION }}
+
+      - name: Validate Poetry configuration
+        run: |
+          poetry check
+          poetry lock --check
+
+      - name: Analyze dependency changes
+        run: |
+          echo "## 📦 Dependency Changes" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Check if pyproject.toml was modified
+          if git diff --name-only origin/main...HEAD | grep -q "pyproject.toml"; then
+            echo "### Modified Dependencies" >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`diff" >> $GITHUB_STEP_SUMMARY
+            git diff origin/main...HEAD pyproject.toml >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            
+            # Check for security vulnerabilities in new dependencies
+            poetry export -f requirements.txt --output requirements.txt
+            pip install safety
+            safety check -r requirements.txt --json > safety-report.json || true
+            
+            if [ -s safety-report.json ] && [ "$(cat safety-report.json)" != "[]" ]; then
+              echo "### ⚠️ Security Vulnerabilities Found" >> $GITHUB_STEP_SUMMARY
+              echo "\`\`\`json" >> $GITHUB_STEP_SUMMARY
+              cat safety-report.json >> $GITHUB_STEP_SUMMARY
+              echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "### ✅ No Security Vulnerabilities Found" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "No dependency changes detected." >> $GITHUB_STEP_SUMMARY
+          fi
+
+  # Job 8: Build validation
+  build:
+    name: Build Validation
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Checkout PR code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: false
+          tags: llm-cost-tracker:pr-${{ github.event.number }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Test Docker image
+        run: |
+          docker run --rm --entrypoint="" llm-cost-tracker:pr-${{ github.event.number }} python --version
+          docker run --rm --entrypoint="" llm-cost-tracker:pr-${{ github.event.number }} python -c "import llm_cost_tracker; print('✅ Package imports successfully')"
+
+  # Job 9: Generate PR summary
+  pr-summary:
+    name: PR Summary
+    runs-on: ubuntu-latest
+    if: always() && github.event_name == 'pull_request'
+    needs: [pr-validation, code-quality, test, security, documentation, performance, dependencies, build]
+
+    steps:
+      - name: Generate PR Summary
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const jobs = [
+              { name: 'PR Validation', result: '${{ needs.pr-validation.result }}' },
+              { name: 'Code Quality', result: '${{ needs.code-quality.result }}' },
+              { name: 'Tests', result: '${{ needs.test.result }}' },
+              { name: 'Security', result: '${{ needs.security.result }}' },
+              { name: 'Documentation', result: '${{ needs.documentation.result }}' },
+              { name: 'Performance', result: '${{ needs.performance.result }}' },
+              { name: 'Dependencies', result: '${{ needs.dependencies.result }}' },
+              { name: 'Build', result: '${{ needs.build.result }}' }
+            ];
+
+            const passed = jobs.filter(job => job.result === 'success').length;
+            const failed = jobs.filter(job => job.result === 'failure').length;
+            const skipped = jobs.filter(job => job.result === 'skipped').length;
+
+            const statusEmoji = failed > 0 ? '❌' : '✅';
+            const title = `${statusEmoji} PR Validation Summary`;
+
+            let body = `## ${title}\n\n`;
+            body += `**Results**: ${passed} passed, ${failed} failed, ${skipped} skipped\n\n`;
+            body += `### Job Results\n`;
+            
+            for (const job of jobs) {
+              const emoji = job.result === 'success' ? '✅' : 
+                           job.result === 'failure' ? '❌' : 
+                           job.result === 'skipped' ? '⏭️' : '⏳';
+              body += `- ${emoji} **${job.name}**: ${job.result}\n`;
+            }
+
+            if (failed > 0) {
+              body += `\n### ⚠️ Action Required\n`;
+              body += `Some checks have failed. Please review the failing jobs and address the issues before merging.\n`;
+            } else {
+              body += `\n### 🎉 All Checks Passed!\n`;
+              body += `This PR is ready for review and merge.\n`;
+            }
+
+            body += `\n---\n`;
+            body += `*Generated by [PR Validation Workflow](${context.payload.pull_request.html_url}/checks)*`;
+
+            // Post comment on PR
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            });
+
+  # Job 10: Auto-assign reviewers
+  assign-reviewers:
+    name: Auto-assign Reviewers
+    runs-on: ubuntu-latest
+    if: github.event.action == 'opened' && github.event_name == 'pull_request'
+
+    steps:
+      - name: Auto-assign reviewers
+        uses: actions/github-script@v6
+        with:
+          script: |
+            // Define reviewer assignment rules
+            const reviewerRules = {
+              'src/': ['@senior-developer', '@tech-lead'],
+              'tests/': ['@qa-engineer', '@senior-developer'],
+              'docs/': ['@tech-writer', '@product-manager'],
+              'config/': ['@devops-engineer', '@tech-lead'],
+              '.github/': ['@devops-engineer', '@tech-lead']
+            };
+
+            const { data: files } = await github.rest.pulls.listFiles({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+            });
+
+            const reviewers = new Set();
+            
+            for (const file of files) {
+              for (const [path, assignees] of Object.entries(reviewerRules)) {
+                if (file.filename.startsWith(path)) {
+                  assignees.forEach(reviewer => reviewers.add(reviewer.replace('@', '')));
+                }
+              }
+            }
+
+            if (reviewers.size > 0) {
+              await github.rest.pulls.requestReviewers({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: context.issue.number,
+                reviewers: Array.from(reviewers)
+              });
+            }
+
+# Workflow completion notification
+on:
+  workflow_run:
+    workflows: ["PR Validation"]
+    types: [completed]
+
+jobs:
+  notify-completion:
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion != 'success'
+    
+    steps:
+      - name: Notify on failure
+        run: |
+          echo "PR validation failed for ${{ github.event.workflow_run.head_branch }}"
+          # Add notification logic here (Slack, Teams, etc.)
