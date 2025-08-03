@@ -67,6 +67,12 @@ app.add_middleware(
 app.include_router(otlp_router, tags=["otlp"])
 app.include_router(alert_router, tags=["alerts"])
 
+# Include new API routers
+from .controllers import budget_router, cost_router, session_router
+app.include_router(budget_router, tags=["budget"])
+app.include_router(cost_router, tags=["cost-analysis"])
+app.include_router(session_router, tags=["sessions"])
+
 
 @app.middleware("http")
 async def security_middleware(request: Request, call_next):
