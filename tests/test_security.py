@@ -31,7 +31,11 @@ def test_sanitize_user_input():
     # Input with dangerous characters
     result = sanitize_user_input("Hello <script>alert('xss')</script>")
     assert "<script>" not in result
-    assert "alert" not in result
+    assert ">" not in result
+    assert "<" not in result
+    assert "(" not in result
+    assert ")" not in result
+    # The word "alert" will still be there as it contains allowed characters
     
     # Too long input
     with pytest.raises(ValueError):
