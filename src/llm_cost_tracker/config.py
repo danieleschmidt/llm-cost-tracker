@@ -82,6 +82,31 @@ class Settings(BaseSettings):
         env="BUDGET_CONFIG_PATH"
     )
     
+    # Additional settings for testing
+    secret_key: Optional[str] = Field(
+        default=None,
+        description="Secret key for JWT tokens",
+        env="SECRET_KEY"
+    )
+    
+    enable_budget_alerts: bool = Field(
+        default=True,
+        description="Enable budget alerting",
+        env="ENABLE_BUDGET_ALERTS"
+    )
+    
+    enable_model_swapping: bool = Field(
+        default=True,
+        description="Enable automatic model swapping",
+        env="ENABLE_MODEL_SWAPPING"
+    )
+    
+    enable_metrics_export: bool = Field(
+        default=True,
+        description="Enable metrics export",
+        env="ENABLE_METRICS_EXPORT"
+    )
+    
     @validator("database_url")
     def validate_database_url(cls, v):
         """Ensure database URL doesn't contain credentials in logs."""
@@ -109,6 +134,7 @@ class Settings(BaseSettings):
         env_file = ".env"
         env_file_encoding = "utf-8"
         case_sensitive = False
+        extra = "allow"  # Allow extra fields for testing
 
 
 @lru_cache()

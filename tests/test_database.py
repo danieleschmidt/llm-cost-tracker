@@ -2,6 +2,7 @@
 
 from datetime import datetime
 from unittest.mock import AsyncMock, MagicMock
+from types import SimpleNamespace
 
 import pytest
 
@@ -11,10 +12,22 @@ from llm_cost_tracker.database import DatabaseManager
 @pytest.fixture
 def mock_pool():
     """Mock database pool."""
-    pool = AsyncMock()
+    pool = MagicMock()
     connection = AsyncMock()
-    pool.acquire.return_value.__aenter__.return_value = connection
-    pool.acquire.return_value.__aexit__ = AsyncMock()
+    
+    # Create a mock context manager
+    class MockAsyncContextManager:
+        def __init__(self, conn):
+            self.conn = conn
+            
+        async def __aenter__(self):
+            return self.conn
+            
+        async def __aexit__(self, exc_type, exc_val, exc_tb):
+            return None
+    
+    # Make acquire() return the context manager directly (not a coroutine)
+    pool.acquire.return_value = MockAsyncContextManager(connection)
     return pool, connection
 
 

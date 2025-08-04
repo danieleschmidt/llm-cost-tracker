@@ -1,0 +1,742 @@
+{
+  "errors": [],
+  "generated_at": "2025-08-04T05:06:09Z",
+  "metrics": {
+    "_totals": {
+      "CONFIDENCE.HIGH": 6,
+      "CONFIDENCE.LOW": 7,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 1,
+      "SEVERITY.LOW": 5,
+      "SEVERITY.MEDIUM": 7,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 6507,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "src/llm_cost_tracker/__init__.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 2,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "src/llm_cost_tracker/alert_webhooks.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 210,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "src/llm_cost_tracker/auto_scaling.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 396,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "src/llm_cost_tracker/backlog_manager.py": {
+      "CONFIDENCE.HIGH": 5,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 5,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 245,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "src/llm_cost_tracker/cache.py": {
+      "CONFIDENCE.HIGH": 1,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 1,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 342,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "src/llm_cost_tracker/circuit_breaker.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 168,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "src/llm_cost_tracker/cli.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 98,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "src/llm_cost_tracker/concurrency.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 358,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "src/llm_cost_tracker/config.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 123,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "src/llm_cost_tracker/controllers/__init__.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 9,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "src/llm_cost_tracker/controllers/budget_controller.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 147,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "src/llm_cost_tracker/controllers/cost_controller.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 226,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "src/llm_cost_tracker/controllers/session_controller.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 247,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "src/llm_cost_tracker/database.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 400,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "src/llm_cost_tracker/health_checks.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 232,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "src/llm_cost_tracker/langchain_middleware.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 202,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "src/llm_cost_tracker/logging_config.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 177,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "src/llm_cost_tracker/main.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 412,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "src/llm_cost_tracker/models/__init__.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 16,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "src/llm_cost_tracker/models/budget_rule.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 60,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "src/llm_cost_tracker/models/cost_record.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 60,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "src/llm_cost_tracker/models/usage_log.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 59,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "src/llm_cost_tracker/models/user_session.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 81,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "src/llm_cost_tracker/otlp_ingestion.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 250,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "src/llm_cost_tracker/security.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 107,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "src/llm_cost_tracker/services/__init__.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 11,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "src/llm_cost_tracker/services/budget_service.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 2,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 2,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 248,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "src/llm_cost_tracker/services/cost_analysis_service.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 1,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 1,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 426,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "src/llm_cost_tracker/services/model_routing_service.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 402,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "src/llm_cost_tracker/services/session_service.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 4,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 4,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 444,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "src/llm_cost_tracker/validation.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 349,
+      "nosec": 0,
+      "skipped_tests": 0
+    }
+  },
+  "results": [
+    {
+      "code": "6 import os\n7 import subprocess\n8 from datetime import datetime, timedelta\n",
+      "col_offset": 0,
+      "end_col_offset": 17,
+      "filename": "src/llm_cost_tracker/backlog_manager.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 78,
+        "link": "https://cwe.mitre.org/data/definitions/78.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Consider possible security implications associated with the subprocess module.",
+      "line_number": 7,
+      "line_range": [
+        7
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/blacklists/blacklist_imports.html#b404-import-subprocess",
+      "test_id": "B404",
+      "test_name": "blacklist"
+    },
+    {
+      "code": "103         try:\n104             result = subprocess.run([\n105                 'grep', '-r', '-n', '-E', 'TODO|FIXME|XXX|HACK',\n106                 str(self.repo_path), '--exclude-dir=.git'\n107             ], capture_output=True, text=True)\n108             \n",
+      "col_offset": 21,
+      "end_col_offset": 46,
+      "filename": "src/llm_cost_tracker/backlog_manager.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 78,
+        "link": "https://cwe.mitre.org/data/definitions/78.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Starting a process with a partial executable path",
+      "line_number": 104,
+      "line_range": [
+        104,
+        105,
+        106,
+        107
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/plugins/b607_start_process_with_partial_path.html",
+      "test_id": "B607",
+      "test_name": "start_process_with_partial_path"
+    },
+    {
+      "code": "103         try:\n104             result = subprocess.run([\n105                 'grep', '-r', '-n', '-E', 'TODO|FIXME|XXX|HACK',\n106                 str(self.repo_path), '--exclude-dir=.git'\n107             ], capture_output=True, text=True)\n108             \n",
+      "col_offset": 21,
+      "end_col_offset": 46,
+      "filename": "src/llm_cost_tracker/backlog_manager.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 78,
+        "link": "https://cwe.mitre.org/data/definitions/78.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "subprocess call - check for execution of untrusted input.",
+      "line_number": 104,
+      "line_range": [
+        104,
+        105,
+        106,
+        107
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/plugins/b603_subprocess_without_shell_equals_true.html",
+      "test_id": "B603",
+      "test_name": "subprocess_without_shell_equals_true"
+    },
+    {
+      "code": "143             # Run tests to detect failures\n144             result = subprocess.run([\n145                 'python', '-m', 'pytest', '--tb=no', '-q'\n146             ], cwd=self.repo_path, capture_output=True, text=True)\n147             \n",
+      "col_offset": 21,
+      "end_col_offset": 66,
+      "filename": "src/llm_cost_tracker/backlog_manager.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 78,
+        "link": "https://cwe.mitre.org/data/definitions/78.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Starting a process with a partial executable path",
+      "line_number": 144,
+      "line_range": [
+        144,
+        145,
+        146
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/plugins/b607_start_process_with_partial_path.html",
+      "test_id": "B607",
+      "test_name": "start_process_with_partial_path"
+    },
+    {
+      "code": "143             # Run tests to detect failures\n144             result = subprocess.run([\n145                 'python', '-m', 'pytest', '--tb=no', '-q'\n146             ], cwd=self.repo_path, capture_output=True, text=True)\n147             \n",
+      "col_offset": 21,
+      "end_col_offset": 66,
+      "filename": "src/llm_cost_tracker/backlog_manager.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 78,
+        "link": "https://cwe.mitre.org/data/definitions/78.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "subprocess call - check for execution of untrusted input.",
+      "line_number": 144,
+      "line_range": [
+        144,
+        145,
+        146
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/plugins/b603_subprocess_without_shell_equals_true.html",
+      "test_id": "B603",
+      "test_name": "subprocess_without_shell_equals_true"
+    },
+    {
+      "code": "236         \n237         return hashlib.md5(sorted_data.encode()).hexdigest()\n238     \n",
+      "col_offset": 15,
+      "end_col_offset": 48,
+      "filename": "src/llm_cost_tracker/cache.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 327,
+        "link": "https://cwe.mitre.org/data/definitions/327.html"
+      },
+      "issue_severity": "HIGH",
+      "issue_text": "Use of weak MD5 hash for security. Consider usedforsecurity=False",
+      "line_number": 237,
+      "line_range": [
+        237
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/plugins/b324_hashlib.html",
+      "test_id": "B324",
+      "test_name": "hashlib"
+    },
+    {
+      "code": "72             set_clause = \", \".join([f\"{k} = %({k})s\" for k in update_fields.keys()])\n73             query = f\"UPDATE budget_rules SET {set_clause} WHERE id = %(id)s RETURNING *\"\n74             update_fields['id'] = rule_id\n",
+      "col_offset": 22,
+      "end_col_offset": 46,
+      "filename": "src/llm_cost_tracker/services/budget_service.py",
+      "issue_confidence": "LOW",
+      "issue_cwe": {
+        "id": 89,
+        "link": "https://cwe.mitre.org/data/definitions/89.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Possible SQL injection vector through string-based query construction.",
+      "line_number": 73,
+      "line_range": [
+        73
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/plugins/b608_hardcoded_sql_expressions.html",
+      "test_id": "B608",
+      "test_name": "hardcoded_sql_expressions"
+    },
+    {
+      "code": "154             \n155             query = f\"\"\"\n156                 SELECT \n157                     COALESCE(SUM(total_cost_usd), 0) as total_cost_usd,\n158                     COUNT(*) as total_requests,\n159                     COALESCE(SUM(input_tokens + output_tokens), 0) as total_tokens,\n160                     COALESCE(SUM(input_tokens), 0) as total_input_tokens,\n161                     COALESCE(SUM(output_tokens), 0) as total_output_tokens,\n162                     COALESCE(AVG(latency_ms), 0) as avg_latency_ms,\n163                     COUNT(DISTINCT model_name) as unique_models,\n164                     COUNT(DISTINCT user_id) as unique_users\n165                 FROM llm_usage_logs \n166                 WHERE {where_clause}\n167             \"\"\"\n168             \n",
+      "col_offset": 24,
+      "end_col_offset": 22,
+      "filename": "src/llm_cost_tracker/services/budget_service.py",
+      "issue_confidence": "LOW",
+      "issue_cwe": {
+        "id": 89,
+        "link": "https://cwe.mitre.org/data/definitions/89.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Possible SQL injection vector through string-based query construction.",
+      "line_number": 155,
+      "line_range": [
+        155,
+        156,
+        157,
+        158,
+        159,
+        160,
+        161,
+        162,
+        163,
+        164,
+        165,
+        166,
+        167
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/plugins/b608_hardcoded_sql_expressions.html",
+      "test_id": "B608",
+      "test_name": "hardcoded_sql_expressions"
+    },
+    {
+      "code": "69             # Get daily cost data\n70             daily_query = f\"\"\"\n71                 SELECT \n72                     DATE(timestamp) as date,\n73                     SUM(total_cost_usd) as daily_cost,\n74                     COUNT(*) as daily_requests,\n75                     SUM(input_tokens + output_tokens) as daily_tokens,\n76                     AVG(latency_ms) as avg_latency\n77                 FROM llm_usage_logs \n78                 WHERE {where_clause}\n79                 GROUP BY DATE(timestamp)\n80                 ORDER BY date\n81             \"\"\"\n82             \n",
+      "col_offset": 30,
+      "end_col_offset": 22,
+      "filename": "src/llm_cost_tracker/services/cost_analysis_service.py",
+      "issue_confidence": "LOW",
+      "issue_cwe": {
+        "id": 89,
+        "link": "https://cwe.mitre.org/data/definitions/89.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Possible SQL injection vector through string-based query construction.",
+      "line_number": 70,
+      "line_range": [
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/plugins/b608_hardcoded_sql_expressions.html",
+      "test_id": "B608",
+      "test_name": "hardcoded_sql_expressions"
+    },
+    {
+      "code": "154             \n155             query = f\"\"\"\n156                 SELECT * FROM user_sessions \n157                 WHERE {where_clause}\n158                 ORDER BY last_activity DESC\n159             \"\"\"\n160             \n",
+      "col_offset": 24,
+      "end_col_offset": 22,
+      "filename": "src/llm_cost_tracker/services/session_service.py",
+      "issue_confidence": "LOW",
+      "issue_cwe": {
+        "id": 89,
+        "link": "https://cwe.mitre.org/data/definitions/89.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Possible SQL injection vector through string-based query construction.",
+      "line_number": 155,
+      "line_range": [
+        155,
+        156,
+        157,
+        158,
+        159
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/plugins/b608_hardcoded_sql_expressions.html",
+      "test_id": "B608",
+      "test_name": "hardcoded_sql_expressions"
+    },
+    {
+      "code": "193             # Get aggregated metrics\n194             query = f\"\"\"\n195                 SELECT \n196                     COUNT(*) as total_sessions,\n197                     COUNT(CASE WHEN last_activity > NOW() - INTERVAL '30 minutes' THEN 1 END) as active_sessions,\n198                     AVG(EXTRACT(EPOCH FROM (last_activity - start_time)) / 60) as avg_duration_minutes,\n199                     AVG(total_requests) as avg_requests_per_session,\n200                     AVG(total_cost_usd) as avg_cost_per_session,\n201                     SUM(total_cost_usd) as total_session_cost,\n202                     COUNT(DISTINCT user_id) as unique_users\n203                 FROM user_sessions \n204                 WHERE {where_clause}\n205             \"\"\"\n206             \n",
+      "col_offset": 24,
+      "end_col_offset": 22,
+      "filename": "src/llm_cost_tracker/services/session_service.py",
+      "issue_confidence": "LOW",
+      "issue_cwe": {
+        "id": 89,
+        "link": "https://cwe.mitre.org/data/definitions/89.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Possible SQL injection vector through string-based query construction.",
+      "line_number": 194,
+      "line_range": [
+        194,
+        195,
+        196,
+        197,
+        198,
+        199,
+        200,
+        201,
+        202,
+        203,
+        204,
+        205
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/plugins/b608_hardcoded_sql_expressions.html",
+      "test_id": "B608",
+      "test_name": "hardcoded_sql_expressions"
+    },
+    {
+      "code": "214             # Get most used models\n215             models_query = f\"\"\"\n216                 SELECT \n217                     model_name,\n218                     COUNT(*) as usage_count\n219                 FROM llm_usage_logs \n220                 WHERE timestamp BETWEEN %s AND %s\n221                 {\"AND user_id = %s\" if user_id else \"\"}\n222                 GROUP BY model_name\n223                 ORDER BY usage_count DESC\n224                 LIMIT 5\n225             \"\"\"\n226             \n",
+      "col_offset": 31,
+      "end_col_offset": 16,
+      "filename": "src/llm_cost_tracker/services/session_service.py",
+      "issue_confidence": "LOW",
+      "issue_cwe": {
+        "id": 89,
+        "link": "https://cwe.mitre.org/data/definitions/89.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Possible SQL injection vector through string-based query construction.",
+      "line_number": 215,
+      "line_range": [
+        215,
+        216,
+        217,
+        218,
+        219,
+        220,
+        221,
+        222,
+        223,
+        224,
+        225
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/plugins/b608_hardcoded_sql_expressions.html",
+      "test_id": "B608",
+      "test_name": "hardcoded_sql_expressions"
+    },
+    {
+      "code": "456                 \n457                 query = f\"SELECT COUNT(*) as concurrent FROM user_sessions WHERE {where_clause}\"\n458                 result = await self.db.execute_query(query, params)\n",
+      "col_offset": 26,
+      "end_col_offset": 81,
+      "filename": "src/llm_cost_tracker/services/session_service.py",
+      "issue_confidence": "LOW",
+      "issue_cwe": {
+        "id": 89,
+        "link": "https://cwe.mitre.org/data/definitions/89.html"
+      },
+      "issue_severity": "MEDIUM",
+      "issue_text": "Possible SQL injection vector through string-based query construction.",
+      "line_number": 457,
+      "line_range": [
+        457
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.6/plugins/b608_hardcoded_sql_expressions.html",
+      "test_id": "B608",
+      "test_name": "hardcoded_sql_expressions"
+    }
+  ]
+}
