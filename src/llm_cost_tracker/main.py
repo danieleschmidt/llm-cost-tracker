@@ -230,10 +230,11 @@ async def internal_server_error_handler(request: Request, exc: Exception):
     )
 
 # Include new API routers
-from .controllers import budget_router, cost_router, session_router
+from .controllers import budget_router, cost_router, session_router, quantum_router
 app.include_router(budget_router, tags=["budget"])
 app.include_router(cost_router, tags=["cost-analysis"])
 app.include_router(session_router, tags=["sessions"])
+app.include_router(quantum_router, tags=["quantum-planning"])
 
 
 @app.middleware("http")

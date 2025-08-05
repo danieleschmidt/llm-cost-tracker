@@ -1,0 +1,103 @@
+# Multi-stage production Dockerfile for Quantum Task Planner
+FROM python:3.11-slim as base
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONPATH=/app \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
+
+# Create non-root user
+RUN groupadd -r quantum && useradd -r -g quantum quantum
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    gcc \
+    libc6-dev \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Development stage
+FROM base as development
+
+# Install development dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
+    vim \
+    postgresql-client \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Copy dependency files
+COPY pyproject.toml poetry.lock* ./
+
+# Install Poetry and dependencies
+RUN pip install poetry && \
+    poetry config virtualenvs.create false && \
+    poetry install --with dev
+
+# Copy source code
+COPY . .
+
+# Install package in development mode
+RUN poetry install
+
+EXPOSE 8000
+
+CMD ["python", "-m", "uvicorn", "src.llm_cost_tracker.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+
+# Testing stage
+FROM development as testing
+
+# Run tests
+RUN python -m pytest tests/ -v --cov=src/llm_cost_tracker --cov-report=html --cov-report=term
+RUN python scripts/quality_gates.py
+
+# Production stage
+FROM base as production
+
+WORKDIR /app
+
+# Copy dependency files
+COPY pyproject.toml poetry.lock* ./
+
+# Install Poetry and production dependencies only
+RUN pip install poetry && \
+    poetry config virtualenvs.create false && \
+    poetry install --only main --no-dev
+
+# Copy source code
+COPY src/ ./src/
+COPY config/ ./config/
+COPY dashboards/ ./dashboards/
+COPY sql/ ./sql/
+COPY scripts/ ./scripts/
+
+# Create necessary directories
+RUN mkdir -p /app/logs /app/data /app/backups && \
+    chown -R quantum:quantum /app
+
+# Install the package
+RUN poetry install --only main
+
+# Security hardening
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get purge -y --auto-remove gcc libc6-dev
+
+# Switch to non-root user
+USER quantum
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+# Expose port
+EXPOSE 8000
+
+# Production command
+CMD ["python", "-m", "uvicorn", "src.llm_cost_tracker.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "4", "--access-log", "--log-config", "config/logging.json"]
