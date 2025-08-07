@@ -1,10 +1,11 @@
-"""LLM Cost Tracker - OpenTelemetry-based cost tracking for LLM applications with Quantum-Inspired Task Planning."""
+"""LLM Cost Tracker with Sentiment Analysis - OpenTelemetry-based cost tracking for LLM applications with Quantum-Inspired Task Planning."""
 
 __version__ = "0.1.0"
 
 from .quantum_task_planner import QuantumTaskPlanner, QuantumTask, TaskState, ResourcePool
 from .quantum_i18n import quantum_i18n, t, set_language, SupportedLanguage
 from .quantum_compliance import compliance_manager, record_processing, anonymize_data
+from .sentiment_analyzer import SentimentAnalyzer, SentimentResult, SentimentLabel, SentimentRequest, BatchSentimentRequest
 
 __all__ = [
     "QuantumTaskPlanner", 
@@ -17,5 +18,10 @@ __all__ = [
     "SupportedLanguage",
     "compliance_manager",
     "record_processing",
-    "anonymize_data"
+    "anonymize_data",
+    "SentimentAnalyzer",
+    "SentimentResult",
+    "SentimentLabel", 
+    "SentimentRequest",
+    "BatchSentimentRequest"
 ]
