@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  quantum-task-planner:
+  sentiment-analyzer:
     build:
       context: .
       dockerfile: Dockerfile
@@ -11,21 +11,33 @@ services:
       - PYTHONPATH=/app
       - LOG_LEVEL=INFO
       - ENABLE_DEBUG=false
-      - DATABASE_URL=postgresql://quantum_user:${POSTGRES_PASSWORD}@postgres:5432/quantum_db
+      - DATABASE_URL=postgresql://sentiment_user:${POSTGRES_PASSWORD}@postgres:5432/sentiment_analyzer_prod
       - REDIS_URL=redis://redis:6379/0
       - PROMETHEUS_ENDPOINT=http://prometheus:9090
       - GRAFANA_ENDPOINT=http://grafana:3000
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - SECRET_KEY=${SECRET_KEY}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
       - MONITORING_ENABLED=true
       - CACHE_ENABLED=true
       - LOAD_BALANCING_ENABLED=true
       - AUTO_SCALING_ENABLED=true
+      - QUANTUM_PLANNING_ENABLED=true
       - I18N_DEFAULT_LANGUAGE=en
       - COMPLIANCE_REGIONS=eu_gdpr,us_ccpa
       - DATA_RETENTION_DAYS=365
       - CIRCUIT_BREAKER_ENABLED=true
       - SECURITY_HEADERS_ENABLED=true
       - RATE_LIMITING_ENABLED=true
+      - SECURITY_SCANNING_ENABLED=true
+      - PII_DETECTION_ENABLED=true
+      - SENTIMENT_MULTILINGUAL=true
+      - SENTIMENT_BATCH_PROCESSING=true
+      - PERFORMANCE_OPTIMIZATION=true
+      - TARGET_LATENCY_MS=200
+      - MAX_CONCURRENT_TASKS=100
     ports:
       - "${API_PORT:-8000}:8000"
     depends_on:
@@ -59,16 +71,16 @@ services:
         window: 120s
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.quantum-api.rule=Host(`api.quantum-planner.local`)"
-      - "traefik.http.routers.quantum-api.tls=true"
-      - "traefik.http.services.quantum-api.loadbalancer.server.port=8000"
+      - "traefik.http.routers.sentiment-api.rule=Host(`api.sentiment-analyzer.local`)"
+      - "traefik.http.routers.sentiment-api.tls=true"
+      - "traefik.http.services.sentiment-api.loadbalancer.server.port=8000"
 
   postgres:
     image: postgres:15-alpine
     restart: unless-stopped
     environment:
-      - POSTGRES_DB=quantum_db
-      - POSTGRES_USER=quantum_user
+      - POSTGRES_DB=sentiment_analyzer_prod
+      - POSTGRES_USER=sentiment_user
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_INITDB_ARGS=--auth-host=scram-sha-256
     volumes:
@@ -78,7 +90,7 @@ services:
     networks:
       - quantum-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U quantum_user -d quantum_db"]
+      test: ["CMD-SHELL", "pg_isready -U sentiment_user -d sentiment_analyzer_prod"]
       interval: 30s
       timeout: 10s
       retries: 5
