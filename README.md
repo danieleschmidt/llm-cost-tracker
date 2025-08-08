@@ -1,31 +1,23 @@
-# Sentiment Analyzer Pro
+# llm-cost-tracker
 
-[![Build Status](https://img.shields.io/github/actions/workflow/status/terragon-labs/sentiment-analyzer-pro/ci.yml?branch=main)](https://github.com/terragon-labs/sentiment-analyzer-pro/actions)
-[![Coverage Status](https://img.shields.io/coveralls/github/terragon-labs/sentiment-analyzer-pro)](https://coveralls.io/github/terragon-labs/sentiment-analyzer-pro)
-[![License](https://img.shields.io/github/license/terragon-labs/sentiment-analyzer-pro)](LICENSE)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/terragon-labs/llm-cost-tracker/ci.yml?branch=main)](https://github.com/terragon-labs/llm-cost-tracker/actions)
+[![Coverage Status](https://img.shields.io/coveralls/github/terragon-labs/llm-cost-tracker)](https://coveralls.io/github/terragon-labs/llm-cost-tracker)
+[![License](https://img.shields.io/github/license/terragon-labs/llm-cost-tracker)](LICENSE)
 [![Version](https://img.shields.io/badge/version-v0.1.0-blue)](https://semver.org)
 
-**Enterprise-grade sentiment analysis platform** with quantum-enhanced task planning, advanced security, and production-ready deployment. Built on top of a sophisticated LLM cost tracking foundation, this system provides real-time sentiment classification with comprehensive threat detection, performance optimization, and global compliance features.
+A comprehensive platform combining **LLM cost tracking** with **quantum-inspired task planning**. This self-hostable solution captures token, latency, and cost data from LangChain and LiteLLM while providing advanced task scheduling using quantum computing concepts like superposition, entanglement, and quantum annealing.
 
-## 🌟 Core Capabilities
+## 🌟 Dual-Purpose Platform
 
-### 🧠 Advanced Sentiment Analysis
-- **Multi-model Support**: GPT-3.5, GPT-4, Claude integration with intelligent model selection
-- **Real-time Processing**: Sub-200ms latency with 75+ RPS throughput capacity
-- **Batch Processing**: Intelligent chunking for high-volume analysis with parallel execution
-- **Multi-language Support**: 6 languages (EN, ES, FR, DE, JA, ZH) with localized responses
+### 📊 LLM Cost Tracking
+- OpenTelemetry collector and rules engine for LLM operations
+- Real-time cost monitoring with Postgres storage and Grafana visualization  
+- Budget-aware model switching using Vellum's price catalog
 
-### 🔒 Enterprise Security
-- **Threat Detection**: Real-time scanning for injection attacks, PII exposure, and malicious content
-- **Data Protection**: Automatic anonymization with GDPR/CCPA compliance features
-- **Access Control**: JWT authentication, rate limiting, and IP-based security policies
-- **Audit Trail**: Comprehensive logging for compliance and security monitoring
-
-### ⚡ Quantum-Enhanced Performance
-- **Task Planning**: Quantum-inspired scheduling with superposition and entanglement concepts
-- **Auto-scaling**: Dynamic resource allocation based on load and performance metrics  
-- **Intelligent Caching**: LRU eviction with predictive prefetching and access pattern optimization
-- **Circuit Breakers**: Automatic failure isolation with health-aware load balancing
+### ⚛️ Quantum Task Planning
+- Quantum-inspired scheduling with superposition, entanglement, and interference patterns
+- High-performance optimization using quantum annealing algorithms
+- Enterprise-grade scalability with auto-scaling and load balancing
 
 ## ✨ Key Features
 

@@ -122,8 +122,8 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="Sentiment Analyzer Pro with LLM Cost Tracking",
-    description="Advanced sentiment analysis with quantum-enhanced task planning and OpenTelemetry-based cost tracking",
+    title="LLM Cost Tracker",
+    description="OpenTelemetry-based cost tracking for LLM applications",
     version="0.1.0",
     lifespan=lifespan,
     docs_url="/docs" if get_settings().enable_debug else None,
@@ -231,12 +231,10 @@ async def internal_server_error_handler(request: Request, exc: Exception):
 
 # Include new API routers
 from .controllers import budget_router, cost_router, session_router, quantum_router
-from .controllers.sentiment_controller import router as sentiment_router
 app.include_router(budget_router, tags=["budget"])
 app.include_router(cost_router, tags=["cost-analysis"])
 app.include_router(session_router, tags=["sessions"])
 app.include_router(quantum_router, tags=["quantum-planning"])
-app.include_router(sentiment_router, tags=["sentiment-analysis"])
 
 
 @app.middleware("http")
