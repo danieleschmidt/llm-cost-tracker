@@ -1,0 +1,90 @@
+2025-08-12 01:21:36,751 - llm_cost_tracker.quantum_task_planner - INFO - [quantum_task_planner.py:429] - Monitoring system attached to quantum task planner
+2025-08-12 01:21:36,751 - __main__ - INFO - [demo_robust_functionality.py:124] - 🛡️  Robust LLM Cost Tracker initialized with enhanced monitoring
+2025-08-12 01:21:36,753 - llm_cost_tracker.quantum_task_planner - ERROR - [quantum_task_planner.py:206] - Failed to add task : Task validation failed: id: Task ID cannot be empty
+2025-08-12 01:21:36,754 - llm_cost_tracker.quantum_task_planner - ERROR - [quantum_task_planner.py:206] - Failed to add task valid_id: Task validation failed: name: Task name too long (max 200 characters)
+2025-08-12 01:21:36,755 - llm_cost_tracker.quantum_task_planner - ERROR - [quantum_task_planner.py:206] - Failed to add task script_injection: Task validation failed: name: Task name contains potentially dangerous content
+2025-08-12 01:21:36,755 - llm_cost_tracker.quantum_task_planner - INFO - [quantum_task_planner.py:221] - Added task sql_injection: '; DROP TABLE tasks; --
+2025-08-12 01:21:36,755 - __main__ - INFO - [demo_robust_functionality.py:80] - Quantum event: task_added for task sql_injection
+2025-08-12 01:21:36,756 - llm_cost_tracker.quantum_task_planner - ERROR - [quantum_task_planner.py:206] - Failed to add task negative_priority: Task validation failed: priority: Priority must be between 1.0 and 10.0
+2025-08-12 01:21:36,756 - llm_cost_tracker.quantum_task_planner - ERROR - [quantum_task_planner.py:206] - Failed to add task circular_dependency: Task validation failed: dependencies: Dependencies not found: circular_dependency
+2025-08-12 01:21:36,757 - llm_cost_tracker.quantum_task_planner - WARNING - [quantum_task_planner.py:211] - Task resource_hungry validation warning - required_resources: Resource amount for cpu_cores seems excessive: 1000.0
+2025-08-12 01:21:36,757 - llm_cost_tracker.quantum_task_planner - INFO - [quantum_task_planner.py:221] - Added task resource_hungry: Resource Hungry Task
+2025-08-12 01:21:36,757 - __main__ - INFO - [demo_robust_functionality.py:80] - Quantum event: task_added for task resource_hungry
+2025-08-12 01:21:36,757 - __main__ - ERROR - [demo_robust_functionality.py:246] - Error scenario resource_hungry handled: asyncio.run() cannot be called from a running event loop
+Traceback (most recent call last):
+  File "/root/repo/demo_robust_functionality.py", line 234, in demo_error_handling_and_recovery
+    execution_success = asyncio.run(self.planner.execute_task(task.id))
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/runners.py", line 190, in run
+    raise RuntimeError(
+RuntimeError: asyncio.run() cannot be called from a running event loop
+2025-08-12 01:21:36,764 - llm_cost_tracker.quantum_task_planner - INFO - [quantum_task_planner.py:221] - Added task timeout_task: Timeout Simulation Task
+2025-08-12 01:21:36,765 - __main__ - INFO - [demo_robust_functionality.py:80] - Quantum event: task_added for task timeout_task
+2025-08-12 01:21:36,765 - __main__ - ERROR - [demo_robust_functionality.py:246] - Error scenario timeout_task handled: asyncio.run() cannot be called from a running event loop
+Traceback (most recent call last):
+  File "/root/repo/demo_robust_functionality.py", line 234, in demo_error_handling_and_recovery
+    execution_success = asyncio.run(self.planner.execute_task(task.id))
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/runners.py", line 190, in run
+    raise RuntimeError(
+RuntimeError: asyncio.run() cannot be called from a running event loop
+2025-08-12 01:21:36,768 - llm_cost_tracker.quantum_task_planner - INFO - [quantum_task_planner.py:409] - Advanced quantum annealing complete. Best cost: 103.6593, Pareto solutions: 7, Iterations: 5
+2025-08-12 01:21:36,768 - __main__ - INFO - [demo_robust_functionality.py:80] - Quantum event: superposition_collapse for task test_task_1
+2025-08-12 01:21:36,769 - llm_cost_tracker.quantum_task_planner - INFO - [quantum_task_planner.py:221] - Added task concurrent_task_0: Concurrent Task 0
+2025-08-12 01:21:36,769 - __main__ - INFO - [demo_robust_functionality.py:80] - Quantum event: task_added for task concurrent_task_0
+2025-08-12 01:21:36,769 - llm_cost_tracker.quantum_task_planner - INFO - [quantum_task_planner.py:221] - Added task concurrent_task_1: Concurrent Task 1
+2025-08-12 01:21:36,769 - __main__ - INFO - [demo_robust_functionality.py:80] - Quantum event: task_added for task concurrent_task_1
+2025-08-12 01:21:36,769 - llm_cost_tracker.quantum_task_planner - INFO - [quantum_task_planner.py:221] - Added task concurrent_task_2: Concurrent Task 2
+2025-08-12 01:21:36,770 - __main__ - INFO - [demo_robust_functionality.py:80] - Quantum event: task_added for task concurrent_task_2
+2025-08-12 01:21:36,770 - llm_cost_tracker.quantum_task_planner - INFO - [quantum_task_planner.py:221] - Added task concurrent_task_3: Concurrent Task 3
+2025-08-12 01:21:36,770 - __main__ - INFO - [demo_robust_functionality.py:80] - Quantum event: task_added for task concurrent_task_3
+2025-08-12 01:21:36,770 - llm_cost_tracker.quantum_task_planner - INFO - [quantum_task_planner.py:221] - Added task concurrent_task_4: Concurrent Task 4
+2025-08-12 01:21:36,770 - __main__ - INFO - [demo_robust_functionality.py:80] - Quantum event: task_added for task concurrent_task_4
+2025-08-12 01:21:36,770 - llm_cost_tracker.quantum_task_planner - INFO - [quantum_task_planner.py:221] - Added task concurrent_task_5: Concurrent Task 5
+2025-08-12 01:21:36,771 - __main__ - INFO - [demo_robust_functionality.py:80] - Quantum event: task_added for task concurrent_task_5
+2025-08-12 01:21:36,771 - llm_cost_tracker.quantum_task_planner - INFO - [quantum_task_planner.py:221] - Added task concurrent_task_6: Concurrent Task 6
+2025-08-12 01:21:36,771 - __main__ - INFO - [demo_robust_functionality.py:80] - Quantum event: task_added for task concurrent_task_6
+2025-08-12 01:21:36,771 - llm_cost_tracker.quantum_task_planner - INFO - [quantum_task_planner.py:221] - Added task concurrent_task_7: Concurrent Task 7
+2025-08-12 01:21:36,771 - __main__ - INFO - [demo_robust_functionality.py:80] - Quantum event: task_added for task concurrent_task_7
+2025-08-12 01:21:36,771 - llm_cost_tracker.quantum_task_planner - INFO - [quantum_task_planner.py:221] - Added task concurrent_task_8: Concurrent Task 8
+2025-08-12 01:21:36,771 - __main__ - INFO - [demo_robust_functionality.py:80] - Quantum event: task_added for task concurrent_task_8
+2025-08-12 01:21:36,772 - llm_cost_tracker.quantum_task_planner - INFO - [quantum_task_planner.py:221] - Added task concurrent_task_9: Concurrent Task 9
+2025-08-12 01:21:36,772 - __main__ - INFO - [demo_robust_functionality.py:80] - Quantum event: task_added for task concurrent_task_9
+2025-08-12 01:21:36,772 - llm_cost_tracker.quantum_task_planner - INFO - [quantum_task_planner.py:221] - Added task resilience_task_0: Resilience Test Task 0
+2025-08-12 01:21:36,772 - __main__ - INFO - [demo_robust_functionality.py:80] - Quantum event: task_added for task resilience_task_0
+2025-08-12 01:21:36,772 - llm_cost_tracker.quantum_task_planner - INFO - [quantum_task_planner.py:221] - Added task resilience_task_1: Resilience Test Task 1
+2025-08-12 01:21:36,772 - __main__ - INFO - [demo_robust_functionality.py:80] - Quantum event: task_added for task resilience_task_1
+2025-08-12 01:21:36,773 - llm_cost_tracker.quantum_task_planner - INFO - [quantum_task_planner.py:221] - Added task resilience_task_2: Resilience Test Task 2
+2025-08-12 01:21:36,773 - __main__ - INFO - [demo_robust_functionality.py:80] - Quantum event: task_added for task resilience_task_2
+2025-08-12 01:21:36,773 - llm_cost_tracker.quantum_task_planner - INFO - [quantum_task_planner.py:221] - Added task resilience_task_3: Resilience Test Task 3
+2025-08-12 01:21:36,773 - __main__ - INFO - [demo_robust_functionality.py:80] - Quantum event: task_added for task resilience_task_3
+2025-08-12 01:21:36,773 - llm_cost_tracker.quantum_task_planner - INFO - [quantum_task_planner.py:221] - Added task resilience_task_4: Resilience Test Task 4
+2025-08-12 01:21:36,774 - __main__ - INFO - [demo_robust_functionality.py:80] - Quantum event: task_added for task resilience_task_4
+2025-08-12 01:21:36,774 - llm_cost_tracker.quantum_task_planner - INFO - [quantum_task_planner.py:650] - Starting parallel execution of 5 tasks
+2025-08-12 01:21:36,774 - __main__ - INFO - [demo_robust_functionality.py:80] - Quantum event: superposition_collapse for task resilience_task_2
+2025-08-12 01:21:36,774 - llm_cost_tracker.quantum_task_planner - INFO - [quantum_task_planner.py:1402] - Executing task resilience_task_2: Resilience Test Task 2
+2025-08-12 01:21:36,774 - __main__ - INFO - [demo_robust_functionality.py:80] - Quantum event: interference_applied for task resilience_task_2
+2025-08-12 01:21:46,785 - llm_cost_tracker.quantum_task_planner - INFO - [quantum_task_planner.py:1440] - Task resilience_task_2 completed successfully in 10010.94ms
+2025-08-12 01:21:46,785 - __main__ - INFO - [demo_robust_functionality.py:80] - Quantum event: superposition_collapse for task resilience_task_3
+2025-08-12 01:21:46,785 - llm_cost_tracker.quantum_task_planner - INFO - [quantum_task_planner.py:1402] - Executing task resilience_task_3: Resilience Test Task 3
+2025-08-12 01:21:46,785 - __main__ - INFO - [demo_robust_functionality.py:80] - Quantum event: interference_applied for task resilience_task_3
+2025-08-12 01:21:56,796 - llm_cost_tracker.quantum_task_planner - WARNING - [quantum_task_planner.py:1445] - Task resilience_task_3 failed during execution: Quantum execution probability threshold not met (p=0.455, rolled=0.574)
+2025-08-12 01:21:56,796 - __main__ - INFO - [demo_robust_functionality.py:80] - Quantum event: superposition_collapse for task resilience_task_4
+2025-08-12 01:21:56,797 - llm_cost_tracker.quantum_task_planner - INFO - [quantum_task_planner.py:1402] - Executing task resilience_task_4: Resilience Test Task 4
+2025-08-12 01:21:56,797 - __main__ - INFO - [demo_robust_functionality.py:80] - Quantum event: interference_applied for task resilience_task_4
+2025-08-12 01:22:06,807 - llm_cost_tracker.quantum_task_planner - INFO - [quantum_task_planner.py:1440] - Task resilience_task_4 completed successfully in 10010.81ms
+2025-08-12 01:22:06,808 - __main__ - INFO - [demo_robust_functionality.py:80] - Quantum event: superposition_collapse for task resilience_task_0
+2025-08-12 01:22:06,808 - llm_cost_tracker.quantum_task_planner - INFO - [quantum_task_planner.py:1402] - Executing task resilience_task_0: Resilience Test Task 0
+2025-08-12 01:22:06,808 - __main__ - INFO - [demo_robust_functionality.py:80] - Quantum event: interference_applied for task resilience_task_0
+2025-08-12 01:22:16,819 - llm_cost_tracker.quantum_task_planner - WARNING - [quantum_task_planner.py:1445] - Task resilience_task_0 failed during execution: Quantum execution probability threshold not met (p=0.212, rolled=0.512)
+2025-08-12 01:22:16,819 - __main__ - INFO - [demo_robust_functionality.py:80] - Quantum event: superposition_collapse for task resilience_task_1
+2025-08-12 01:22:16,819 - llm_cost_tracker.quantum_task_planner - INFO - [quantum_task_planner.py:1402] - Executing task resilience_task_1: Resilience Test Task 1
+2025-08-12 01:22:16,819 - __main__ - INFO - [demo_robust_functionality.py:80] - Quantum event: interference_applied for task resilience_task_1
+2025-08-12 01:22:26,830 - llm_cost_tracker.quantum_task_planner - INFO - [quantum_task_planner.py:1440] - Task resilience_task_1 completed successfully in 10010.90ms
+2025-08-12 01:22:26,830 - llm_cost_tracker.quantum_task_planner - INFO - [quantum_task_planner.py:728] - Parallel execution complete in 50.06s. Success rate: 60.00% (3/5)
+2025-08-12 01:22:26,871 - llm_cost_tracker.quantum_task_planner - INFO - [quantum_task_planner.py:409] - Advanced quantum annealing complete. Best cost: 349.1061, Pareto solutions: 2, Iterations: 5
+2025-08-12 01:22:26,872 - __main__ - INFO - [demo_robust_functionality.py:460] - Info message - normal operation
+2025-08-12 01:22:26,872 - __main__ - WARNING - [demo_robust_functionality.py:461] - Warning message - potential issue detected
+2025-08-12 01:22:26,872 - __main__ - ERROR - [demo_robust_functionality.py:462] - Error message - recoverable error occurred
+2025-08-12 01:22:26,872 - __main__ - INFO - [demo_robust_functionality.py:465] - Structured log entry
+2025-08-12 01:22:26,873 - __main__ - ERROR - [demo_robust_functionality.py:97] - Error recorded: health_check - Health issues detected: Scheduler unable to generate valid schedules (severity: warning)
