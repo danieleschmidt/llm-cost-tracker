@@ -1,0 +1,134 @@
+{
+  "timestamp": "2025-08-15T03:16:30.381635",
+  "metrics_history": [
+    {
+      "metric_type": "cpu_utilization",
+      "value": 0.41299765795650084,
+      "timestamp": "2025-08-15T03:16:00.350541",
+      "source": "server_1",
+      "metadata": {}
+    },
+    {
+      "metric_type": "memory_utilization",
+      "value": 0.5093969561806283,
+      "timestamp": "2025-08-15T03:16:00.350541",
+      "source": "server_1",
+      "metadata": {}
+    },
+    {
+      "metric_type": "latency",
+      "value": 0.08582038506939389,
+      "timestamp": "2025-08-15T03:16:00.350541",
+      "source": "server_1",
+      "metadata": {}
+    },
+    {
+      "metric_type": "error_rate",
+      "value": 0.004009310710587237,
+      "timestamp": "2025-08-15T03:16:00.350541",
+      "source": "server_1",
+      "metadata": {}
+    },
+    {
+      "metric_type": "cpu_utilization",
+      "value": 0.46039753314863613,
+      "timestamp": "2025-08-15T03:16:00.350541",
+      "source": "server_2",
+      "metadata": {}
+    },
+    {
+      "metric_type": "memory_utilization",
+      "value": 0.5013112446756566,
+      "timestamp": "2025-08-15T03:16:00.350541",
+      "source": "server_2",
+      "metadata": {}
+    },
+    {
+      "metric_type": "latency",
+      "value": 0.11894097175830419,
+      "timestamp": "2025-08-15T03:16:00.350541",
+      "source": "server_2",
+      "metadata": {}
+    },
+    {
+      "metric_type": "error_rate",
+      "value": 0.004653813635255219,
+      "timestamp": "2025-08-15T03:16:00.350541",
+      "source": "server_2",
+      "metadata": {}
+    },
+    {
+      "metric_type": "cpu_utilization",
+      "value": 0.6628315928029243,
+      "timestamp": "2025-08-15T03:16:00.350541",
+      "source": "server_3",
+      "metadata": {}
+    },
+    {
+      "metric_type": "memory_utilization",
+      "value": 0.5382445810542508,
+      "timestamp": "2025-08-15T03:16:00.350541",
+      "source": "server_3",
+      "metadata": {}
+    },
+    {
+      "metric_type": "latency",
+      "value": 0.1392464441621381,
+      "timestamp": "2025-08-15T03:16:00.350541",
+      "source": "server_3",
+      "metadata": {}
+    },
+    {
+      "metric_type": "error_rate",
+      "value": 0.008445530649788523,
+      "timestamp": "2025-08-15T03:16:00.350541",
+      "source": "server_3",
+      "metadata": {}
+    },
+    {
+      "metric_type": "throughput",
+      "value": 775.7995385016233,
+      "timestamp": "2025-08-15T03:16:00.350541",
+      "source": "system",
+      "metadata": {}
+    }
+  ],
+  "optimization_results": [],
+  "scaling_history": [],
+  "system_configuration": {
+    "optimization_targets": [
+      {
+        "metric_type": "latency",
+        "target_value": 0.1,
+        "priority": 0.9,
+        "tolerance": 0.2
+      },
+      {
+        "metric_type": "error_rate",
+        "target_value": 0.01,
+        "priority": 0.8,
+        "tolerance": 0.5
+      },
+      {
+        "metric_type": "cpu_utilization",
+        "target_value": 0.7,
+        "priority": 0.6,
+        "tolerance": 0.1
+      },
+      {
+        "metric_type": "memory_utilization",
+        "target_value": 0.8,
+        "priority": 0.5,
+        "tolerance": 0.1
+      },
+      {
+        "metric_type": "throughput",
+        "target_value": 1000.0,
+        "priority": 0.7,
+        "tolerance": 0.1
+      }
+    ],
+    "current_strategy": "adaptive",
+    "current_instances": 1
+  }
+}

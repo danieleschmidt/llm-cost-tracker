@@ -1,0 +1,517 @@
+{
+  "timestamp": "2025-08-15T03:16:00.344471",
+  "total_execution_time": 66.45307064056396,
+  "benchmark_summary": {
+    "total_benchmarks": 5,
+    "successful": 5,
+    "failed": 0,
+    "success_rate": 1.0
+  },
+  "performance_highlights": {},
+  "regression_alerts": [],
+  "improvement_opportunities": [],
+  "benchmark_results": {
+    "quantum_task_creation": {
+      "benchmark_name": "quantum_task_creation",
+      "benchmark_type": "performance",
+      "execution_time": 12.919658184051514,
+      "metrics": [
+        {
+          "name": "task_creation_time",
+          "type": "latency",
+          "value": 0.11727867841720581,
+          "unit": "seconds",
+          "timestamp": "2025-08-15T03:15:06.809363",
+          "metadata": {
+            "min": 0.11487007141113281,
+            "max": 0.12847423553466797,
+            "std_dev": 0.0017985897363225003,
+            "median": 0.11699521541595459,
+            "count": 100
+          }
+        },
+        {
+          "name": "tasks_created",
+          "type": "latency",
+          "value": 100.0,
+          "unit": "seconds",
+          "timestamp": "2025-08-15T03:15:06.809551",
+          "metadata": {
+            "min": 100.0,
+            "max": 100.0,
+            "std_dev": 0.0,
+            "median": 100.0,
+            "count": 100
+          }
+        },
+        {
+          "name": "tasks_per_second",
+          "type": "latency",
+          "value": 852.860362306861,
+          "unit": "seconds",
+          "timestamp": "2025-08-15T03:15:06.809860",
+          "metadata": {
+            "min": 778.3661804550347,
+            "max": 870.5487754254877,
+            "std_dev": 12.55448627222556,
+            "median": 854.7358087196699,
+            "count": 100
+          }
+        },
+        {
+          "name": "avg_task_creation_time",
+          "type": "latency",
+          "value": 0.0011727867841720581,
+          "unit": "seconds",
+          "timestamp": "2025-08-15T03:15:06.810153",
+          "metadata": {
+            "min": 0.0011487007141113281,
+            "max": 0.0012847423553466798,
+            "std_dev": 1.798589736322501e-05,
+            "median": 0.001169952154159546,
+            "count": 100
+          }
+        },
+        {
+          "name": "iteration_execution_time",
+          "type": "latency",
+          "value": 0.11732937097549438,
+          "unit": "seconds",
+          "timestamp": "2025-08-15T03:15:06.810376",
+          "metadata": {
+            "min": 0.1149146556854248,
+            "max": 0.12851572036743164,
+            "std_dev": 0.0017985512608972847,
+            "median": 0.11703729629516602,
+            "count": 100
+          }
+        }
+      ],
+      "statistical_summary": {
+        "mean_execution_time": 0.11732937097549438,
+        "median_execution_time": 0.11703729629516602,
+        "std_dev_execution_time": 0.0017985512608972847,
+        "min_execution_time": 0.1149146556854248,
+        "max_execution_time": 0.12851572036743164,
+        "percentile_95": 0.11995877027511596,
+        "percentile_99": 0.12256411314010623,
+        "coefficient_of_variation": 1.532907954712323,
+        "total_iterations": 100
+      },
+      "success": true,
+      "error_message": null,
+      "baseline_comparison": null,
+      "significance_test": null
+    },
+    "quantum_optimization_convergence": {
+      "benchmark_name": "quantum_optimization_convergence",
+      "benchmark_type": "accuracy",
+      "execution_time": 23.90464162826538,
+      "metrics": [
+        {
+          "name": "optimization_time",
+          "type": "latency",
+          "value": 1.0396158695220947,
+          "unit": "seconds",
+          "timestamp": "2025-08-15T03:15:30.715104",
+          "metadata": {
+            "min": 1.0309221744537354,
+            "max": 1.0749306678771973,
+            "std_dev": 0.011345582552027667,
+            "median": 1.0353931188583374,
+            "count": 20
+          }
+        },
+        {
+          "name": "convergence_iterations",
+          "type": "optimization_convergence",
+          "value": 100.0,
+          "unit": "iterations",
+          "timestamp": "2025-08-15T03:15:30.715169",
+          "metadata": {
+            "min": 100.0,
+            "max": 100.0,
+            "std_dev": 0.0,
+            "median": 100.0,
+            "count": 20
+          }
+        },
+        {
+          "name": "final_energy",
+          "type": "latency",
+          "value": 0.8265640522014355,
+          "unit": "seconds",
+          "timestamp": "2025-08-15T03:15:30.715333",
+          "metadata": {
+            "min": 0.361073889088306,
+            "max": 1.5031463664449638,
+            "std_dev": 0.3663571058100771,
+            "median": 0.8493598940092181,
+            "count": 20
+          }
+        },
+        {
+          "name": "convergence_rate",
+          "type": "throughput",
+          "value": 1.0,
+          "unit": "ops/sec",
+          "timestamp": "2025-08-15T03:15:30.715389",
+          "metadata": {
+            "min": 1.0,
+            "max": 1.0,
+            "std_dev": 0.0,
+            "median": 1.0,
+            "count": 20
+          }
+        },
+        {
+          "name": "optimization_efficiency",
+          "type": "optimization_convergence",
+          "value": 0.0,
+          "unit": "iterations",
+          "timestamp": "2025-08-15T03:15:30.715477",
+          "metadata": {
+            "min": 0.0,
+            "max": 0.0,
+            "std_dev": 0.0,
+            "median": 0.0,
+            "count": 20
+          }
+        },
+        {
+          "name": "iteration_execution_time",
+          "type": "latency",
+          "value": 1.0396681785583497,
+          "unit": "seconds",
+          "timestamp": "2025-08-15T03:15:30.715588",
+          "metadata": {
+            "min": 1.0309741497039795,
+            "max": 1.0749831199645996,
+            "std_dev": 0.011345729690957245,
+            "median": 1.0354470014572144,
+            "count": 20
+          }
+        }
+      ],
+      "statistical_summary": {
+        "mean_execution_time": 1.0396681785583497,
+        "median_execution_time": 1.0354470014572144,
+        "std_dev_execution_time": 0.011345729690957245,
+        "min_execution_time": 1.0309741497039795,
+        "max_execution_time": 1.0749831199645996,
+        "percentile_95": 1.0679370045661927,
+        "percentile_99": 1.0735738968849182,
+        "coefficient_of_variation": 1.0912837311890935,
+        "total_iterations": 20
+      },
+      "success": true,
+      "error_message": null,
+      "baseline_comparison": null,
+      "significance_test": null
+    },
+    "parallel_execution_scalability": {
+      "benchmark_name": "parallel_execution_scalability",
+      "benchmark_type": "scalability",
+      "execution_time": 2.0871312618255615,
+      "metrics": [
+        {
+          "name": "sequential_time",
+          "type": "latency",
+          "value": 0.10231375694274902,
+          "unit": "seconds",
+          "timestamp": "2025-08-15T03:15:32.802242",
+          "metadata": {
+            "min": 0.10102415084838867,
+            "max": 0.1033930778503418,
+            "std_dev": 0.0008212623115057633,
+            "median": 0.10227930545806885,
+            "count": 10
+          }
+        },
+        {
+          "name": "parallel_1_tasks",
+          "type": "latency",
+          "value": 0.10231375694274902,
+          "unit": "seconds",
+          "timestamp": "2025-08-15T03:15:32.802320",
+          "metadata": {
+            "min": 0.10102415084838867,
+            "max": 0.1033930778503418,
+            "std_dev": 0.0008212623115057633,
+            "median": 0.10227930545806885,
+            "count": 10
+          }
+        },
+        {
+          "name": "parallel_2_tasks",
+          "type": "latency",
+          "value": 0.1037743330001831,
+          "unit": "seconds",
+          "timestamp": "2025-08-15T03:15:32.802393",
+          "metadata": {
+            "min": 0.10236454010009766,
+            "max": 0.1059269905090332,
+            "std_dev": 0.0013142412533156116,
+            "median": 0.10346448421478271,
+            "count": 10
+          }
+        },
+        {
+          "name": "parallel_4_tasks",
+          "type": "latency",
+          "value": 0.10851845741271973,
+          "unit": "seconds",
+          "timestamp": "2025-08-15T03:15:32.802526",
+          "metadata": {
+            "min": 0.1044764518737793,
+            "max": 0.1132667064666748,
+            "std_dev": 0.003189094244221249,
+            "median": 0.10803961753845215,
+            "count": 10
+          }
+        },
+        {
+          "name": "parallel_8_tasks",
+          "type": "latency",
+          "value": 0.1148531198501587,
+          "unit": "seconds",
+          "timestamp": "2025-08-15T03:15:32.802606",
+          "metadata": {
+            "min": 0.1062314510345459,
+            "max": 0.1269822120666504,
+            "std_dev": 0.007479989861719678,
+            "median": 0.11443030834197998,
+            "count": 10
+          }
+        },
+        {
+          "name": "parallel_16_tasks",
+          "type": "latency",
+          "value": 0.11902587413787842,
+          "unit": "seconds",
+          "timestamp": "2025-08-15T03:15:32.802675",
+          "metadata": {
+            "min": 0.10841703414916992,
+            "max": 0.1285874843597412,
+            "std_dev": 0.008338595045493705,
+            "median": 0.12044930458068848,
+            "count": 10
+          }
+        },
+        {
+          "name": "iteration_execution_time",
+          "type": "latency",
+          "value": 0.5485162496566772,
+          "unit": "seconds",
+          "timestamp": "2025-08-15T03:15:32.802751",
+          "metadata": {
+            "min": 0.5406985282897949,
+            "max": 0.5602812767028809,
+            "std_dev": 0.005756930143660147,
+            "median": 0.5486595630645752,
+            "count": 10
+          }
+        }
+      ],
+      "statistical_summary": {
+        "mean_execution_time": 0.5485162496566772,
+        "median_execution_time": 0.5486595630645752,
+        "std_dev_execution_time": 0.005756930143660147,
+        "min_execution_time": 0.5406985282897949,
+        "max_execution_time": 0.5602812767028809,
+        "percentile_95": 0.5562449812889099,
+        "percentile_99": 0.5594740176200866,
+        "coefficient_of_variation": 1.0495459609926738,
+        "total_iterations": 10
+      },
+      "success": true,
+      "error_message": null,
+      "baseline_comparison": null,
+      "significance_test": null
+    },
+    "memory_efficiency": {
+      "benchmark_name": "memory_efficiency",
+      "benchmark_type": "resource_utilization",
+      "execution_time": 0.0022292137145996094,
+      "metrics": [
+        {
+          "name": "iteration_execution_time",
+          "type": "latency",
+          "value": 8.592605590820312e-05,
+          "unit": "seconds",
+          "timestamp": "2025-08-15T03:15:32.805062",
+          "metadata": {
+            "min": 7.987022399902344e-05,
+            "max": 0.00011682510375976562,
+            "std_dev": 9.085772452853355e-06,
+            "median": 8.273124694824219e-05,
+            "count": 15
+          }
+        }
+      ],
+      "statistical_summary": {
+        "mean_execution_time": 8.592605590820312e-05,
+        "median_execution_time": 8.273124694824219e-05,
+        "std_dev_execution_time": 9.085772452853355e-06,
+        "min_execution_time": 7.987022399902344e-05,
+        "max_execution_time": 0.00011682510375976562,
+        "percentile_95": 9.896755218505857e-05,
+        "percentile_99": 0.0001132535934448242,
+        "coefficient_of_variation": 10.573943324664995,
+        "total_iterations": 15
+      },
+      "success": true,
+      "error_message": null,
+      "baseline_comparison": null,
+      "significance_test": null
+    },
+    "quantum_coherence_simulation": {
+      "benchmark_name": "quantum_coherence_simulation",
+      "benchmark_type": "accuracy",
+      "execution_time": 27.53892970085144,
+      "metrics": [
+        {
+          "name": "simulation_time",
+          "type": "latency",
+          "value": 0.5190851116180419,
+          "unit": "seconds",
+          "timestamp": "2025-08-15T03:16:00.340643",
+          "metadata": {
+            "min": 0.5100753307342529,
+            "max": 0.551020622253418,
+            "std_dev": 0.006940259486580182,
+            "median": 0.517720103263855,
+            "count": 50
+          }
+        },
+        {
+          "name": "initial_coherence",
+          "type": "quantum_coherence",
+          "value": 1.0,
+          "unit": "coherence",
+          "timestamp": "2025-08-15T03:16:00.340792",
+          "metadata": {
+            "min": 1.0,
+            "max": 1.0,
+            "std_dev": 0.0,
+            "median": 1.0,
+            "count": 50
+          }
+        },
+        {
+          "name": "final_coherence",
+          "type": "quantum_coherence",
+          "value": 0.7820791810123778,
+          "unit": "coherence",
+          "timestamp": "2025-08-15T03:16:00.341277",
+          "metadata": {
+            "min": 0.7401506700599028,
+            "max": 0.8254202045759576,
+            "std_dev": 0.021755934654586227,
+            "median": 0.7821446465101971,
+            "count": 50
+          }
+        },
+        {
+          "name": "average_coherence",
+          "type": "quantum_coherence",
+          "value": 0.886179575214043,
+          "unit": "coherence",
+          "timestamp": "2025-08-15T03:16:00.341710",
+          "metadata": {
+            "min": 0.8804758491553502,
+            "max": 0.8931921760711012,
+            "std_dev": 0.0028683065207476956,
+            "median": 0.8863131988647877,
+            "count": 50
+          }
+        },
+        {
+          "name": "coherence_decay",
+          "type": "quantum_coherence",
+          "value": 0.21792081898762214,
+          "unit": "coherence",
+          "timestamp": "2025-08-15T03:16:00.342172",
+          "metadata": {
+            "min": 0.17457979542404245,
+            "max": 0.25984932994009724,
+            "std_dev": 0.021755934654586227,
+            "median": 0.21785535348980284,
+            "count": 50
+          }
+        },
+        {
+          "name": "coherence_stability",
+          "type": "quantum_coherence",
+          "value": 0.923901418404362,
+          "unit": "coherence",
+          "timestamp": "2025-08-15T03:16:00.342589",
+          "metadata": {
+            "min": 0.9175894916177765,
+            "max": 0.9313431220714622,
+            "std_dev": 0.0032332433386850503,
+            "median": 0.9240193517845193,
+            "count": 50
+          }
+        },
+        {
+          "name": "measurement_count",
+          "type": "latency",
+          "value": 50.0,
+          "unit": "seconds",
+          "timestamp": "2025-08-15T03:16:00.342754",
+          "metadata": {
+            "min": 50.0,
+            "max": 50.0,
+            "std_dev": 0.0,
+            "median": 50.0,
+            "count": 50
+          }
+        },
+        {
+          "name": "decay_rate_fitted",
+          "type": "throughput",
+          "value": 0.04358416379752443,
+          "unit": "ops/sec",
+          "timestamp": "2025-08-15T03:16:00.343267",
+          "metadata": {
+            "min": 0.03491595908480849,
+            "max": 0.05196986598801945,
+            "std_dev": 0.004351186930917245,
+            "median": 0.04357107069796057,
+            "count": 50
+          }
+        },
+        {
+          "name": "iteration_execution_time",
+          "type": "latency",
+          "value": 0.5195228862762451,
+          "unit": "seconds",
+          "timestamp": "2025-08-15T03:16:00.343582",
+          "metadata": {
+            "min": 0.5104129314422607,
+            "max": 0.5513720512390137,
+            "std_dev": 0.007108615230098809,
+            "median": 0.5180867910385132,
+            "count": 50
+          }
+        }
+      ],
+      "statistical_summary": {
+        "mean_execution_time": 0.5195228862762451,
+        "median_execution_time": 0.5180867910385132,
+        "std_dev_execution_time": 0.007108615230098809,
+        "min_execution_time": 0.5104129314422607,
+        "max_execution_time": 0.5513720512390137,
+        "percentile_95": 0.5285416960716247,
+        "percentile_99": 0.5490929102897644,
+        "coefficient_of_variation": 1.3682968388651422,
+        "total_iterations": 50
+      },
+      "success": true,
+      "error_message": null,
+      "baseline_comparison": null,
+      "significance_test": null
+    }
+  }
+}

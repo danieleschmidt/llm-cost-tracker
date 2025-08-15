@@ -1,0 +1,92 @@
+{
+  "timestamp": "2025-08-15T03:16:00.349831",
+  "processing_records": [
+    {
+      "processing_id": "3c1efc1d-3c63-42f8-8352-73a5f4d3fadc",
+      "timestamp": "2025-08-15T03:04:49.494076",
+      "data_categories": [
+        "personal_identifier"
+      ],
+      "legal_basis": "consent",
+      "purpose": "User analytics",
+      "data_subject_id": "user_123",
+      "retention_period": null,
+      "anonymized": false,
+      "consent_id": "1a97e0b2-dc02-457e-b160-741ffc71028b"
+    },
+    {
+      "processing_id": "15b7c9f3-88da-447e-8a53-350fd30c945e",
+      "timestamp": "2025-08-15T03:04:49.497283",
+      "data_categories": [
+        "personal_identifier"
+      ],
+      "legal_basis": "legal_obligation",
+      "purpose": "Data subject access request",
+      "data_subject_id": "user_123",
+      "retention_period": null,
+      "anonymized": false,
+      "consent_id": null
+    },
+    {
+      "processing_id": "a1899860-6853-485c-a4e5-8ae53f99ddf3",
+      "timestamp": "2025-08-15T03:16:00.346942",
+      "data_categories": [
+        "personal_identifier"
+      ],
+      "legal_basis": "consent",
+      "purpose": "User analytics",
+      "data_subject_id": "user_123",
+      "retention_period": null,
+      "anonymized": false,
+      "consent_id": "3dd0301f-6a94-4a9c-bec3-c2331f348ee1"
+    },
+    {
+      "processing_id": "9cf7bd46-4ecb-4b37-a7d8-5bde080905ef",
+      "timestamp": "2025-08-15T03:16:00.349786",
+      "data_categories": [
+        "personal_identifier"
+      ],
+      "legal_basis": "legal_obligation",
+      "purpose": "Data subject access request",
+      "data_subject_id": "user_123",
+      "retention_period": null,
+      "anonymized": false,
+      "consent_id": null
+    }
+  ],
+  "consent_records": [
+    {
+      "consent_id": "1a97e0b2-dc02-457e-b160-741ffc71028b",
+      "data_subject_id": "user_123",
+      "timestamp": "2025-08-15T03:04:49.494052",
+      "purposes": [
+        "analytics",
+        "personalization"
+      ],
+      "data_categories": [
+        "personal_identifier",
+        "behavioral"
+      ],
+      "active": true,
+      "withdrawal_timestamp": null,
+      "expiry_timestamp": "2027-08-15T03:04:49.494048"
+    },
+    {
+      "consent_id": "3dd0301f-6a94-4a9c-bec3-c2331f348ee1",
+      "data_subject_id": "user_123",
+      "timestamp": "2025-08-15T03:16:00.346920",
+      "purposes": [
+        "analytics",
+        "personalization"
+      ],
+      "data_categories": [
+        "personal_identifier",
+        "behavioral"
+      ],
+      "active": true,
+      "withdrawal_timestamp": null,
+      "expiry_timestamp": "2027-08-15T03:16:00.346917"
+    }
+  ],
+  "compliance_alerts": []
+}
