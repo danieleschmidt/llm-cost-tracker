@@ -1,1117 +1,981 @@
-"""
-Autonomous Evolution Engine for Self-Improving System Patterns
-=============================================================
-
-This module implements a revolutionary autonomous evolution engine that enables
-the LLM Cost Tracker and Quantum Task Planner to continuously improve and adapt
-without human intervention. This represents the pinnacle of autonomous system design.
-
-Key Evolutionary Features:
-- Self-modifying code generation and testing
-- Adaptive performance optimization based on real-world usage
-- Autonomous feature discovery and implementation
-- Self-healing system architecture
-- Continuous learning from production data
-
-Author: Terragon Labs Autonomous Systems Division
-"""
+"""Autonomous Evolution Engine with Self-Improvement Capabilities."""
 
 import asyncio
-import logging
 import json
-import hashlib
+import logging
+import math
+import random
+import statistics
 import time
-import inspect
-import ast
-import sys
-import os
-from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Tuple, Any, Union, Callable
-from collections import deque, defaultdict
 from dataclasses import dataclass, field
-from abc import ABC, abstractmethod
-import threading
-from concurrent.futures import ThreadPoolExecutor
-import importlib
-import tempfile
-import shutil
+from datetime import datetime, timedelta
+from enum import Enum
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple, Callable, Union, Set
+from collections import defaultdict, deque
+import uuid
+import hashlib
 
 logger = logging.getLogger(__name__)
 
 
+class EvolutionStrategy(Enum):
+    """Evolution strategies for system improvement."""
+    GENETIC_ALGORITHM = "genetic_algorithm"
+    SIMULATED_ANNEALING = "simulated_annealing"
+    GRADIENT_DESCENT = "gradient_descent"
+    REINFORCEMENT_LEARNING = "reinforcement_learning"
+    SWARM_OPTIMIZATION = "swarm_optimization"
+    ADAPTIVE_HYBRID = "adaptive_hybrid"
+
+
+class FitnessMetric(Enum):
+    """Metrics used to evaluate fitness of system configurations."""
+    PERFORMANCE_SCORE = "performance_score"
+    RESOURCE_EFFICIENCY = "resource_efficiency"
+    ERROR_RATE_INVERSE = "error_rate_inverse"
+    USER_SATISFACTION = "user_satisfaction"
+    COST_EFFECTIVENESS = "cost_effectiveness"
+    STABILITY_SCORE = "stability_score"
+    SCALABILITY_FACTOR = "scalability_factor"
+
+
 @dataclass
-class EvolutionHypothesis:
-    """Represents a hypothesis for system improvement."""
-    
-    hypothesis_id: str
-    description: str
-    target_metric: str
-    expected_improvement: float
-    confidence_score: float
-    
-    # Implementation details
-    code_changes: List[Dict[str, str]] = field(default_factory=list)
-    test_cases: List[str] = field(default_factory=list)
-    rollback_plan: Dict[str, Any] = field(default_factory=dict)
-    
-    # Experiment tracking
-    status: str = "proposed"  # proposed, testing, validated, deployed, rejected
-    created_at: datetime = field(default_factory=datetime.now)
-    test_results: List[Dict[str, Any]] = field(default_factory=list)
-    production_metrics: Dict[str, float] = field(default_factory=dict)
+class SystemGenome:
+    """Represents a system configuration as a genome for evolution."""
+    genome_id: str
+    parameters: Dict[str, Any]
+    fitness_scores: Dict[FitnessMetric, float] = field(default_factory=dict)
+    generation: int = 0
+    parent_ids: List[str] = field(default_factory=list)
+    mutation_rate: float = 0.1
+    crossover_points: List[str] = field(default_factory=list)
     
     def to_dict(self) -> Dict[str, Any]:
-        """Convert hypothesis to dictionary."""
+        """Convert genome to dictionary."""
         return {
-            "hypothesis_id": self.hypothesis_id,
-            "description": self.description,
-            "target_metric": self.target_metric,
-            "expected_improvement": self.expected_improvement,
-            "confidence_score": self.confidence_score,
-            "status": self.status,
-            "created_at": self.created_at.isoformat(),
-            "code_changes_count": len(self.code_changes),
-            "test_cases_count": len(self.test_cases),
-            "test_results_count": len(self.test_results),
-            "production_metrics": self.production_metrics
+            "genome_id": self.genome_id,
+            "parameters": self.parameters,
+            "fitness_scores": {k.value: v for k, v in self.fitness_scores.items()},
+            "generation": self.generation,
+            "parent_ids": self.parent_ids,
+            "mutation_rate": self.mutation_rate,
+            "crossover_points": self.crossover_points
+        }
+    
+    def calculate_overall_fitness(self, weights: Dict[FitnessMetric, float] = None) -> float:
+        """Calculate overall fitness score."""
+        if not self.fitness_scores:
+            return 0.0
+        
+        if weights is None:
+            # Default equal weighting
+            weights = {metric: 1.0 for metric in self.fitness_scores.keys()}
+        
+        total_weighted_score = 0.0
+        total_weight = 0.0
+        
+        for metric, score in self.fitness_scores.items():
+            weight = weights.get(metric, 1.0)
+            total_weighted_score += score * weight
+            total_weight += weight
+        
+        return total_weighted_score / total_weight if total_weight > 0 else 0.0
+
+
+@dataclass
+class EvolutionExperiment:
+    """Represents an evolution experiment with specific parameters."""
+    experiment_id: str
+    strategy: EvolutionStrategy
+    population_size: int
+    generations: int
+    mutation_rate: float
+    crossover_rate: float
+    elite_percentage: float
+    fitness_weights: Dict[FitnessMetric, float]
+    start_time: datetime
+    end_time: Optional[datetime] = None
+    best_genome: Optional[SystemGenome] = None
+    convergence_generation: Optional[int] = None
+    
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert experiment to dictionary."""
+        return {
+            "experiment_id": self.experiment_id,
+            "strategy": self.strategy.value,
+            "population_size": self.population_size,
+            "generations": self.generations,
+            "mutation_rate": self.mutation_rate,
+            "crossover_rate": self.crossover_rate,
+            "elite_percentage": self.elite_percentage,
+            "fitness_weights": {k.value: v for k, v in self.fitness_weights.items()},
+            "start_time": self.start_time.isoformat(),
+            "end_time": self.end_time.isoformat() if self.end_time else None,
+            "best_genome": self.best_genome.to_dict() if self.best_genome else None,
+            "convergence_generation": self.convergence_generation
         }
 
 
-class CodeAnalyzer:
-    """Analyzes existing code for improvement opportunities."""
+@dataclass
+class EvolutionaryFeedback:
+    """Feedback from system performance for evolutionary learning."""
+    feedback_id: str
+    genome_id: str
+    timestamp: datetime
+    performance_metrics: Dict[str, float]
+    user_feedback: Optional[Dict[str, Any]] = None
+    system_health: Optional[Dict[str, float]] = None
+    environmental_context: Optional[Dict[str, Any]] = None
     
-    def __init__(self, source_directory: str = "src/llm_cost_tracker"):
-        self.source_directory = source_directory
-        self.analysis_cache = {}
-        self.performance_patterns = {}
-        
-    def analyze_code_patterns(self) -> Dict[str, Any]:
-        """Analyze code patterns for optimization opportunities."""
-        try:
-            analysis_results = {
-                "function_complexity": {},
-                "performance_bottlenecks": [],
-                "optimization_opportunities": [],
-                "code_smells": [],
-                "improvement_suggestions": []
-            }
-            
-            # Walk through source files
-            for root, dirs, files in os.walk(self.source_directory):
-                for file in files:
-                    if file.endswith('.py'):
-                        file_path = os.path.join(root, file)
-                        file_analysis = self._analyze_file(file_path)
-                        
-                        # Merge results
-                        for key in analysis_results:
-                            if key in file_analysis:
-                                if isinstance(analysis_results[key], dict):
-                                    analysis_results[key].update(file_analysis[key])
-                                elif isinstance(analysis_results[key], list):
-                                    analysis_results[key].extend(file_analysis[key])
-            
-            return analysis_results
-            
-        except Exception as e:
-            logger.error(f"Error analyzing code patterns: {e}")
-            return {}
-    
-    def _analyze_file(self, file_path: str) -> Dict[str, Any]:
-        """Analyze a single Python file."""
-        try:
-            with open(file_path, 'r', encoding='utf-8') as f:
-                content = f.read()
-            
-            # Parse AST
-            tree = ast.parse(content)
-            
-            analysis = {
-                "function_complexity": {},
-                "performance_bottlenecks": [],
-                "optimization_opportunities": [],
-                "code_smells": [],
-                "improvement_suggestions": []
-            }
-            
-            # Analyze functions
-            for node in ast.walk(tree):
-                if isinstance(node, ast.FunctionDef):
-                    func_analysis = self._analyze_function(node, content, file_path)
-                    analysis["function_complexity"][f"{file_path}::{node.name}"] = func_analysis
-                    
-                    # Check for optimization opportunities
-                    if func_analysis["cyclomatic_complexity"] > 10:
-                        analysis["code_smells"].append({
-                            "type": "high_complexity",
-                            "location": f"{file_path}::{node.name}",
-                            "complexity": func_analysis["cyclomatic_complexity"],
-                            "suggestion": "Consider breaking down this function"
-                        })
-                    
-                    if func_analysis["line_count"] > 50:
-                        analysis["improvement_suggestions"].append({
-                            "type": "long_function",
-                            "location": f"{file_path}::{node.name}",
-                            "line_count": func_analysis["line_count"],
-                            "suggestion": "Consider splitting this function for better maintainability"
-                        })
-            
-            return analysis
-            
-        except Exception as e:
-            logger.error(f"Error analyzing file {file_path}: {e}")
-            return {}
-    
-    def _analyze_function(self, func_node: ast.FunctionDef, content: str, file_path: str) -> Dict[str, Any]:
-        """Analyze a single function for complexity and performance."""
-        try:
-            # Count lines
-            func_lines = func_node.end_lineno - func_node.lineno + 1 if hasattr(func_node, 'end_lineno') else 0
-            
-            # Calculate cyclomatic complexity (simplified)
-            complexity = 1  # Base complexity
-            for node in ast.walk(func_node):
-                if isinstance(node, (ast.If, ast.For, ast.While, ast.With)):
-                    complexity += 1
-                elif isinstance(node, ast.ExceptHandler):
-                    complexity += 1
-            
-            # Count nested loops (performance indicator)
-            nested_loops = 0
-            for node in ast.walk(func_node):
-                if isinstance(node, (ast.For, ast.While)):
-                    for child in ast.walk(node):
-                        if isinstance(child, (ast.For, ast.While)) and child != node:
-                            nested_loops += 1
-            
-            # Check for async functions
-            is_async = isinstance(func_node, ast.AsyncFunctionDef)
-            
-            return {
-                "name": func_node.name,
-                "line_count": func_lines,
-                "cyclomatic_complexity": complexity,
-                "nested_loops": nested_loops,
-                "is_async": is_async,
-                "file_path": file_path,
-                "performance_score": max(0, 10 - complexity - nested_loops * 2)
-            }
-            
-        except Exception as e:
-            logger.error(f"Error analyzing function: {e}")
-            return {"name": "unknown", "line_count": 0, "cyclomatic_complexity": 1}
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert feedback to dictionary."""
+        return {
+            "feedback_id": self.feedback_id,
+            "genome_id": self.genome_id,
+            "timestamp": self.timestamp.isoformat(),
+            "performance_metrics": self.performance_metrics,
+            "user_feedback": self.user_feedback,
+            "system_health": self.system_health,
+            "environmental_context": self.environmental_context
+        }
 
 
-class HypothesisGenerator:
-    """Generates improvement hypotheses based on system analysis."""
+class ParameterSpace:
+    """Defines the parameter space for system configuration evolution."""
     
     def __init__(self):
-        self.hypothesis_templates = self._load_hypothesis_templates()
-        self.generated_hypotheses = {}
-        
-    def _load_hypothesis_templates(self) -> Dict[str, Dict[str, Any]]:
-        """Load hypothesis templates for different improvement types."""
-        return {
-            "performance_optimization": {
-                "template": "Optimize {function_name} by {optimization_type}",
-                "metrics": ["response_time", "throughput", "cpu_usage"],
-                "confidence_base": 0.7
-            },
-            "caching_improvement": {
-                "template": "Add caching to {function_name} to reduce {resource_type} usage",
-                "metrics": ["cache_hit_rate", "response_time", "memory_usage"],
-                "confidence_base": 0.8
-            },
-            "concurrency_enhancement": {
-                "template": "Parallelize {operation_name} to improve throughput",
-                "metrics": ["throughput", "resource_utilization", "response_time"],
-                "confidence_base": 0.6
-            },
-            "algorithm_optimization": {
-                "template": "Replace {algorithm_name} with more efficient implementation",
-                "metrics": ["algorithmic_complexity", "execution_time", "memory_usage"],
-                "confidence_base": 0.9
-            },
-            "resource_pooling": {
-                "template": "Implement connection pooling for {resource_type}",
-                "metrics": ["connection_overhead", "resource_utilization", "throughput"],
-                "confidence_base": 0.75
-            }
+        """Initialize parameter space."""
+        self.parameters = {
+            # Performance parameters
+            "cache_size_mb": {"type": "int", "min": 64, "max": 2048, "step": 64},
+            "connection_pool_size": {"type": "int", "min": 5, "max": 50, "step": 5},
+            "worker_threads": {"type": "int", "min": 1, "max": 16, "step": 1},
+            "batch_size": {"type": "int", "min": 10, "max": 1000, "step": 10},
+            
+            # Optimization parameters
+            "learning_rate": {"type": "float", "min": 0.001, "max": 0.1, "step": 0.001},
+            "regularization": {"type": "float", "min": 0.0, "max": 0.1, "step": 0.001},
+            "momentum": {"type": "float", "min": 0.1, "max": 0.9, "step": 0.05},
+            
+            # System behavior parameters
+            "timeout_seconds": {"type": "int", "min": 5, "max": 300, "step": 5},
+            "retry_attempts": {"type": "int", "min": 1, "max": 10, "step": 1},
+            "gc_frequency": {"type": "choice", "choices": ["low", "medium", "high", "adaptive"]},
+            "compression_level": {"type": "int", "min": 1, "max": 9, "step": 1},
+            
+            # Quantum-inspired parameters
+            "quantum_coherence_threshold": {"type": "float", "min": 0.1, "max": 1.0, "step": 0.05},
+            "entanglement_strength": {"type": "float", "min": 0.0, "max": 1.0, "step": 0.1},
+            "superposition_depth": {"type": "int", "min": 2, "max": 16, "step": 2},
+            "annealing_schedule": {"type": "choice", "choices": ["linear", "exponential", "logarithmic", "adaptive"]},
+            
+            # Feature flags
+            "enable_caching": {"type": "bool"},
+            "enable_compression": {"type": "bool"},
+            "enable_parallel_processing": {"type": "bool"},
+            "enable_adaptive_scaling": {"type": "bool"},
+            "enable_quantum_optimization": {"type": "bool"},
         }
     
-    def generate_hypotheses(self, 
-                          code_analysis: Dict[str, Any], 
-                          performance_metrics: Dict[str, float]) -> List[EvolutionHypothesis]:
-        """Generate improvement hypotheses based on analysis."""
-        hypotheses = []
+    def generate_random_genome(self) -> Dict[str, Any]:
+        """Generate a random genome within the parameter space."""
+        genome = {}
         
-        try:
-            # Generate performance optimization hypotheses
-            for func_location, func_data in code_analysis.get("function_complexity", {}).items():
-                if func_data["performance_score"] < 5:  # Low performance score
-                    hypothesis = self._generate_performance_hypothesis(func_location, func_data, performance_metrics)
-                    if hypothesis:
-                        hypotheses.append(hypothesis)
+        for param_name, param_config in self.parameters.items():
+            param_type = param_config["type"]
             
-            # Generate caching hypotheses
-            for bottleneck in code_analysis.get("performance_bottlenecks", []):
-                hypothesis = self._generate_caching_hypothesis(bottleneck, performance_metrics)
-                if hypothesis:
-                    hypotheses.append(hypothesis)
-            
-            # Generate algorithm optimization hypotheses
-            for improvement in code_analysis.get("improvement_suggestions", []):
-                if improvement["type"] == "long_function":
-                    hypothesis = self._generate_algorithm_hypothesis(improvement, performance_metrics)
-                    if hypothesis:
-                        hypotheses.append(hypothesis)
-            
-            logger.info(f"Generated {len(hypotheses)} improvement hypotheses")
-            return hypotheses
-            
-        except Exception as e:
-            logger.error(f"Error generating hypotheses: {e}")
-            return []
+            if param_type == "int":
+                min_val = param_config["min"]
+                max_val = param_config["max"]
+                step = param_config.get("step", 1)
+                value = random.randrange(min_val, max_val + 1, step)
+                genome[param_name] = value
+                
+            elif param_type == "float":
+                min_val = param_config["min"]
+                max_val = param_config["max"]
+                step = param_config.get("step", 0.001)
+                num_steps = int((max_val - min_val) / step)
+                value = min_val + random.randint(0, num_steps) * step
+                genome[param_name] = round(value, 6)
+                
+            elif param_type == "bool":
+                genome[param_name] = random.choice([True, False])
+                
+            elif param_type == "choice":
+                genome[param_name] = random.choice(param_config["choices"])
+        
+        return genome
     
-    def _generate_performance_hypothesis(self, 
-                                       func_location: str, 
-                                       func_data: Dict[str, Any], 
-                                       metrics: Dict[str, float]) -> Optional[EvolutionHypothesis]:
-        """Generate performance optimization hypothesis."""
-        try:
-            function_name = func_data.get("name", "unknown")
-            complexity = func_data.get("cyclomatic_complexity", 1)
-            
-            # Determine optimization type based on function characteristics
-            if func_data.get("nested_loops", 0) > 0:
-                optimization_type = "reducing nested loops"
-                expected_improvement = 0.3  # 30% improvement expected
-            elif complexity > 8:
-                optimization_type = "simplifying complex logic"
-                expected_improvement = 0.2  # 20% improvement expected
+    def mutate_genome(self, genome: Dict[str, Any], mutation_rate: float = 0.1) -> Dict[str, Any]:
+        """Mutate a genome with specified mutation rate."""
+        mutated_genome = genome.copy()
+        
+        for param_name, param_config in self.parameters.items():
+            if random.random() < mutation_rate:
+                param_type = param_config["type"]
+                
+                if param_type == "int":
+                    min_val = param_config["min"]
+                    max_val = param_config["max"]
+                    step = param_config.get("step", 1)
+                    # Small mutation around current value
+                    current_val = mutated_genome[param_name]
+                    mutation_range = max(1, (max_val - min_val) // 10)
+                    new_val = current_val + random.randint(-mutation_range, mutation_range) * step
+                    mutated_genome[param_name] = max(min_val, min(max_val, new_val))
+                    
+                elif param_type == "float":
+                    min_val = param_config["min"]
+                    max_val = param_config["max"]
+                    step = param_config.get("step", 0.001)
+                    # Small mutation around current value
+                    current_val = mutated_genome[param_name]
+                    mutation_range = (max_val - min_val) * 0.1  # 10% range
+                    new_val = current_val + random.gauss(0, mutation_range / 3)
+                    mutated_genome[param_name] = round(max(min_val, min(max_val, new_val)), 6)
+                    
+                elif param_type == "bool":
+                    # Flip boolean with some probability
+                    if random.random() < 0.5:
+                        mutated_genome[param_name] = not mutated_genome[param_name]
+                        
+                elif param_type == "choice":
+                    # Change to a different choice
+                    choices = param_config["choices"]
+                    current_choice = mutated_genome[param_name]
+                    other_choices = [c for c in choices if c != current_choice]
+                    if other_choices:
+                        mutated_genome[param_name] = random.choice(other_choices)
+        
+        return mutated_genome
+    
+    def crossover_genomes(self, parent1: Dict[str, Any], parent2: Dict[str, Any]) -> Tuple[Dict[str, Any], Dict[str, Any]]:
+        """Perform crossover between two parent genomes."""
+        child1 = {}
+        child2 = {}
+        
+        param_names = list(self.parameters.keys())
+        crossover_point = random.randint(1, len(param_names) - 1)
+        
+        for i, param_name in enumerate(param_names):
+            if i < crossover_point:
+                child1[param_name] = parent1[param_name]
+                child2[param_name] = parent2[param_name]
             else:
-                optimization_type = "general performance tuning"
-                expected_improvement = 0.15  # 15% improvement expected
-            
-            hypothesis_id = hashlib.md5(f"perf_{func_location}_{optimization_type}".encode()).hexdigest()[:12]
-            
-            hypothesis = EvolutionHypothesis(
-                hypothesis_id=hypothesis_id,
-                description=f"Optimize {function_name} by {optimization_type}",
-                target_metric="response_time",
-                expected_improvement=expected_improvement,
-                confidence_score=0.7 - (complexity - 10) * 0.1 if complexity > 10 else 0.7
-            )
-            
-            # Generate basic code change suggestion
-            hypothesis.code_changes = [{
-                "file": func_data.get("file_path", "unknown"),
-                "function": function_name,
-                "type": "performance_optimization",
-                "description": f"Optimize {function_name} to reduce complexity from {complexity}"
-            }]
-            
-            return hypothesis
-            
-        except Exception as e:
-            logger.error(f"Error generating performance hypothesis: {e}")
-            return None
-    
-    def _generate_caching_hypothesis(self, 
-                                   bottleneck: Dict[str, Any], 
-                                   metrics: Dict[str, float]) -> Optional[EvolutionHypothesis]:
-        """Generate caching improvement hypothesis."""
-        try:
-            location = bottleneck.get("location", "unknown")
-            resource_type = bottleneck.get("resource_type", "computation")
-            
-            hypothesis_id = hashlib.md5(f"cache_{location}_{resource_type}".encode()).hexdigest()[:12]
-            
-            hypothesis = EvolutionHypothesis(
-                hypothesis_id=hypothesis_id,
-                description=f"Add caching to {location} to reduce {resource_type} usage",
-                target_metric="cache_hit_rate",
-                expected_improvement=0.4,  # 40% improvement expected
-                confidence_score=0.8
-            )
-            
-            hypothesis.code_changes = [{
-                "location": location,
-                "type": "add_caching",
-                "description": f"Implement caching for {resource_type} operations",
-                "cache_type": "LRU" if resource_type == "memory" else "TTL"
-            }]
-            
-            return hypothesis
-            
-        except Exception as e:
-            logger.error(f"Error generating caching hypothesis: {e}")
-            return None
-    
-    def _generate_algorithm_hypothesis(self, 
-                                     improvement: Dict[str, Any], 
-                                     metrics: Dict[str, float]) -> Optional[EvolutionHypothesis]:
-        """Generate algorithm optimization hypothesis."""
-        try:
-            location = improvement.get("location", "unknown")
-            line_count = improvement.get("line_count", 0)
-            
-            hypothesis_id = hashlib.md5(f"algo_{location}_{line_count}".encode()).hexdigest()[:12]
-            
-            hypothesis = EvolutionHypothesis(
-                hypothesis_id=hypothesis_id,
-                description=f"Refactor function at {location} to improve algorithmic efficiency",
-                target_metric="execution_time",
-                expected_improvement=0.25,  # 25% improvement expected
-                confidence_score=0.6
-            )
-            
-            hypothesis.code_changes = [{
-                "location": location,
-                "type": "algorithm_optimization",
-                "description": f"Refactor {line_count}-line function for better efficiency",
-                "approach": "function_decomposition"
-            }]
-            
-            return hypothesis
-            
-        except Exception as e:
-            logger.error(f"Error generating algorithm hypothesis: {e}")
-            return None
-
-
-class EvolutionTester:
-    """Tests evolution hypotheses in isolated environments."""
-    
-    def __init__(self, test_environment_path: str = None):
-        self.test_environment_path = test_environment_path or tempfile.mkdtemp(prefix="evolution_test_")
-        self.test_results_history = deque(maxlen=1000)
+                child1[param_name] = parent2[param_name]
+                child2[param_name] = parent1[param_name]
         
-    async def test_hypothesis_async(self, hypothesis: EvolutionHypothesis) -> Dict[str, Any]:
-        """Test a hypothesis in an isolated environment."""
-        try:
-            logger.info(f"Testing hypothesis: {hypothesis.hypothesis_id}")
-            
-            test_result = {
-                "hypothesis_id": hypothesis.hypothesis_id,
-                "test_start_time": datetime.now().isoformat(),
-                "test_status": "running",
-                "test_phases": {},
-                "overall_result": None,
-                "performance_impact": {},
-                "risk_assessment": {}
-            }
-            
-            # Phase 1: Setup test environment
-            test_result["test_phases"]["setup"] = await self._setup_test_environment(hypothesis)
-            
-            # Phase 2: Apply code changes
-            test_result["test_phases"]["code_application"] = await self._apply_code_changes(hypothesis)
-            
-            # Phase 3: Run tests
-            test_result["test_phases"]["testing"] = await self._run_hypothesis_tests(hypothesis)
-            
-            # Phase 4: Performance validation
-            test_result["test_phases"]["performance"] = await self._validate_performance(hypothesis)
-            
-            # Phase 5: Risk assessment
-            test_result["test_phases"]["risk"] = await self._assess_risks(hypothesis)
-            
-            # Determine overall result
-            test_result["overall_result"] = self._determine_test_result(test_result["test_phases"])
-            test_result["test_status"] = "completed"
-            test_result["test_end_time"] = datetime.now().isoformat()
-            
-            # Update hypothesis status
-            if test_result["overall_result"]["passed"]:
-                hypothesis.status = "validated"
-            else:
-                hypothesis.status = "rejected"
-            
-            hypothesis.test_results.append(test_result)
-            self.test_results_history.append(test_result)
-            
-            logger.info(f"Hypothesis {hypothesis.hypothesis_id} test completed: {test_result['overall_result']['passed']}")
-            return test_result
-            
-        except Exception as e:
-            logger.error(f"Error testing hypothesis {hypothesis.hypothesis_id}: {e}")
-            return {
-                "hypothesis_id": hypothesis.hypothesis_id,
-                "test_status": "failed",
-                "error": str(e),
-                "test_end_time": datetime.now().isoformat()
-            }
-    
-    async def _setup_test_environment(self, hypothesis: EvolutionHypothesis) -> Dict[str, Any]:
-        """Setup isolated test environment."""
-        try:
-            # Create test directory
-            test_dir = os.path.join(self.test_environment_path, hypothesis.hypothesis_id)
-            os.makedirs(test_dir, exist_ok=True)
-            
-            # Copy source files
-            source_files = []
-            for change in hypothesis.code_changes:
-                if "file" in change and os.path.exists(change["file"]):
-                    dest_file = os.path.join(test_dir, os.path.basename(change["file"]))
-                    shutil.copy2(change["file"], dest_file)
-                    source_files.append(dest_file)
-            
-            return {
-                "status": "success",
-                "test_directory": test_dir,
-                "files_copied": len(source_files),
-                "source_files": source_files
-            }
-            
-        except Exception as e:
-            return {"status": "failed", "error": str(e)}
-    
-    async def _apply_code_changes(self, hypothesis: EvolutionHypothesis) -> Dict[str, Any]:
-        """Apply code changes specified in hypothesis."""
-        try:
-            changes_applied = 0
-            
-            for change in hypothesis.code_changes:
-                if change.get("type") == "performance_optimization":
-                    # Simulate performance optimization
-                    changes_applied += 1
-                elif change.get("type") == "add_caching":
-                    # Simulate adding caching
-                    changes_applied += 1
-                elif change.get("type") == "algorithm_optimization":
-                    # Simulate algorithm optimization
-                    changes_applied += 1
-            
-            return {
-                "status": "success",
-                "changes_applied": changes_applied,
-                "changes_total": len(hypothesis.code_changes)
-            }
-            
-        except Exception as e:
-            return {"status": "failed", "error": str(e)}
-    
-    async def _run_hypothesis_tests(self, hypothesis: EvolutionHypothesis) -> Dict[str, Any]:
-        """Run tests to validate hypothesis."""
-        try:
-            # Simulate running tests
-            await asyncio.sleep(0.1)  # Simulate test execution time
-            
-            # Mock test results based on hypothesis confidence
-            test_pass_rate = hypothesis.confidence_score + 0.1  # Slightly better than expected
-            tests_run = len(hypothesis.test_cases) if hypothesis.test_cases else 5  # Default test count
-            tests_passed = int(tests_run * test_pass_rate)
-            
-            return {
-                "status": "completed",
-                "tests_run": tests_run,
-                "tests_passed": tests_passed,
-                "pass_rate": tests_passed / tests_run if tests_run > 0 else 0,
-                "test_details": [
-                    {"test_id": f"test_{i}", "status": "passed" if i < tests_passed else "failed"}
-                    for i in range(tests_run)
-                ]
-            }
-            
-        except Exception as e:
-            return {"status": "failed", "error": str(e)}
-    
-    async def _validate_performance(self, hypothesis: EvolutionHypothesis) -> Dict[str, Any]:
-        """Validate performance improvements."""
-        try:
-            # Simulate performance measurements
-            baseline_performance = 1.0
-            
-            # Calculate expected performance based on hypothesis
-            improvement_factor = 1.0 + hypothesis.expected_improvement
-            optimized_performance = baseline_performance * improvement_factor
-            
-            # Add some realistic variance
-            import random
-            actual_improvement = improvement_factor * random.uniform(0.8, 1.2)
-            actual_performance = baseline_performance * actual_improvement
-            
-            performance_gain = (actual_performance - baseline_performance) / baseline_performance
-            
-            return {
-                "status": "completed",
-                "baseline_performance": baseline_performance,
-                "optimized_performance": actual_performance,
-                "performance_gain": performance_gain,
-                "expected_gain": hypothesis.expected_improvement,
-                "target_metric": hypothesis.target_metric,
-                "meets_expectations": performance_gain >= (hypothesis.expected_improvement * 0.8)
-            }
-            
-        except Exception as e:
-            return {"status": "failed", "error": str(e)}
-    
-    async def _assess_risks(self, hypothesis: EvolutionHypothesis) -> Dict[str, Any]:
-        """Assess risks of implementing the hypothesis."""
-        try:
-            # Calculate risk factors
-            complexity_risk = min(0.5, len(hypothesis.code_changes) * 0.1)
-            confidence_risk = 1.0 - hypothesis.confidence_score
-            integration_risk = 0.2  # Base integration risk
-            
-            total_risk = (complexity_risk + confidence_risk + integration_risk) / 3
-            risk_level = "low" if total_risk < 0.3 else "medium" if total_risk < 0.6 else "high"
-            
-            return {
-                "status": "completed",
-                "total_risk_score": total_risk,
-                "risk_level": risk_level,
-                "risk_factors": {
-                    "complexity_risk": complexity_risk,
-                    "confidence_risk": confidence_risk,
-                    "integration_risk": integration_risk
-                },
-                "mitigation_strategies": self._generate_mitigation_strategies(total_risk, risk_level)
-            }
-            
-        except Exception as e:
-            return {"status": "failed", "error": str(e)}
-    
-    def _generate_mitigation_strategies(self, risk_score: float, risk_level: str) -> List[str]:
-        """Generate risk mitigation strategies."""
-        strategies = []
-        
-        if risk_level == "high":
-            strategies.extend([
-                "Implement gradual rollout with feature flags",
-                "Set up comprehensive monitoring and alerting",
-                "Prepare detailed rollback procedures",
-                "Conduct extensive integration testing"
-            ])
-        elif risk_level == "medium":
-            strategies.extend([
-                "Implement A/B testing for performance comparison",
-                "Monitor key metrics closely during deployment",
-                "Have rollback plan ready"
-            ])
-        else:  # low risk
-            strategies.extend([
-                "Monitor basic performance metrics",
-                "Standard deployment procedures"
-            ])
-        
-        return strategies
-    
-    def _determine_test_result(self, test_phases: Dict[str, Any]) -> Dict[str, Any]:
-        """Determine overall test result based on all phases."""
-        try:
-            phases_passed = 0
-            total_phases = len(test_phases)
-            
-            for phase_name, phase_result in test_phases.items():
-                if isinstance(phase_result, dict):
-                    if phase_result.get("status") == "success" or phase_result.get("status") == "completed":
-                        # Additional criteria for specific phases
-                        if phase_name == "testing":
-                            if phase_result.get("pass_rate", 0) >= 0.8:  # 80% test pass rate
-                                phases_passed += 1
-                        elif phase_name == "performance":
-                            if phase_result.get("meets_expectations", False):
-                                phases_passed += 1
-                        elif phase_name == "risk":
-                            if phase_result.get("risk_level") != "high":
-                                phases_passed += 1
-                        else:
-                            phases_passed += 1
-            
-            success_rate = phases_passed / total_phases if total_phases > 0 else 0
-            passed = success_rate >= 0.8  # 80% of phases must pass
-            
-            return {
-                "passed": passed,
-                "success_rate": success_rate,
-                "phases_passed": phases_passed,
-                "total_phases": total_phases,
-                "recommendation": "deploy" if passed else "reject"
-            }
-            
-        except Exception as e:
-            logger.error(f"Error determining test result: {e}")
-            return {"passed": False, "error": str(e)}
+        return child1, child2
 
 
 class AutonomousEvolutionEngine:
-    """Main autonomous evolution engine coordinating all components."""
+    """Autonomous evolution engine for system self-improvement."""
     
-    def __init__(self, config: Dict[str, Any] = None):
-        self.config = config or self._get_default_config()
-        
-        # Core components
-        self.code_analyzer = CodeAnalyzer()
-        self.hypothesis_generator = HypothesisGenerator()
-        self.evolution_tester = EvolutionTester()
+    def __init__(self, project_root: Path = None):
+        """Initialize the autonomous evolution engine."""
+        self.project_root = project_root or Path("/root/repo")
+        self.parameter_space = ParameterSpace()
         
         # Evolution state
-        self.is_active = False
-        self.current_hypotheses: Dict[str, EvolutionHypothesis] = {}
-        self.evolution_history = deque(maxlen=10000)
-        self.performance_baseline = {}
+        self.current_population: List[SystemGenome] = []
+        self.evolution_history: List[EvolutionExperiment] = []
+        self.feedback_history: List[EvolutionaryFeedback] = []
+        self.best_genome_ever: Optional[SystemGenome] = None
         
-        # Metrics and tracking
-        self.evolution_metrics = {
-            "hypotheses_generated": 0,
-            "hypotheses_tested": 0,
-            "hypotheses_deployed": 0,
-            "performance_improvements": [],
-            "failed_experiments": 0
+        # Evolution parameters
+        self.population_size = 20
+        self.elite_percentage = 0.2
+        self.mutation_rate = 0.1
+        self.crossover_rate = 0.8
+        self.convergence_threshold = 0.001
+        self.max_generations = 100
+        
+        # Current experiment
+        self.current_experiment: Optional[EvolutionExperiment] = None
+        self.current_generation = 0
+        
+        # Fitness evaluation
+        self.fitness_weights = {
+            FitnessMetric.PERFORMANCE_SCORE: 0.25,
+            FitnessMetric.RESOURCE_EFFICIENCY: 0.20,
+            FitnessMetric.ERROR_RATE_INVERSE: 0.20,
+            FitnessMetric.STABILITY_SCORE: 0.15,
+            FitnessMetric.COST_EFFECTIVENESS: 0.10,
+            FitnessMetric.SCALABILITY_FACTOR: 0.10
         }
         
-        # Async task management
-        self._evolution_task = None
-        self._monitoring_task = None
+        # Self-improvement
+        self.evolution_active = False
+        self.learning_rate = 0.01
+        self.adaptation_history: deque = deque(maxlen=100)
         
-    def _get_default_config(self) -> Dict[str, Any]:
-        """Get default evolution engine configuration."""
-        return {
-            "evolution_frequency": 3600.0,  # 1 hour
-            "max_concurrent_experiments": 3,
-            "performance_threshold": 0.1,  # 10% improvement required
-            "risk_tolerance": "medium",
-            "auto_deploy": False,  # Require manual approval for deployment
-            "metrics_collection_interval": 300.0,  # 5 minutes
-            "hypothesis_confidence_threshold": 0.7
-        }
+        self._initialize_population()
     
-    async def start_evolution_async(self):
-        """Start the autonomous evolution engine."""
+    def _initialize_population(self) -> None:
+        """Initialize the starting population."""
+        logger.info("Initializing evolution population...")
+        
+        # Create initial population with random genomes
+        for i in range(self.population_size):
+            genome_params = self.parameter_space.generate_random_genome()
+            genome = SystemGenome(
+                genome_id=str(uuid.uuid4()),
+                parameters=genome_params,
+                generation=0
+            )
+            self.current_population.append(genome)
+        
+        logger.info(f"Initialized population with {len(self.current_population)} genomes")
+    
+    async def start_evolution(self, strategy: EvolutionStrategy = EvolutionStrategy.ADAPTIVE_HYBRID) -> str:
+        """Start an evolution experiment."""
+        if self.evolution_active:
+            logger.warning("Evolution is already active")
+            return ""
+        
+        experiment_id = str(uuid.uuid4())
+        
+        self.current_experiment = EvolutionExperiment(
+            experiment_id=experiment_id,
+            strategy=strategy,
+            population_size=self.population_size,
+            generations=self.max_generations,
+            mutation_rate=self.mutation_rate,
+            crossover_rate=self.crossover_rate,
+            elite_percentage=self.elite_percentage,
+            fitness_weights=self.fitness_weights.copy(),
+            start_time=datetime.now()
+        )
+        
+        self.evolution_active = True
+        self.current_generation = 0
+        
+        logger.info(f"Starting evolution experiment: {experiment_id} with strategy: {strategy.value}")
+        
+        # Start evolution loop
+        asyncio.create_task(self._evolution_loop())
+        
+        return experiment_id
+    
+    async def stop_evolution(self) -> None:
+        """Stop the current evolution experiment."""
+        if not self.evolution_active:
+            return
+        
+        self.evolution_active = False
+        
+        if self.current_experiment:
+            self.current_experiment.end_time = datetime.now()
+            self.current_experiment.best_genome = self._get_best_genome()
+            self.evolution_history.append(self.current_experiment)
+            
+            logger.info(f"Evolution experiment {self.current_experiment.experiment_id} completed")
+        
+        await self._save_evolution_data()
+    
+    async def evaluate_genome_fitness(self, genome: SystemGenome) -> Dict[FitnessMetric, float]:
+        """Evaluate fitness of a genome through system testing."""
         try:
-            self.is_active = True
+            # Simulate applying genome configuration and measuring performance
+            await self._apply_genome_configuration(genome)
             
-            # Establish performance baseline
-            await self._establish_baseline_async()
+            # Simulate measurement period
+            await asyncio.sleep(1)  # 1 second evaluation period for demo
             
-            # Start evolution and monitoring tasks
-            self._evolution_task = asyncio.create_task(self._evolution_loop_async())
-            self._monitoring_task = asyncio.create_task(self._monitoring_loop_async())
+            # Simulate performance metrics collection
+            performance_metrics = await self._collect_performance_metrics(genome)
             
-            logger.info("🧬 Autonomous Evolution Engine started")
+            # Calculate fitness scores
+            fitness_scores = {}
+            
+            # Performance score (based on latency, throughput)
+            latency = performance_metrics.get("latency", 0.1)
+            throughput = performance_metrics.get("throughput", 1000)
+            performance_score = min(1.0, (1.0 / max(latency, 0.01)) * (throughput / 1000) * 0.1)
+            fitness_scores[FitnessMetric.PERFORMANCE_SCORE] = performance_score
+            
+            # Resource efficiency (based on CPU, memory usage)
+            cpu_usage = performance_metrics.get("cpu_utilization", 0.5)
+            memory_usage = performance_metrics.get("memory_utilization", 0.5)
+            resource_efficiency = max(0.0, 1.0 - (cpu_usage * 0.6 + memory_usage * 0.4))
+            fitness_scores[FitnessMetric.RESOURCE_EFFICIENCY] = resource_efficiency
+            
+            # Error rate inverse (lower error rate = higher fitness)
+            error_rate = performance_metrics.get("error_rate", 0.01)
+            error_rate_inverse = max(0.0, 1.0 - error_rate * 100)
+            fitness_scores[FitnessMetric.ERROR_RATE_INVERSE] = error_rate_inverse
+            
+            # Stability score (based on variance in performance)
+            stability_score = performance_metrics.get("stability", 0.8)
+            fitness_scores[FitnessMetric.STABILITY_SCORE] = stability_score
+            
+            # Cost effectiveness (based on resource usage vs performance)
+            cost_per_performance = (cpu_usage + memory_usage) / max(performance_score, 0.01)
+            cost_effectiveness = max(0.0, 1.0 - cost_per_performance)
+            fitness_scores[FitnessMetric.COST_EFFECTIVENESS] = cost_effectiveness
+            
+            # Scalability factor (based on configuration scalability)
+            scalability_factor = self._calculate_scalability_factor(genome)
+            fitness_scores[FitnessMetric.SCALABILITY_FACTOR] = scalability_factor
+            
+            # Update genome fitness
+            genome.fitness_scores = fitness_scores
+            
+            logger.debug(f"Evaluated genome {genome.genome_id[:8]}: fitness = {genome.calculate_overall_fitness(self.fitness_weights):.3f}")
+            
+            return fitness_scores
             
         except Exception as e:
-            logger.error(f"Error starting evolution engine: {e}")
-            self.is_active = False
+            logger.error(f"Failed to evaluate genome fitness: {e}")
+            # Return low fitness scores on failure
+            return {metric: 0.1 for metric in FitnessMetric}
     
-    async def stop_evolution_async(self):
-        """Stop the autonomous evolution engine."""
+    async def _apply_genome_configuration(self, genome: SystemGenome) -> bool:
+        """Apply genome configuration to the system."""
         try:
-            self.is_active = False
+            # Simulate applying configuration changes
+            logger.debug(f"Applying configuration for genome {genome.genome_id[:8]}")
             
-            # Cancel background tasks
-            if self._evolution_task:
-                self._evolution_task.cancel()
-            if self._monitoring_task:
-                self._monitoring_task.cancel()
+            # In a real implementation, this would:
+            # - Update system configuration files
+            # - Restart services with new parameters
+            # - Update runtime configuration
             
-            logger.info("🛑 Autonomous Evolution Engine stopped")
+            await asyncio.sleep(0.1)  # Simulate configuration application time
+            return True
             
         except Exception as e:
-            logger.error(f"Error stopping evolution engine: {e}")
+            logger.error(f"Failed to apply genome configuration: {e}")
+            return False
     
-    async def _establish_baseline_async(self):
-        """Establish performance baseline for comparison."""
+    async def _collect_performance_metrics(self, genome: SystemGenome) -> Dict[str, float]:
+        """Collect performance metrics for genome evaluation."""
         try:
-            # Simulate baseline establishment
-            self.performance_baseline = {
-                "response_time": 150.0,  # ms
-                "throughput": 1000.0,   # requests/second
-                "cpu_usage": 45.0,      # percentage
-                "memory_usage": 512.0,  # MB
-                "cache_hit_rate": 0.85, # percentage
-                "error_rate": 0.02      # percentage
+            # Simulate performance metrics based on genome parameters
+            params = genome.parameters
+            
+            # Calculate simulated metrics based on parameters
+            base_latency = 0.1
+            base_throughput = 1000
+            base_cpu = 0.5
+            base_memory = 0.5
+            base_error_rate = 0.01
+            
+            # Apply parameter effects
+            if params.get("enable_caching", False):
+                base_latency *= 0.8
+                base_memory *= 1.2
+            
+            if params.get("enable_compression", False):
+                base_latency *= 1.1
+                base_cpu *= 1.3
+                base_throughput *= 1.1
+            
+            cache_size = params.get("cache_size_mb", 256)
+            base_latency *= max(0.5, 1.0 - (cache_size - 64) / 2048)
+            
+            connection_pool_size = params.get("connection_pool_size", 10)
+            base_throughput *= min(2.0, 1.0 + (connection_pool_size - 5) / 50)
+            
+            worker_threads = params.get("worker_threads", 4)
+            base_cpu *= max(0.3, min(1.5, worker_threads / 8))
+            base_throughput *= min(1.5, 1.0 + (worker_threads - 1) / 16)
+            
+            # Add randomness for realistic simulation
+            latency = max(0.01, base_latency * random.gauss(1.0, 0.1))
+            throughput = max(100, base_throughput * random.gauss(1.0, 0.1))
+            cpu_utilization = max(0.1, min(1.0, base_cpu * random.gauss(1.0, 0.05)))
+            memory_utilization = max(0.1, min(1.0, base_memory * random.gauss(1.0, 0.05)))
+            error_rate = max(0.0, min(0.1, base_error_rate * random.gauss(1.0, 0.2)))
+            
+            # Calculate stability based on parameter coherence
+            stability = self._calculate_stability_score(params)
+            
+            return {
+                "latency": latency,
+                "throughput": throughput,
+                "cpu_utilization": cpu_utilization,
+                "memory_utilization": memory_utilization,
+                "error_rate": error_rate,
+                "stability": stability
             }
             
-            logger.info("📊 Performance baseline established")
-            
         except Exception as e:
-            logger.error(f"Error establishing baseline: {e}")
+            logger.error(f"Failed to collect performance metrics: {e}")
+            return {
+                "latency": 0.5,
+                "throughput": 500,
+                "cpu_utilization": 0.8,
+                "memory_utilization": 0.8,
+                "error_rate": 0.05,
+                "stability": 0.3
+            }
     
-    async def _evolution_loop_async(self):
+    def _calculate_stability_score(self, params: Dict[str, Any]) -> float:
+        """Calculate stability score based on parameter configuration."""
+        stability = 0.8  # Base stability
+        
+        # Aggressive caching can cause instability
+        if params.get("cache_size_mb", 256) > 1024:
+            stability *= 0.9
+        
+        # Too many worker threads can cause contention
+        if params.get("worker_threads", 4) > 8:
+            stability *= 0.85
+        
+        # Very high compression can cause issues
+        if params.get("compression_level", 5) > 7:
+            stability *= 0.9
+        
+        # Short timeouts can cause instability
+        if params.get("timeout_seconds", 30) < 10:
+            stability *= 0.8
+        
+        # Quantum parameters add uncertainty
+        if params.get("enable_quantum_optimization", False):
+            coherence = params.get("quantum_coherence_threshold", 0.5)
+            stability *= (0.7 + coherence * 0.3)
+        
+        return max(0.1, min(1.0, stability))
+    
+    def _calculate_scalability_factor(self, genome: SystemGenome) -> float:
+        """Calculate scalability factor for genome."""
+        params = genome.parameters
+        scalability = 0.5  # Base scalability
+        
+        # Features that improve scalability
+        if params.get("enable_adaptive_scaling", False):
+            scalability += 0.2
+        
+        if params.get("enable_parallel_processing", False):
+            scalability += 0.15
+        
+        if params.get("connection_pool_size", 10) >= 20:
+            scalability += 0.1
+        
+        if params.get("worker_threads", 4) >= 8:
+            scalability += 0.1
+        
+        # Large cache improves scalability
+        cache_size = params.get("cache_size_mb", 256)
+        if cache_size >= 512:
+            scalability += 0.05
+        
+        return max(0.1, min(1.0, scalability))
+    
+    def _get_best_genome(self) -> Optional[SystemGenome]:
+        """Get the best genome from current population."""
+        if not self.current_population:
+            return None
+        
+        best_genome = None
+        best_fitness = -1.0
+        
+        for genome in self.current_population:
+            if genome.fitness_scores:
+                fitness = genome.calculate_overall_fitness(self.fitness_weights)
+                if fitness > best_fitness:
+                    best_fitness = fitness
+                    best_genome = genome
+        
+        return best_genome
+    
+    async def _evolution_loop(self) -> None:
         """Main evolution loop."""
-        while self.is_active:
-            try:
-                logger.info("🔄 Starting evolution cycle")
-                
-                # Phase 1: Analyze current system
-                code_analysis = await self._analyze_system_async()
-                
-                # Phase 2: Generate improvement hypotheses
-                new_hypotheses = await self._generate_hypotheses_async(code_analysis)
-                
-                # Phase 3: Test hypotheses
-                validated_hypotheses = await self._test_hypotheses_async(new_hypotheses)
-                
-                # Phase 4: Deploy validated improvements (if auto-deploy enabled)
-                if self.config.get("auto_deploy", False):
-                    await self._deploy_improvements_async(validated_hypotheses)
-                
-                # Record evolution cycle
-                self._record_evolution_cycle(code_analysis, new_hypotheses, validated_hypotheses)
-                
-                logger.info(f"Evolution cycle completed: {len(new_hypotheses)} hypotheses, {len(validated_hypotheses)} validated")
-                
-                # Wait for next cycle
-                await asyncio.sleep(self.config["evolution_frequency"])
-                
-            except asyncio.CancelledError:
-                break
-            except Exception as e:
-                logger.error(f"Error in evolution loop: {e}")
-                await asyncio.sleep(60.0)  # Wait before retrying
-    
-    async def _monitoring_loop_async(self):
-        """Continuous system monitoring for evolution opportunities."""
-        while self.is_active:
-            try:
-                # Collect current performance metrics
-                current_metrics = await self._collect_performance_metrics()
-                
-                # Compare with baseline
-                performance_deltas = self._calculate_performance_deltas(current_metrics)
-                
-                # Identify immediate optimization opportunities
-                urgent_optimizations = self._identify_urgent_optimizations(performance_deltas)
-                
-                if urgent_optimizations:
-                    logger.info(f"🚨 Identified {len(urgent_optimizations)} urgent optimizations")
-                    # Could trigger immediate evolution cycle here
-                
-                await asyncio.sleep(self.config["metrics_collection_interval"])
-                
-            except asyncio.CancelledError:
-                break
-            except Exception as e:
-                logger.error(f"Error in monitoring loop: {e}")
-                await asyncio.sleep(30.0)
-    
-    async def _analyze_system_async(self) -> Dict[str, Any]:
-        """Analyze current system for improvement opportunities."""
+        logger.info("Starting evolution loop...")
+        
         try:
-            # Run code analysis
-            code_analysis = self.code_analyzer.analyze_code_patterns()
-            
-            # Get current performance metrics
-            performance_metrics = await self._collect_performance_metrics()
-            
-            # Combine analyses
-            system_analysis = {
-                "code_analysis": code_analysis,
-                "performance_metrics": performance_metrics,
-                "analysis_timestamp": datetime.now().isoformat(),
-                "baseline_comparison": self._calculate_performance_deltas(performance_metrics)
-            }
-            
-            return system_analysis
-            
-        except Exception as e:
-            logger.error(f"Error analyzing system: {e}")
-            return {}
-    
-    async def _generate_hypotheses_async(self, system_analysis: Dict[str, Any]) -> List[EvolutionHypothesis]:
-        """Generate improvement hypotheses based on system analysis."""
-        try:
-            code_analysis = system_analysis.get("code_analysis", {})
-            performance_metrics = system_analysis.get("performance_metrics", {})
-            
-            # Generate hypotheses
-            hypotheses = self.hypothesis_generator.generate_hypotheses(code_analysis, performance_metrics)
-            
-            # Filter by confidence threshold
-            filtered_hypotheses = [
-                h for h in hypotheses 
-                if h.confidence_score >= self.config["hypothesis_confidence_threshold"]
-            ]
-            
-            # Add to current hypotheses tracking
-            for hypothesis in filtered_hypotheses:
-                self.current_hypotheses[hypothesis.hypothesis_id] = hypothesis
-            
-            self.evolution_metrics["hypotheses_generated"] += len(filtered_hypotheses)
-            
-            return filtered_hypotheses
-            
-        except Exception as e:
-            logger.error(f"Error generating hypotheses: {e}")
-            return []
-    
-    async def _test_hypotheses_async(self, hypotheses: List[EvolutionHypothesis]) -> List[EvolutionHypothesis]:
-        """Test hypotheses concurrently."""
-        try:
-            max_concurrent = self.config["max_concurrent_experiments"]
-            
-            # Test hypotheses in batches
-            validated_hypotheses = []
-            
-            for i in range(0, len(hypotheses), max_concurrent):
-                batch = hypotheses[i:i + max_concurrent]
+            while self.evolution_active and self.current_generation < self.max_generations:
+                generation_start = time.time()
                 
-                # Test batch concurrently
-                test_tasks = [self.evolution_tester.test_hypothesis_async(h) for h in batch]
-                test_results = await asyncio.gather(*test_tasks, return_exceptions=True)
+                logger.info(f"Starting generation {self.current_generation}")
                 
-                # Collect validated hypotheses
-                for j, result in enumerate(test_results):
-                    if isinstance(result, dict) and result.get("overall_result", {}).get("passed", False):
-                        validated_hypotheses.append(batch[j])
-                        self.evolution_metrics["hypotheses_deployed"] += 1
-                    else:
-                        self.evolution_metrics["failed_experiments"] += 1
+                # Evaluate fitness for all genomes in current generation
+                evaluation_tasks = []
+                for genome in self.current_population:
+                    if not genome.fitness_scores:  # Only evaluate if not already evaluated
+                        task = asyncio.create_task(self.evaluate_genome_fitness(genome))
+                        evaluation_tasks.append((genome, task))
                 
-                self.evolution_metrics["hypotheses_tested"] += len(batch)
-            
-            return validated_hypotheses
-            
-        except Exception as e:
-            logger.error(f"Error testing hypotheses: {e}")
-            return []
-    
-    async def _deploy_improvements_async(self, validated_hypotheses: List[EvolutionHypothesis]):
-        """Deploy validated improvements to production."""
-        try:
-            for hypothesis in validated_hypotheses:
-                logger.info(f"🚀 Deploying improvement: {hypothesis.description}")
+                # Wait for all evaluations to complete
+                for genome, task in evaluation_tasks:
+                    try:
+                        await task
+                    except Exception as e:
+                        logger.error(f"Failed to evaluate genome {genome.genome_id[:8]}: {e}")
                 
-                # Simulate deployment process
-                deployment_result = await self._deploy_hypothesis_async(hypothesis)
-                
-                if deployment_result["success"]:
-                    hypothesis.status = "deployed"
-                    self.evolution_metrics["performance_improvements"].append({
-                        "hypothesis_id": hypothesis.hypothesis_id,
-                        "improvement": hypothesis.expected_improvement,
-                        "deployed_at": datetime.now().isoformat()
-                    })
+                # Check for convergence
+                best_genome = self._get_best_genome()
+                if best_genome:
+                    best_fitness = best_genome.calculate_overall_fitness(self.fitness_weights)
                     
-                    logger.info(f"✅ Successfully deployed: {hypothesis.hypothesis_id}")
+                    # Update best genome ever
+                    if (self.best_genome_ever is None or 
+                        best_fitness > self.best_genome_ever.calculate_overall_fitness(self.fitness_weights)):
+                        self.best_genome_ever = best_genome
+                    
+                    logger.info(f"Generation {self.current_generation}: Best fitness = {best_fitness:.4f}")
+                    
+                    # Check convergence
+                    if self._check_convergence():
+                        logger.info(f"Convergence achieved at generation {self.current_generation}")
+                        if self.current_experiment:
+                            self.current_experiment.convergence_generation = self.current_generation
+                        break
+                
+                # Create next generation
+                if self.current_generation < self.max_generations - 1:
+                    next_generation = await self._create_next_generation()
+                    self.current_population = next_generation
+                
+                self.current_generation += 1
+                
+                generation_time = time.time() - generation_start
+                logger.info(f"Generation {self.current_generation - 1} completed in {generation_time:.2f}s")
+                
+                # Adaptive parameter adjustment
+                self._adapt_evolution_parameters()
+                
+                # Brief pause between generations
+                await asyncio.sleep(0.1)  # Reduced for demo
+            
+            logger.info(f"Evolution completed after {self.current_generation} generations")
+            
+        except Exception as e:
+            logger.error(f"Error in evolution loop: {e}")
+        finally:
+            await self.stop_evolution()
+    
+    def _check_convergence(self) -> bool:
+        """Check if population has converged."""
+        if len(self.current_population) < 2:
+            return False
+        
+        fitness_scores = []
+        for genome in self.current_population:
+            if genome.fitness_scores:
+                fitness = genome.calculate_overall_fitness(self.fitness_weights)
+                fitness_scores.append(fitness)
+        
+        if len(fitness_scores) < 2:
+            return False
+        
+        # Check if fitness variance is below threshold
+        fitness_variance = statistics.variance(fitness_scores)
+        return fitness_variance < self.convergence_threshold
+    
+    async def _create_next_generation(self) -> List[SystemGenome]:
+        """Create next generation through selection, crossover, and mutation."""
+        next_generation = []
+        
+        # Sort population by fitness
+        evaluated_population = [g for g in self.current_population if g.fitness_scores]
+        evaluated_population.sort(
+            key=lambda g: g.calculate_overall_fitness(self.fitness_weights),
+            reverse=True
+        )
+        
+        if not evaluated_population:
+            # If no evaluated genomes, create random population
+            return [
+                SystemGenome(
+                    genome_id=str(uuid.uuid4()),
+                    parameters=self.parameter_space.generate_random_genome(),
+                    generation=self.current_generation + 1
+                )
+                for _ in range(self.population_size)
+            ]
+        
+        # Elite selection
+        elite_count = max(1, int(self.population_size * self.elite_percentage))
+        elites = evaluated_population[:elite_count]
+        
+        # Add elites to next generation
+        for elite in elites:
+            next_generation.append(SystemGenome(
+                genome_id=str(uuid.uuid4()),
+                parameters=elite.parameters.copy(),
+                generation=self.current_generation + 1,
+                parent_ids=[elite.genome_id],
+                fitness_scores={}  # Reset fitness scores for re-evaluation
+            ))
+        
+        # Fill remaining population through crossover and mutation
+        while len(next_generation) < self.population_size:
+            # Tournament selection for parents
+            parent1 = self._tournament_selection(evaluated_population)
+            parent2 = self._tournament_selection(evaluated_population)
+            
+            if random.random() < self.crossover_rate:
+                # Crossover
+                child1_params, child2_params = self.parameter_space.crossover_genomes(
+                    parent1.parameters, parent2.parameters
+                )
+                
+                child1 = SystemGenome(
+                    genome_id=str(uuid.uuid4()),
+                    parameters=child1_params,
+                    generation=self.current_generation + 1,
+                    parent_ids=[parent1.genome_id, parent2.genome_id],
+                    mutation_rate=self.mutation_rate
+                )
+                
+                child2 = SystemGenome(
+                    genome_id=str(uuid.uuid4()),
+                    parameters=child2_params,
+                    generation=self.current_generation + 1,
+                    parent_ids=[parent1.genome_id, parent2.genome_id],
+                    mutation_rate=self.mutation_rate
+                )
+                
+                next_generation.extend([child1, child2])
+            else:
+                # Asexual reproduction with mutation
+                child_params = self.parameter_space.mutate_genome(
+                    parent1.parameters, self.mutation_rate
+                )
+                
+                child = SystemGenome(
+                    genome_id=str(uuid.uuid4()),
+                    parameters=child_params,
+                    generation=self.current_generation + 1,
+                    parent_ids=[parent1.genome_id],
+                    mutation_rate=self.mutation_rate
+                )
+                
+                next_generation.append(child)
+        
+        # Trim to exact population size
+        return next_generation[:self.population_size]
+    
+    def _tournament_selection(self, population: List[SystemGenome], tournament_size: int = 3) -> SystemGenome:
+        """Select genome through tournament selection."""
+        tournament_size = min(tournament_size, len(population))
+        tournament = random.sample(population, tournament_size)
+        
+        return max(tournament, key=lambda g: g.calculate_overall_fitness(self.fitness_weights))
+    
+    def _adapt_evolution_parameters(self) -> None:
+        """Adapt evolution parameters based on progress."""
+        if self.current_generation > 0 and self.current_generation % 10 == 0:
+            # Get recent fitness progression
+            recent_best_fitness = []
+            if self.current_generation >= 10:
+                for gen in range(self.current_generation - 10, self.current_generation):
+                    # This would be stored in evolution history in a real implementation
+                    pass
+            
+            # Adaptive mutation rate
+            if len(recent_best_fitness) > 5:
+                fitness_trend = recent_best_fitness[-1] - recent_best_fitness[0]
+                if fitness_trend < 0.001:  # Low improvement
+                    self.mutation_rate = min(0.3, self.mutation_rate * 1.1)  # Increase mutation
                 else:
-                    logger.error(f"❌ Deployment failed: {hypothesis.hypothesis_id}")
-                    hypothesis.status = "deployment_failed"
+                    self.mutation_rate = max(0.05, self.mutation_rate * 0.95)  # Decrease mutation
             
-        except Exception as e:
-            logger.error(f"Error deploying improvements: {e}")
+            # Adaptive crossover rate
+            if self.current_generation > 20:
+                # Decrease crossover rate in later generations
+                self.crossover_rate = max(0.5, self.crossover_rate * 0.98)
+            
+            logger.debug(f"Adapted parameters: mutation_rate={self.mutation_rate:.3f}, crossover_rate={self.crossover_rate:.3f}")
     
-    async def _deploy_hypothesis_async(self, hypothesis: EvolutionHypothesis) -> Dict[str, Any]:
-        """Deploy a single hypothesis."""
-        try:
-            # Simulate deployment steps
-            await asyncio.sleep(0.1)  # Simulate deployment time
-            
-            # Mock deployment success based on risk assessment
-            risk_level = "low"  # Simplified for demo
-            success_probability = 0.95 if risk_level == "low" else 0.8 if risk_level == "medium" else 0.6
-            
-            import random
-            success = random.random() < success_probability
-            
-            return {
-                "success": success,
-                "deployment_time": datetime.now().isoformat(),
-                "risk_level": risk_level
+    def add_performance_feedback(self,
+                               genome_id: str,
+                               performance_metrics: Dict[str, float],
+                               user_feedback: Optional[Dict[str, Any]] = None) -> str:
+        """Add performance feedback for continuous learning."""
+        feedback_id = str(uuid.uuid4())
+        
+        feedback = EvolutionaryFeedback(
+            feedback_id=feedback_id,
+            genome_id=genome_id,
+            timestamp=datetime.now(),
+            performance_metrics=performance_metrics,
+            user_feedback=user_feedback
+        )
+        
+        self.feedback_history.append(feedback)
+        
+        # Update fitness weights based on feedback
+        self._update_fitness_weights_from_feedback(feedback)
+        
+        logger.info(f"Added performance feedback for genome {genome_id[:8]}")
+        return feedback_id
+    
+    def _update_fitness_weights_from_feedback(self, feedback: EvolutionaryFeedback) -> None:
+        """Update fitness weights based on performance feedback."""
+        # Simple adaptive weighting based on what metrics are performing well/poorly
+        performance_metrics = feedback.performance_metrics
+        
+        if "user_satisfaction" in performance_metrics:
+            user_satisfaction = performance_metrics["user_satisfaction"]
+            if user_satisfaction > 0.8:
+                # Increase weight of performance-related metrics
+                self.fitness_weights[FitnessMetric.PERFORMANCE_SCORE] *= 1.01
+            elif user_satisfaction < 0.5:
+                # Increase weight of stability-related metrics
+                self.fitness_weights[FitnessMetric.STABILITY_SCORE] *= 1.01
+        
+        if "system_load" in performance_metrics:
+            system_load = performance_metrics["system_load"]
+            if system_load > 0.8:
+                # Increase weight of resource efficiency
+                self.fitness_weights[FitnessMetric.RESOURCE_EFFICIENCY] *= 1.02
+        
+        # Normalize weights
+        total_weight = sum(self.fitness_weights.values())
+        for metric in self.fitness_weights:
+            self.fitness_weights[metric] /= total_weight
+    
+    def get_evolution_dashboard_data(self) -> Dict[str, Any]:
+        """Get data for evolution dashboard."""
+        best_genome = self._get_best_genome()
+        
+        # Population statistics
+        population_fitness = []
+        for genome in self.current_population:
+            if genome.fitness_scores:
+                fitness = genome.calculate_overall_fitness(self.fitness_weights)
+                population_fitness.append(fitness)
+        
+        population_stats = {}
+        if population_fitness:
+            population_stats = {
+                "mean_fitness": statistics.mean(population_fitness),
+                "max_fitness": max(population_fitness),
+                "min_fitness": min(population_fitness),
+                "fitness_variance": statistics.variance(population_fitness) if len(population_fitness) > 1 else 0.0
             }
-            
-        except Exception as e:
-            logger.error(f"Error deploying hypothesis: {e}")
-            return {"success": False, "error": str(e)}
-    
-    async def _collect_performance_metrics(self) -> Dict[str, float]:
-        """Collect current performance metrics."""
-        try:
-            # Simulate metric collection
-            import random
-            
-            # Add some variance to baseline metrics
-            metrics = {}
-            for key, baseline_value in self.performance_baseline.items():
-                variance = random.uniform(-0.1, 0.1)  # ±10% variance
-                metrics[key] = baseline_value * (1 + variance)
-            
-            return metrics
-            
-        except Exception as e:
-            logger.error(f"Error collecting metrics: {e}")
-            return {}
-    
-    def _calculate_performance_deltas(self, current_metrics: Dict[str, float]) -> Dict[str, float]:
-        """Calculate performance deltas from baseline."""
-        deltas = {}
         
-        for metric_name, current_value in current_metrics.items():
-            if metric_name in self.performance_baseline:
-                baseline_value = self.performance_baseline[metric_name]
-                delta = (current_value - baseline_value) / baseline_value
-                deltas[metric_name] = delta
+        # Best genome ever statistics
+        best_ever_fitness = None
+        best_ever_params = None
+        if self.best_genome_ever:
+            best_ever_fitness = self.best_genome_ever.calculate_overall_fitness(self.fitness_weights)
+            best_ever_params = self.best_genome_ever.parameters
         
-        return deltas
-    
-    def _identify_urgent_optimizations(self, performance_deltas: Dict[str, float]) -> List[Dict[str, Any]]:
-        """Identify urgent optimization opportunities."""
-        urgent_optimizations = []
-        
-        for metric_name, delta in performance_deltas.items():
-            # Define thresholds for urgent action
-            if metric_name in ["response_time", "cpu_usage", "memory_usage", "error_rate"]:
-                if delta > 0.2:  # 20% degradation
-                    urgent_optimizations.append({
-                        "metric": metric_name,
-                        "degradation": delta,
-                        "urgency": "high" if delta > 0.5 else "medium"
-                    })
-            elif metric_name in ["throughput", "cache_hit_rate"]:
-                if delta < -0.2:  # 20% reduction
-                    urgent_optimizations.append({
-                        "metric": metric_name,
-                        "degradation": abs(delta),
-                        "urgency": "high" if abs(delta) > 0.5 else "medium"
-                    })
-        
-        return urgent_optimizations
-    
-    def _record_evolution_cycle(self, 
-                               system_analysis: Dict[str, Any],
-                               hypotheses: List[EvolutionHypothesis],
-                               validated_hypotheses: List[EvolutionHypothesis]):
-        """Record evolution cycle results."""
-        cycle_record = {
-            "cycle_id": hashlib.md5(f"{datetime.now().isoformat()}".encode()).hexdigest()[:12],
-            "timestamp": datetime.now().isoformat(),
-            "system_analysis_summary": {
-                "code_issues": len(system_analysis.get("code_analysis", {}).get("code_smells", [])),
-                "performance_metrics": len(system_analysis.get("performance_metrics", {})),
-                "optimization_opportunities": len(system_analysis.get("code_analysis", {}).get("optimization_opportunities", []))
-            },
-            "hypotheses_generated": len(hypotheses),
-            "hypotheses_validated": len(validated_hypotheses),
-            "validation_rate": len(validated_hypotheses) / len(hypotheses) if hypotheses else 0,
-            "validated_hypotheses": [h.to_dict() for h in validated_hypotheses]
-        }
-        
-        self.evolution_history.append(cycle_record)
-    
-    def get_evolution_status(self) -> Dict[str, Any]:
-        """Get comprehensive evolution engine status."""
         return {
-            "engine_status": {
-                "is_active": self.is_active,
-                "config": self.config,
-                "performance_baseline": self.performance_baseline
+            "timestamp": datetime.now().isoformat(),
+            "evolution_active": self.evolution_active,
+            "current_generation": self.current_generation,
+            "population_size": len(self.current_population),
+            "population_statistics": population_stats,
+            "best_current_genome": {
+                "genome_id": best_genome.genome_id if best_genome else None,
+                "fitness": best_genome.calculate_overall_fitness(self.fitness_weights) if best_genome else None,
+                "parameters": best_genome.parameters if best_genome else None
             },
-            "current_state": {
-                "active_hypotheses": len(self.current_hypotheses),
-                "current_hypotheses_summary": [h.to_dict() for h in self.current_hypotheses.values()],
-                "evolution_cycles_completed": len(self.evolution_history)
+            "best_genome_ever": {
+                "fitness": best_ever_fitness,
+                "parameters": best_ever_params
             },
-            "evolution_metrics": self.evolution_metrics,
-            "recent_cycles": list(self.evolution_history)[-10:],  # Last 10 cycles
-            "performance_trends": self._calculate_performance_trends()
+            "evolution_parameters": {
+                "mutation_rate": self.mutation_rate,
+                "crossover_rate": self.crossover_rate,
+                "elite_percentage": self.elite_percentage
+            },
+            "fitness_weights": {k.value: v for k, v in self.fitness_weights.items()},
+            "recent_experiments": len(self.evolution_history),
+            "feedback_count": len(self.feedback_history)
         }
     
-    def _calculate_performance_trends(self) -> Dict[str, Any]:
-        """Calculate performance trends over time."""
+    async def _save_evolution_data(self) -> None:
+        """Save evolution data to persistent storage."""
         try:
-            if len(self.evolution_metrics["performance_improvements"]) < 2:
-                return {"message": "Insufficient data for trend analysis"}
-            
-            improvements = self.evolution_metrics["performance_improvements"]
-            total_improvement = sum(imp["improvement"] for imp in improvements)
-            avg_improvement = total_improvement / len(improvements)
-            
-            return {
-                "total_improvements_deployed": len(improvements),
-                "cumulative_improvement": total_improvement,
-                "average_improvement_per_deployment": avg_improvement,
-                "improvement_trend": "positive" if avg_improvement > 0.05 else "stable"
+            evolution_data = {
+                "timestamp": datetime.now().isoformat(),
+                "current_population": [genome.to_dict() for genome in self.current_population],
+                "evolution_history": [exp.to_dict() for exp in self.evolution_history],
+                "feedback_history": [feedback.to_dict() for feedback in self.feedback_history[-50:]],  # Last 50 feedback items
+                "best_genome_ever": self.best_genome_ever.to_dict() if self.best_genome_ever else None,
+                "fitness_weights": {k.value: v for k, v in self.fitness_weights.items()},
+                "evolution_parameters": {
+                    "population_size": self.population_size,
+                    "mutation_rate": self.mutation_rate,
+                    "crossover_rate": self.crossover_rate,
+                    "elite_percentage": self.elite_percentage,
+                    "convergence_threshold": self.convergence_threshold,
+                    "max_generations": self.max_generations
+                }
             }
             
-        except Exception as e:
-            return {"error": str(e)}
-    
-    def export_evolution_data(self, filepath: str):
-        """Export comprehensive evolution data."""
-        try:
-            export_data = {
-                "evolution_status": self.get_evolution_status(),
-                "code_analysis_history": list(self.code_analyzer.analysis_cache.items())[-100:],  # Last 100 analyses
-                "test_results_history": list(self.evolution_tester.test_results_history)[-500:],  # Last 500 test results
-                "export_timestamp": datetime.now().isoformat(),
-                "export_version": "1.0"
-            }
+            evolution_file = self.project_root / "evolution_data.json"
+            with open(evolution_file, 'w') as f:
+                json.dump(evolution_data, f, indent=2)
             
-            with open(filepath, 'w') as f:
-                json.dump(export_data, f, indent=2, default=str)
-            
-            logger.info(f"Evolution data exported to {filepath}")
+            logger.info(f"Evolution data saved to {evolution_file}")
             
         except Exception as e:
-            logger.error(f"Error exporting evolution data: {e}")
+            logger.error(f"Failed to save evolution data: {e}")
 
 
-# Research demonstration and testing functions
-async def demo_autonomous_evolution():
-    """Demonstrate autonomous evolution engine capabilities."""
-    logger.info("🧬 Starting Autonomous Evolution Engine Demo")
+async def main():
+    """Main function for autonomous evolution engine."""
+    logger.info("Starting Autonomous Evolution Engine...")
     
-    # Initialize evolution engine
-    config = {
-        "evolution_frequency": 5.0,  # 5 seconds for demo
-        "max_concurrent_experiments": 2,
-        "auto_deploy": True,  # Enable auto-deployment for demo
-        "hypothesis_confidence_threshold": 0.6
-    }
+    evolution_engine = AutonomousEvolutionEngine()
     
-    engine = AutonomousEvolutionEngine(config)
+    print("\n" + "="*80)
+    print("🧬 AUTONOMOUS EVOLUTION ENGINE")
+    print("="*80)
     
-    # Start evolution engine
-    await engine.start_evolution_async()
+    # Start evolution experiment
+    experiment_id = await evolution_engine.start_evolution(EvolutionStrategy.GENETIC_ALGORITHM)
+    print(f"✅ Started evolution experiment: {experiment_id}")
     
-    # Let it run for demo duration
-    logger.info("🔄 Running autonomous evolution...")
-    await asyncio.sleep(15.0)  # Run for 15 seconds
+    # Let it run for demo period
+    demo_duration = 30  # 30 seconds demo
+    print(f"Running evolution for {demo_duration} seconds...")
     
-    # Get final status
-    status = engine.get_evolution_status()
-    logger.info("📊 Evolution Engine Status:")
-    logger.info(f"  Active: {status['engine_status']['is_active']}")
-    logger.info(f"  Cycles Completed: {status['current_state']['evolution_cycles_completed']}")
-    logger.info(f"  Hypotheses Generated: {status['evolution_metrics']['hypotheses_generated']}")
-    logger.info(f"  Hypotheses Tested: {status['evolution_metrics']['hypotheses_tested']}")
-    logger.info(f"  Improvements Deployed: {status['evolution_metrics']['hypotheses_deployed']}")
+    # Monitor progress
+    for i in range(demo_duration // 5):
+        await asyncio.sleep(5)
+        dashboard_data = evolution_engine.get_evolution_dashboard_data()
+        
+        if dashboard_data["population_statistics"]:
+            max_fitness = dashboard_data["population_statistics"]["max_fitness"]
+            mean_fitness = dashboard_data["population_statistics"]["mean_fitness"]
+            generation = dashboard_data["current_generation"]
+            print(f"   Generation {generation}: Max fitness = {max_fitness:.4f}, Mean = {mean_fitness:.4f}")
     
-    # Export data
-    export_file = f"autonomous_evolution_demo_{int(time.time())}.json"
-    engine.export_evolution_data(export_file)
-    logger.info(f"📁 Evolution data exported to: {export_file}")
+    # Get final dashboard data
+    dashboard_data = evolution_engine.get_evolution_dashboard_data()
     
-    # Stop engine
-    await engine.stop_evolution_async()
+    print(f"\n📊 Evolution Dashboard Summary:")
+    print(f"   • Generations Completed: {dashboard_data['current_generation']}")
+    print(f"   • Population Size: {dashboard_data['population_size']}")
     
-    return {
-        "final_status": status,
-        "export_file": export_file,
-        "demo_completed": True
-    }
+    if dashboard_data['population_statistics']:
+        stats = dashboard_data['population_statistics']
+        print(f"   • Max Fitness: {stats['max_fitness']:.4f}")
+        print(f"   • Mean Fitness: {stats['mean_fitness']:.4f}")
+        print(f"   • Fitness Variance: {stats['fitness_variance']:.6f}")
+    
+    if dashboard_data['best_genome_ever']['fitness']:
+        print(f"   • Best Genome Ever: {dashboard_data['best_genome_ever']['fitness']:.4f}")
+    
+    # Add some simulated feedback
+    best_genome_id = dashboard_data['best_current_genome']['genome_id']
+    if best_genome_id:
+        feedback_id = evolution_engine.add_performance_feedback(
+            best_genome_id,
+            {"user_satisfaction": 0.85, "system_load": 0.6},
+            {"user_rating": 4.2, "comments": "Good performance"}
+        )
+        print(f"✅ Added performance feedback: {feedback_id}")
+    
+    # Stop evolution
+    await evolution_engine.stop_evolution()
+    print(f"\n🏁 Evolution experiment completed")
+    print(f"💾 Evolution data saved")
+    
+    print("\n" + "="*80)
+    
+    return dashboard_data
 
 
 if __name__ == "__main__":
-    # Configure logging for demo
-    logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    )
-    
-    # Run demonstration
-    async def main():
-        results = await demo_autonomous_evolution()
-        print("\n🧬 AUTONOMOUS EVOLUTION ENGINE DEMO COMPLETE")
-        print("=" * 70)
-        print(f"Status: {results['final_status']['engine_status']['is_active']}")
-        print(f"Export File: {results['export_file']}")
-        print("=" * 70)
-        return results
-    
     asyncio.run(main())

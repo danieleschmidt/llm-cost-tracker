@@ -1,0 +1,917 @@
+{
+  "timestamp": "2025-08-15T03:16:35.098290",
+  "current_population": [
+    {
+      "genome_id": "b146db94-6354-41a3-b0c4-bab10e67c8c7",
+      "parameters": {
+        "cache_size_mb": 64,
+        "connection_pool_size": 45,
+        "worker_threads": 3,
+        "batch_size": 180,
+        "learning_rate": 0.033,
+        "regularization": 0.038,
+        "momentum": 0.75,
+        "timeout_seconds": 200,
+        "retry_attempts": 9,
+        "gc_frequency": "adaptive",
+        "compression_level": 1,
+        "quantum_coherence_threshold": 0.9,
+        "entanglement_strength": 0.8,
+        "superposition_depth": 12,
+        "annealing_schedule": "linear",
+        "enable_caching": false,
+        "enable_compression": false,
+        "enable_parallel_processing": true,
+        "enable_adaptive_scaling": true,
+        "enable_quantum_optimization": false
+      },
+      "fitness_scores": {
+        "performance_score": 1.0,
+        "resource_efficiency": 0.6902023789650742,
+        "error_rate_inverse": 0.2505378494484576,
+        "stability_score": 0.8,
+        "cost_effectiveness": 0.3102341972148055,
+        "scalability_factor": 0.95
+      },
+      "generation": 3,
+      "parent_ids": [
+        "00db7e1f-45a4-4c50-8dbc-30ccd23aeb7c"
+      ],
+      "mutation_rate": 0.1,
+      "crossover_points": []
+    },
+    {
+      "genome_id": "92581d3d-9035-44a2-ae9a-7b4d45a3abe9",
+      "parameters": {
+        "cache_size_mb": 1408,
+        "connection_pool_size": 45,
+        "worker_threads": 3,
+        "batch_size": 180,
+        "learning_rate": 0.033,
+        "regularization": 0.096,
+        "momentum": 0.9,
+        "timeout_seconds": 115,
+        "retry_attempts": 4,
+        "gc_frequency": "low",
+        "compression_level": 3,
+        "quantum_coherence_threshold": 0.75,
+        "entanglement_strength": 0.4,
+        "superposition_depth": 16,
+        "annealing_schedule": "adaptive",
+        "enable_caching": false,
+        "enable_compression": false,
+        "enable_parallel_processing": true,
+        "enable_adaptive_scaling": false,
+        "enable_quantum_optimization": false
+      },
+      "fitness_scores": {
+        "performance_score": 1.0,
+        "resource_efficiency": 0.6648938702006899,
+        "error_rate_inverse": 0.13328372849386727,
+        "stability_score": 0.7200000000000001,
+        "cost_effectiveness": 0.26340582087621867,
+        "scalability_factor": 0.8
+      },
+      "generation": 3,
+      "parent_ids": [
+        "2bcfc99c-38b7-4330-8cd4-b15ababcd2f6"
+      ],
+      "mutation_rate": 0.1,
+      "crossover_points": []
+    },
+    {
+      "genome_id": "bb7820d0-d085-43d2-a133-483ce1cb8049",
+      "parameters": {
+        "cache_size_mb": 1408,
+        "connection_pool_size": 45,
+        "worker_threads": 3,
+        "batch_size": 180,
+        "learning_rate": 0.033,
+        "regularization": 0.096,
+        "momentum": 0.9,
+        "timeout_seconds": 115,
+        "retry_attempts": 4,
+        "gc_frequency": "low",
+        "compression_level": 8,
+        "quantum_coherence_threshold": 0.9,
+        "entanglement_strength": 0.8,
+        "superposition_depth": 12,
+        "annealing_schedule": "linear",
+        "enable_caching": false,
+        "enable_compression": false,
+        "enable_parallel_processing": true,
+        "enable_adaptive_scaling": true,
+        "enable_quantum_optimization": false
+      },
+      "fitness_scores": {
+        "performance_score": 1.0,
+        "resource_efficiency": 0.6941553407893729,
+        "error_rate_inverse": 0.0,
+        "stability_score": 0.6480000000000001,
+        "cost_effectiveness": 0.32781419467524353,
+        "scalability_factor": 1.0
+      },
+      "generation": 3,
+      "parent_ids": [
+        "23969c3e-70bb-46d4-b297-5f7c176ff1b0"
+      ],
+      "mutation_rate": 0.1,
+      "crossover_points": []
+    },
+    {
+      "genome_id": "3055dfc4-d1d5-48ca-a5c0-dde3192c7a5c",
+      "parameters": {
+        "cache_size_mb": 1792,
+        "connection_pool_size": 35,
+        "worker_threads": 3,
+        "batch_size": 760,
+        "learning_rate": 0.061,
+        "regularization": 0.038,
+        "momentum": 0.75,
+        "timeout_seconds": 200,
+        "retry_attempts": 9,
+        "gc_frequency": "adaptive",
+        "compression_level": 1,
+        "quantum_coherence_threshold": 0.9,
+        "entanglement_strength": 0.8,
+        "superposition_depth": 12,
+        "annealing_schedule": "linear",
+        "enable_caching": false,
+        "enable_compression": false,
+        "enable_parallel_processing": true,
+        "enable_adaptive_scaling": true,
+        "enable_quantum_optimization": false
+      },
+      "fitness_scores": {
+        "performance_score": 1.0,
+        "resource_efficiency": 0.6869060497984719,
+        "error_rate_inverse": 0.05138383009661307,
+        "stability_score": 0.7200000000000001,
+        "cost_effectiveness": 0.3016809668999998,
+        "scalability_factor": 1.0
+      },
+      "generation": 3,
+      "parent_ids": [
+        "209d895e-f59b-4bf6-b889-8815333dedb0"
+      ],
+      "mutation_rate": 0.1,
+      "crossover_points": []
+    },
+    {
+      "genome_id": "00f7df7a-bfe6-4521-bc96-6a9f4bba980c",
+      "parameters": {
+        "cache_size_mb": 64,
+        "connection_pool_size": 45,
+        "worker_threads": 3,
+        "batch_size": 180,
+        "learning_rate": 0.033,
+        "regularization": 0.038,
+        "momentum": 0.75,
+        "timeout_seconds": 200,
+        "retry_attempts": 9,
+        "gc_frequency": "adaptive",
+        "compression_level": 1,
+        "quantum_coherence_threshold": 0.9,
+        "entanglement_strength": 0.8,
+        "superposition_depth": 12,
+        "annealing_schedule": "linear",
+        "enable_caching": false,
+        "enable_compression": false,
+        "enable_parallel_processing": true,
+        "enable_adaptive_scaling": true,
+        "enable_quantum_optimization": false
+      },
+      "fitness_scores": {
+        "performance_score": 1.0,
+        "resource_efficiency": 0.6759303154746558,
+        "error_rate_inverse": 0.0,
+        "stability_score": 0.8,
+        "cost_effectiveness": 0.2929556192256789,
+        "scalability_factor": 0.95
+      },
+      "generation": 3,
+      "parent_ids": [
+        "00db7e1f-45a4-4c50-8dbc-30ccd23aeb7c",
+        "00db7e1f-45a4-4c50-8dbc-30ccd23aeb7c"
+      ],
+      "mutation_rate": 0.1,
+      "crossover_points": []
+    },
+    {
+      "genome_id": "5cc5c4e9-0709-4b10-8847-55577b0d7d8c",
+      "parameters": {
+        "cache_size_mb": 64,
+        "connection_pool_size": 45,
+        "worker_threads": 3,
+        "batch_size": 180,
+        "learning_rate": 0.033,
+        "regularization": 0.038,
+        "momentum": 0.75,
+        "timeout_seconds": 200,
+        "retry_attempts": 9,
+        "gc_frequency": "adaptive",
+        "compression_level": 1,
+        "quantum_coherence_threshold": 0.9,
+        "entanglement_strength": 0.8,
+        "superposition_depth": 12,
+        "annealing_schedule": "linear",
+        "enable_caching": false,
+        "enable_compression": false,
+        "enable_parallel_processing": true,
+        "enable_adaptive_scaling": true,
+        "enable_quantum_optimization": false
+      },
+      "fitness_scores": {
+        "performance_score": 1.0,
+        "resource_efficiency": 0.6705404714887009,
+        "error_rate_inverse": 0.23266357477175725,
+        "stability_score": 0.8,
+        "cost_effectiveness": 0.27576347940680346,
+        "scalability_factor": 0.95
+      },
+      "generation": 3,
+      "parent_ids": [
+        "00db7e1f-45a4-4c50-8dbc-30ccd23aeb7c",
+        "00db7e1f-45a4-4c50-8dbc-30ccd23aeb7c"
+      ],
+      "mutation_rate": 0.1,
+      "crossover_points": []
+    },
+    {
+      "genome_id": "4ce4ea06-78c2-43c1-8c2b-e63907441a7b",
+      "parameters": {
+        "cache_size_mb": 1792,
+        "connection_pool_size": 35,
+        "worker_threads": 3,
+        "batch_size": 750,
+        "learning_rate": 0.061,
+        "regularization": 0.096,
+        "momentum": 0.3,
+        "timeout_seconds": 240,
+        "retry_attempts": 6,
+        "gc_frequency": "high",
+        "compression_level": 2,
+        "quantum_coherence_threshold": 0.95,
+        "entanglement_strength": 0.3,
+        "superposition_depth": 16,
+        "annealing_schedule": "adaptive",
+        "enable_caching": false,
+        "enable_compression": false,
+        "enable_parallel_processing": true,
+        "enable_adaptive_scaling": false,
+        "enable_quantum_optimization": true
+      },
+      "fitness_scores": {
+        "performance_score": 1.0,
+        "resource_efficiency": 0.6885659906046837,
+        "error_rate_inverse": 0.04366125802065035,
+        "stability_score": 0.7091999999999999,
+        "cost_effectiveness": 0.31066385324336343,
+        "scalability_factor": 0.8
+      },
+      "generation": 3,
+      "parent_ids": [
+        "5e59eb8b-668e-446d-b9b1-873464a89f27"
+      ],
+      "mutation_rate": 0.1,
+      "crossover_points": []
+    },
+    {
+      "genome_id": "809f7660-e24d-4960-9b81-8d04f572a177",
+      "parameters": {
+        "cache_size_mb": 1408,
+        "connection_pool_size": 45,
+        "worker_threads": 3,
+        "batch_size": 180,
+        "learning_rate": 0.033,
+        "regularization": 0.096,
+        "momentum": 0.9,
+        "timeout_seconds": 115,
+        "retry_attempts": 4,
+        "gc_frequency": "low",
+        "compression_level": 3,
+        "quantum_coherence_threshold": 0.75,
+        "entanglement_strength": 0.4,
+        "superposition_depth": 12,
+        "annealing_schedule": "linear",
+        "enable_caching": false,
+        "enable_compression": false,
+        "enable_parallel_processing": true,
+        "enable_adaptive_scaling": true,
+        "enable_quantum_optimization": false
+      },
+      "fitness_scores": {
+        "performance_score": 1.0,
+        "resource_efficiency": 0.6822197937325867,
+        "error_rate_inverse": 0.14220209795537186,
+        "stability_score": 0.7200000000000001,
+        "cost_effectiveness": 0.29960293793643167,
+        "scalability_factor": 1.0
+      },
+      "generation": 3,
+      "parent_ids": [
+        "2bcfc99c-38b7-4330-8cd4-b15ababcd2f6",
+        "00db7e1f-45a4-4c50-8dbc-30ccd23aeb7c"
+      ],
+      "mutation_rate": 0.1,
+      "crossover_points": []
+    },
+    {
+      "genome_id": "6d8c605b-fc4a-443a-b210-a5a10fbb76a4",
+      "parameters": {
+        "cache_size_mb": 64,
+        "connection_pool_size": 45,
+        "worker_threads": 3,
+        "batch_size": 180,
+        "learning_rate": 0.033,
+        "regularization": 0.038,
+        "momentum": 0.75,
+        "timeout_seconds": 200,
+        "retry_attempts": 9,
+        "gc_frequency": "adaptive",
+        "compression_level": 1,
+        "quantum_coherence_threshold": 0.9,
+        "entanglement_strength": 0.8,
+        "superposition_depth": 16,
+        "annealing_schedule": "adaptive",
+        "enable_caching": false,
+        "enable_compression": false,
+        "enable_parallel_processing": true,
+        "enable_adaptive_scaling": false,
+        "enable_quantum_optimization": false
+      },
+      "fitness_scores": {
+        "performance_score": 1.0,
+        "resource_efficiency": 0.7096438646421813,
+        "error_rate_inverse": 0.0,
+        "stability_score": 0.8,
+        "cost_effectiveness": 0.3609302422124703,
+        "scalability_factor": 0.75
+      },
+      "generation": 3,
+      "parent_ids": [
+        "2bcfc99c-38b7-4330-8cd4-b15ababcd2f6",
+        "00db7e1f-45a4-4c50-8dbc-30ccd23aeb7c"
+      ],
+      "mutation_rate": 0.1,
+      "crossover_points": []
+    },
+    {
+      "genome_id": "ce67daa1-a669-4052-8e2f-a444e8a16b93",
+      "parameters": {
+        "cache_size_mb": 1408,
+        "connection_pool_size": 45,
+        "worker_threads": 3,
+        "batch_size": 180,
+        "learning_rate": 0.033,
+        "regularization": 0.096,
+        "momentum": 0.9,
+        "timeout_seconds": 115,
+        "retry_attempts": 4,
+        "gc_frequency": "low",
+        "compression_level": 8,
+        "quantum_coherence_threshold": 0.9,
+        "entanglement_strength": 0.8,
+        "superposition_depth": 12,
+        "annealing_schedule": "linear",
+        "enable_caching": false,
+        "enable_compression": false,
+        "enable_parallel_processing": true,
+        "enable_adaptive_scaling": true,
+        "enable_quantum_optimization": false
+      },
+      "fitness_scores": {
+        "performance_score": 1.0,
+        "resource_efficiency": 0.7150127850510108,
+        "error_rate_inverse": 0.1442785791154897,
+        "stability_score": 0.6480000000000001,
+        "cost_effectiveness": 0.37342015802371276,
+        "scalability_factor": 1.0
+      },
+      "generation": 3,
+      "parent_ids": [
+        "23969c3e-70bb-46d4-b297-5f7c176ff1b0",
+        "a5552ca8-80d7-407e-8d0e-e2510a36c267"
+      ],
+      "mutation_rate": 0.1,
+      "crossover_points": []
+    },
+    {
+      "genome_id": "168d861d-f57e-44b6-b43f-cb17e2e55476",
+      "parameters": {
+        "cache_size_mb": 1472,
+        "connection_pool_size": 5,
+        "worker_threads": 1,
+        "batch_size": 480,
+        "learning_rate": 0.093,
+        "regularization": 0.075,
+        "momentum": 0.7,
+        "timeout_seconds": 195,
+        "retry_attempts": 2,
+        "gc_frequency": "high",
+        "compression_level": 3,
+        "quantum_coherence_threshold": 0.75,
+        "entanglement_strength": 0.4,
+        "superposition_depth": 16,
+        "annealing_schedule": "linear",
+        "enable_caching": false,
+        "enable_compression": false,
+        "enable_parallel_processing": true,
+        "enable_adaptive_scaling": true,
+        "enable_quantum_optimization": false
+      },
+      "fitness_scores": {
+        "performance_score": 1.0,
+        "resource_efficiency": 0.7015708613037377,
+        "error_rate_inverse": 0.08466851752243865,
+        "stability_score": 0.7200000000000001,
+        "cost_effectiveness": 0.3321488409739807,
+        "scalability_factor": 0.9
+      },
+      "generation": 3,
+      "parent_ids": [
+        "23969c3e-70bb-46d4-b297-5f7c176ff1b0",
+        "a5552ca8-80d7-407e-8d0e-e2510a36c267"
+      ],
+      "mutation_rate": 0.1,
+      "crossover_points": []
+    },
+    {
+      "genome_id": "909010c9-82c6-4c6e-a7f3-6b68ccb8996c",
+      "parameters": {
+        "cache_size_mb": 1792,
+        "connection_pool_size": 35,
+        "worker_threads": 3,
+        "batch_size": 760,
+        "learning_rate": 0.061,
+        "regularization": 0.096,
+        "momentum": 0.3,
+        "timeout_seconds": 240,
+        "retry_attempts": 6,
+        "gc_frequency": "high",
+        "compression_level": 2,
+        "quantum_coherence_threshold": 0.95,
+        "entanglement_strength": 0.3,
+        "superposition_depth": 16,
+        "annealing_schedule": "adaptive",
+        "enable_caching": false,
+        "enable_compression": false,
+        "enable_parallel_processing": true,
+        "enable_adaptive_scaling": false,
+        "enable_quantum_optimization": false
+      },
+      "fitness_scores": {
+        "performance_score": 1.0,
+        "resource_efficiency": 0.7007081778193074,
+        "error_rate_inverse": 0.07254657235893425,
+        "stability_score": 0.7200000000000001,
+        "cost_effectiveness": 0.3405665893709954,
+        "scalability_factor": 0.8
+      },
+      "generation": 3,
+      "parent_ids": [
+        "5e59eb8b-668e-446d-b9b1-873464a89f27",
+        "5e59eb8b-668e-446d-b9b1-873464a89f27"
+      ],
+      "mutation_rate": 0.1,
+      "crossover_points": []
+    },
+    {
+      "genome_id": "8d49e4a9-705e-4e3e-8b3e-5908e33295f4",
+      "parameters": {
+        "cache_size_mb": 1792,
+        "connection_pool_size": 35,
+        "worker_threads": 3,
+        "batch_size": 760,
+        "learning_rate": 0.061,
+        "regularization": 0.096,
+        "momentum": 0.3,
+        "timeout_seconds": 240,
+        "retry_attempts": 6,
+        "gc_frequency": "high",
+        "compression_level": 2,
+        "quantum_coherence_threshold": 0.95,
+        "entanglement_strength": 0.3,
+        "superposition_depth": 16,
+        "annealing_schedule": "adaptive",
+        "enable_caching": false,
+        "enable_compression": false,
+        "enable_parallel_processing": true,
+        "enable_adaptive_scaling": false,
+        "enable_quantum_optimization": false
+      },
+      "fitness_scores": {
+        "performance_score": 1.0,
+        "resource_efficiency": 0.6802999767537252,
+        "error_rate_inverse": 0.06882719512361546,
+        "stability_score": 0.7200000000000001,
+        "cost_effectiveness": 0.2970914765783601,
+        "scalability_factor": 0.8
+      },
+      "generation": 3,
+      "parent_ids": [
+        "5e59eb8b-668e-446d-b9b1-873464a89f27",
+        "5e59eb8b-668e-446d-b9b1-873464a89f27"
+      ],
+      "mutation_rate": 0.1,
+      "crossover_points": []
+    },
+    {
+      "genome_id": "f78f838c-7ca0-4ecc-90d8-fb1ef40347fd",
+      "parameters": {
+        "cache_size_mb": 1792,
+        "connection_pool_size": 25,
+        "worker_threads": 4,
+        "batch_size": 130,
+        "learning_rate": 0.054,
+        "regularization": 0.062,
+        "momentum": 0.4,
+        "timeout_seconds": 115,
+        "retry_attempts": 4,
+        "gc_frequency": "low",
+        "compression_level": 3,
+        "quantum_coherence_threshold": 0.75,
+        "entanglement_strength": 0.4,
+        "superposition_depth": 16,
+        "annealing_schedule": "adaptive",
+        "enable_caching": false,
+        "enable_compression": false,
+        "enable_parallel_processing": true,
+        "enable_adaptive_scaling": false,
+        "enable_quantum_optimization": false
+      },
+      "fitness_scores": {
+        "performance_score": 1.0,
+        "resource_efficiency": 0.6579281495542479,
+        "error_rate_inverse": 0.0,
+        "stability_score": 0.7200000000000001,
+        "cost_effectiveness": 0.2734672044438853,
+        "scalability_factor": 0.8
+      },
+      "generation": 3,
+      "parent_ids": [
+        "13668e7a-4ae4-4239-a688-0d9eb88b87f8",
+        "2bcfc99c-38b7-4330-8cd4-b15ababcd2f6"
+      ],
+      "mutation_rate": 0.1,
+      "crossover_points": []
+    },
+    {
+      "genome_id": "6958ac2a-16ce-4edc-b320-140232258e4e",
+      "parameters": {
+        "cache_size_mb": 1408,
+        "connection_pool_size": 45,
+        "worker_threads": 3,
+        "batch_size": 180,
+        "learning_rate": 0.033,
+        "regularization": 0.096,
+        "momentum": 0.9,
+        "timeout_seconds": 215,
+        "retry_attempts": 4,
+        "gc_frequency": "high",
+        "compression_level": 1,
+        "quantum_coherence_threshold": 0.9,
+        "entanglement_strength": 0.8,
+        "superposition_depth": 12,
+        "annealing_schedule": "linear",
+        "enable_caching": false,
+        "enable_compression": false,
+        "enable_parallel_processing": true,
+        "enable_adaptive_scaling": true,
+        "enable_quantum_optimization": false
+      },
+      "fitness_scores": {
+        "performance_score": 1.0,
+        "resource_efficiency": 0.6853131364828979,
+        "error_rate_inverse": 0.06163354968394241,
+        "stability_score": 0.7200000000000001,
+        "cost_effectiveness": 0.3024265875635934,
+        "scalability_factor": 1.0
+      },
+      "generation": 3,
+      "parent_ids": [
+        "13668e7a-4ae4-4239-a688-0d9eb88b87f8",
+        "2bcfc99c-38b7-4330-8cd4-b15ababcd2f6"
+      ],
+      "mutation_rate": 0.1,
+      "crossover_points": []
+    },
+    {
+      "genome_id": "4b4e0801-554d-4d07-b35c-960df9cb34df",
+      "parameters": {
+        "cache_size_mb": 1792,
+        "connection_pool_size": 35,
+        "worker_threads": 3,
+        "batch_size": 760,
+        "learning_rate": 0.061,
+        "regularization": 0.038,
+        "momentum": 0.75,
+        "timeout_seconds": 200,
+        "retry_attempts": 9,
+        "gc_frequency": "adaptive",
+        "compression_level": 1,
+        "quantum_coherence_threshold": 0.9,
+        "entanglement_strength": 0.8,
+        "superposition_depth": 12,
+        "annealing_schedule": "linear",
+        "enable_caching": false,
+        "enable_compression": false,
+        "enable_parallel_processing": true,
+        "enable_adaptive_scaling": true,
+        "enable_quantum_optimization": false
+      },
+      "fitness_scores": {
+        "performance_score": 1.0,
+        "resource_efficiency": 0.6997699129362751,
+        "error_rate_inverse": 0.0,
+        "stability_score": 0.7200000000000001,
+        "cost_effectiveness": 0.33785434367877865,
+        "scalability_factor": 1.0
+      },
+      "generation": 3,
+      "parent_ids": [
+        "209d895e-f59b-4bf6-b889-8815333dedb0",
+        "00db7e1f-45a4-4c50-8dbc-30ccd23aeb7c"
+      ],
+      "mutation_rate": 0.1,
+      "crossover_points": []
+    },
+    {
+      "genome_id": "c5b62480-3452-4bf0-84c1-a36693c4fc89",
+      "parameters": {
+        "cache_size_mb": 64,
+        "connection_pool_size": 45,
+        "worker_threads": 3,
+        "batch_size": 180,
+        "learning_rate": 0.033,
+        "regularization": 0.038,
+        "momentum": 0.75,
+        "timeout_seconds": 200,
+        "retry_attempts": 9,
+        "gc_frequency": "adaptive",
+        "compression_level": 1,
+        "quantum_coherence_threshold": 0.9,
+        "entanglement_strength": 0.8,
+        "superposition_depth": 12,
+        "annealing_schedule": "linear",
+        "enable_caching": false,
+        "enable_compression": false,
+        "enable_parallel_processing": true,
+        "enable_adaptive_scaling": true,
+        "enable_quantum_optimization": false
+      },
+      "fitness_scores": {
+        "performance_score": 1.0,
+        "resource_efficiency": 0.6928883164847041,
+        "error_rate_inverse": 0.0,
+        "stability_score": 0.8,
+        "cost_effectiveness": 0.3223961162548543,
+        "scalability_factor": 0.95
+      },
+      "generation": 3,
+      "parent_ids": [
+        "209d895e-f59b-4bf6-b889-8815333dedb0",
+        "00db7e1f-45a4-4c50-8dbc-30ccd23aeb7c"
+      ],
+      "mutation_rate": 0.1,
+      "crossover_points": []
+    },
+    {
+      "genome_id": "5df56ae0-2c1d-4cc7-9184-69cc4063e270",
+      "parameters": {
+        "cache_size_mb": 1408,
+        "connection_pool_size": 45,
+        "worker_threads": 3,
+        "batch_size": 180,
+        "learning_rate": 0.033,
+        "regularization": 0.096,
+        "momentum": 0.9,
+        "timeout_seconds": 115,
+        "retry_attempts": 4,
+        "gc_frequency": "low",
+        "compression_level": 3,
+        "quantum_coherence_threshold": 0.75,
+        "entanglement_strength": 0.4,
+        "superposition_depth": 16,
+        "annealing_schedule": "adaptive",
+        "enable_caching": false,
+        "enable_compression": false,
+        "enable_parallel_processing": true,
+        "enable_adaptive_scaling": false,
+        "enable_quantum_optimization": false
+      },
+      "fitness_scores": {
+        "performance_score": 1.0,
+        "resource_efficiency": 0.6710338414418371,
+        "error_rate_inverse": 0.0,
+        "stability_score": 0.7200000000000001,
+        "cost_effectiveness": 0.2739310079386378,
+        "scalability_factor": 0.8
+      },
+      "generation": 3,
+      "parent_ids": [
+        "2bcfc99c-38b7-4330-8cd4-b15ababcd2f6"
+      ],
+      "mutation_rate": 0.1,
+      "crossover_points": []
+    },
+    {
+      "genome_id": "c914de22-c5ff-4026-ac64-74bffb120f94",
+      "parameters": {
+        "cache_size_mb": 1408,
+        "connection_pool_size": 45,
+        "worker_threads": 3,
+        "batch_size": 180,
+        "learning_rate": 0.033,
+        "regularization": 0.096,
+        "momentum": 0.9,
+        "timeout_seconds": 115,
+        "retry_attempts": 4,
+        "gc_frequency": "low",
+        "compression_level": 3,
+        "quantum_coherence_threshold": 0.75,
+        "entanglement_strength": 0.4,
+        "superposition_depth": 16,
+        "annealing_schedule": "adaptive",
+        "enable_caching": false,
+        "enable_compression": false,
+        "enable_parallel_processing": true,
+        "enable_adaptive_scaling": false,
+        "enable_quantum_optimization": false
+      },
+      "fitness_scores": {
+        "performance_score": 1.0,
+        "resource_efficiency": 0.7015301182682162,
+        "error_rate_inverse": 0.0,
+        "stability_score": 0.7200000000000001,
+        "cost_effectiveness": 0.34869907350683527,
+        "scalability_factor": 0.8
+      },
+      "generation": 3,
+      "parent_ids": [
+        "23969c3e-70bb-46d4-b297-5f7c176ff1b0",
+        "2bcfc99c-38b7-4330-8cd4-b15ababcd2f6"
+      ],
+      "mutation_rate": 0.1,
+      "crossover_points": []
+    },
+    {
+      "genome_id": "786b9eac-083b-4fe2-9b5d-280c4b8a0c55",
+      "parameters": {
+        "cache_size_mb": 1408,
+        "connection_pool_size": 45,
+        "worker_threads": 3,
+        "batch_size": 180,
+        "learning_rate": 0.033,
+        "regularization": 0.096,
+        "momentum": 0.9,
+        "timeout_seconds": 115,
+        "retry_attempts": 4,
+        "gc_frequency": "low",
+        "compression_level": 8,
+        "quantum_coherence_threshold": 0.9,
+        "entanglement_strength": 0.8,
+        "superposition_depth": 12,
+        "annealing_schedule": "linear",
+        "enable_caching": false,
+        "enable_compression": false,
+        "enable_parallel_processing": true,
+        "enable_adaptive_scaling": true,
+        "enable_quantum_optimization": false
+      },
+      "fitness_scores": {
+        "performance_score": 1.0,
+        "resource_efficiency": 0.6924206941618332,
+        "error_rate_inverse": 0.14535560803753933,
+        "stability_score": 0.6480000000000001,
+        "cost_effectiveness": 0.31631423857376517,
+        "scalability_factor": 1.0
+      },
+      "generation": 3,
+      "parent_ids": [
+        "23969c3e-70bb-46d4-b297-5f7c176ff1b0",
+        "2bcfc99c-38b7-4330-8cd4-b15ababcd2f6"
+      ],
+      "mutation_rate": 0.1,
+      "crossover_points": []
+    }
+  ],
+  "evolution_history": [
+    {
+      "experiment_id": "0be78ec9-fbca-4ba9-9eab-6423d0921441",
+      "strategy": "genetic_algorithm",
+      "population_size": 20,
+      "generations": 100,
+      "mutation_rate": 0.1,
+      "crossover_rate": 0.8,
+      "elite_percentage": 0.2,
+      "fitness_weights": {
+        "performance_score": 0.25,
+        "resource_efficiency": 0.2,
+        "error_rate_inverse": 0.2,
+        "stability_score": 0.15,
+        "cost_effectiveness": 0.1,
+        "scalability_factor": 0.1
+      },
+      "start_time": "2025-08-15T03:16:30.383115",
+      "end_time": "2025-08-15T03:16:35.098244",
+      "best_genome": {
+        "genome_id": "b146db94-6354-41a3-b0c4-bab10e67c8c7",
+        "parameters": {
+          "cache_size_mb": 64,
+          "connection_pool_size": 45,
+          "worker_threads": 3,
+          "batch_size": 180,
+          "learning_rate": 0.033,
+          "regularization": 0.038,
+          "momentum": 0.75,
+          "timeout_seconds": 200,
+          "retry_attempts": 9,
+          "gc_frequency": "adaptive",
+          "compression_level": 1,
+          "quantum_coherence_threshold": 0.9,
+          "entanglement_strength": 0.8,
+          "superposition_depth": 12,
+          "annealing_schedule": "linear",
+          "enable_caching": false,
+          "enable_compression": false,
+          "enable_parallel_processing": true,
+          "enable_adaptive_scaling": true,
+          "enable_quantum_optimization": false
+        },
+        "fitness_scores": {
+          "performance_score": 1.0,
+          "resource_efficiency": 0.6902023789650742,
+          "error_rate_inverse": 0.2505378494484576,
+          "stability_score": 0.8,
+          "cost_effectiveness": 0.3102341972148055,
+          "scalability_factor": 0.95
+        },
+        "generation": 3,
+        "parent_ids": [
+          "00db7e1f-45a4-4c50-8dbc-30ccd23aeb7c"
+        ],
+        "mutation_rate": 0.1,
+        "crossover_points": []
+      },
+      "convergence_generation": 3
+    }
+  ],
+  "feedback_history": [],
+  "best_genome_ever": {
+    "genome_id": "00db7e1f-45a4-4c50-8dbc-30ccd23aeb7c",
+    "parameters": {
+      "cache_size_mb": 64,
+      "connection_pool_size": 45,
+      "worker_threads": 3,
+      "batch_size": 180,
+      "learning_rate": 0.033,
+      "regularization": 0.038,
+      "momentum": 0.75,
+      "timeout_seconds": 200,
+      "retry_attempts": 9,
+      "gc_frequency": "adaptive",
+      "compression_level": 1,
+      "quantum_coherence_threshold": 0.9,
+      "entanglement_strength": 0.8,
+      "superposition_depth": 12,
+      "annealing_schedule": "linear",
+      "enable_caching": false,
+      "enable_compression": false,
+      "enable_parallel_processing": true,
+      "enable_adaptive_scaling": true,
+      "enable_quantum_optimization": false
+    },
+    "fitness_scores": {
+      "performance_score": 1.0,
+      "resource_efficiency": 0.6781202895856597,
+      "error_rate_inverse": 0.3592445937439436,
+      "stability_score": 0.8,
+      "cost_effectiveness": 0.28874472680327246,
+      "scalability_factor": 0.95
+    },
+    "generation": 2,
+    "parent_ids": [
+      "5a53dcee-b0f4-4aff-8051-d0f094872425",
+      "4de22aa6-41fa-4f0d-9865-eec3740b57c5"
+    ],
+    "mutation_rate": 0.1,
+    "crossover_points": []
+  },
+  "fitness_weights": {
+    "performance_score": 0.25,
+    "resource_efficiency": 0.2,
+    "error_rate_inverse": 0.2,
+    "stability_score": 0.15,
+    "cost_effectiveness": 0.1,
+    "scalability_factor": 0.1
+  },
+  "evolution_parameters": {
+    "population_size": 20,
+    "mutation_rate": 0.1,
+    "crossover_rate": 0.8,
+    "elite_percentage": 0.2,
+    "convergence_threshold": 0.001,
+    "max_generations": 100
+  }
+}

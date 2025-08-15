@@ -1,152 +1,118 @@
 {
-  "timestamp": "2025-08-12T01:27:32.380922",
-  "overall_status": "passed",
-  "gates": {
-    "code_quality": {
-      "status": "passed",
-      "checks": {
-        "python_files_count": 44,
-        "key_modules_found": [
-          "__init__.py",
-          "main.py",
-          "quantum_task_planner.py",
-          "config.py",
-          "database.py"
-        ],
-        "key_modules_coverage": 1.0,
-        "documentation_files": 26,
-        "config_files": [
-          "pyproject.toml",
-          "docker-compose.yml",
-          "Dockerfile"
-        ],
-        "config_coverage": 1.0,
-        "test_files_count": 16
-      },
-      "score": 100,
-      "issues": []
-    },
-    "functional_testing": {
-      "status": "passed",
-      "checks": {
-        "planner_initialization": true,
-        "task_addition": true,
-        "scheduling": true,
-        "system_state": true,
-        "health_check": true
-      },
-      "score": 100,
-      "issues": [],
-      "test_results": {
-        "total_tasks": 1
-      }
-    },
-    "security": {
-      "status": "warning",
-      "checks": {
-        "security_files": [
-          "SECURITY.md"
-        ],
-        "potential_secrets": 33,
-        "validation_coverage": 0.09627156371730662,
-        "error_handling_coverage": 0.6349471341124096
-      },
-      "score": 50,
-      "issues": [
-        "Found 33 potential hardcoded secrets",
-        "Limited input validation patterns found"
-      ],
-      "vulnerabilities": [
-        "/root/repo/src/llm_cost_tracker/services/budget_service.py: token =",
-        "/root/repo/src/llm_cost_tracker/services/session_service.py: token =",
-        "/root/repo/.venv/lib/python3.12/site-packages/asyncpg/connect_utils.py: password =",
-        "/root/repo/.venv/lib/python3.12/site-packages/uvicorn/config.py: password =",
-        "/root/repo/.venv/lib/python3.12/site-packages/sqlalchemy/__init__.py: token =",
-        "/root/repo/.venv/lib/python3.12/site-packages/anyio/from_thread.py: token =",
-        "/root/repo/.venv/lib/python3.12/site-packages/anyio/lowlevel.py: token =",
-        "/root/repo/.venv/lib/python3.12/site-packages/starlette/datastructures.py: password =",
-        "/root/repo/.venv/lib/python3.12/site-packages/yaml/parser.py: token =",
-        "/root/repo/.venv/lib/python3.12/site-packages/pygments/token.py: token =",
-        "/root/repo/.venv/lib/python3.12/site-packages/packaging/_parser.py: token =",
-        "/root/repo/.venv/lib/python3.12/site-packages/packaging/_tokenizer.py: token =",
-        "/root/repo/.venv/lib/python3.12/site-packages/pip/_vendor/packaging/_parser.py: token =",
-        "/root/repo/.venv/lib/python3.12/site-packages/pip/_vendor/packaging/_tokenizer.py: token =",
-        "/root/repo/.venv/lib/python3.12/site-packages/pip/_vendor/pygments/token.py: token =",
-        "/root/repo/.venv/lib/python3.12/site-packages/pip/_vendor/requests/auth.py: password =",
-        "/root/repo/.venv/lib/python3.12/site-packages/pip/_vendor/packaging/licenses/__init__.py: token =",
-        "/root/repo/.venv/lib/python3.12/site-packages/pip/_vendor/urllib3/contrib/socks.py: password =",
-        "/root/repo/.venv/lib/python3.12/site-packages/anyio/_core/_eventloop.py: token =",
-        "/root/repo/.venv/lib/python3.12/site-packages/pydantic/v1/networks.py: password =",
-        "/root/repo/.venv/lib/python3.12/site-packages/opentelemetry/sdk/_shared_internal/__init__.py: token =",
-        "/root/repo/.venv/lib/python3.12/site-packages/opentelemetry/sdk/_logs/_internal/export/__init__.py: token =",
-        "/root/repo/.venv/lib/python3.12/site-packages/opentelemetry/sdk/trace/export/__init__.py: token =",
-        "/root/repo/.venv/lib/python3.12/site-packages/pygments/lexers/c_cpp.py: token =",
-        "/root/repo/.venv/lib/python3.12/site-packages/pygments/lexers/c_like.py: token =",
-        "/root/repo/.venv/lib/python3.12/site-packages/pygments/lexers/erlang.py: token =",
-        "/root/repo/.venv/lib/python3.12/site-packages/pygments/lexers/jsonnet.py: token =",
-        "/root/repo/.venv/lib/python3.12/site-packages/pygments/lexers/ml.py: token =",
-        "/root/repo/.venv/lib/python3.12/site-packages/pygments/lexers/objective.py: token =",
-        "/root/repo/.venv/lib/python3.12/site-packages/pygments/lexers/pawn.py: token =",
-        "/root/repo/.venv/lib/python3.12/site-packages/pygments/lexers/scripting.py: token =",
-        "/root/repo/.venv/lib/python3.12/site-packages/pygments/lexers/wgsl.py: token =",
-        "/root/repo/.venv/lib/python3.12/site-packages/packaging/licenses/__init__.py: token ="
-      ]
-    },
-    "performance": {
+  "timestamp": "2025-08-15T03:14:53.890136",
+  "total_execution_time": 0.4459106922149658,
+  "summary": {
+    "total_gates": 6,
+    "passed": 3,
+    "failed": 2,
+    "warnings": 1,
+    "skipped": 0,
+    "success_rate": 0.5
+  },
+  "status": "failed",
+  "critical_failures": [
+    "unit_tests"
+  ],
+  "gate_results": {
+    "security_scan": {
+      "gate_name": "security_scan",
       "status": "failed",
-      "checks": {},
-      "score": 35,
-      "issues": [
-        "Scheduling too slow: 9296.72ms",
-        "High memory growth: 18335 objects",
-        "Poor system responsiveness: 3521.12ms"
-      ],
-      "benchmarks": {
-        "task_addition_ms": 6.164700999988781,
-        "scheduling_ms": 9296.717023000041,
-        "memory_growth_objects": 18335,
-        "responsiveness_ms": 3521.1222589999807
-      }
-    },
-    "deployment_readiness": {
-      "status": "passed",
-      "checks": {
-        "docker_files": [
-          "Dockerfile",
-          "docker-compose.yml",
-          "docker-compose.production.yml"
-        ],
-        "env_files": [
-          ".env.example",
-          ".env.production.example"
-        ],
-        "deployment_scripts": [
-          "deploy.sh",
-          "build.sh",
-          "dev-setup.sh"
-        ],
-        "monitoring_configs": [
-          "config/alert-rules.yml",
-          "config/prometheus.yml",
-          "config/grafana-datasources.yml"
+      "severity": "high",
+      "execution_time": 0.0064165592193603516,
+      "message": "Security vulnerabilities detected: 3",
+      "details": {
+        "vulnerabilities": [
+          "Dangerous eval() usage in /root/repo/src/llm_cost_tracker/progressive_quality_gates.py",
+          "Dangerous exec() usage in /root/repo/src/llm_cost_tracker/progressive_quality_gates.py",
+          "Shell injection risk in /root/repo/src/llm_cost_tracker/progressive_quality_gates.py"
         ]
       },
-      "score": 100,
-      "issues": []
+      "metrics": {
+        "vulnerability_count": 3
+      },
+      "timestamp": "2025-08-15T03:14:53.450701"
+    },
+    "dependency_audit": {
+      "gate_name": "dependency_audit",
+      "status": "passed",
+      "severity": "high",
+      "execution_time": 0.0002377033233642578,
+      "message": "Dependency audit completed (45 dependencies checked)",
+      "details": {},
+      "metrics": {
+        "dependencies_checked": 45
+      },
+      "timestamp": "2025-08-15T03:14:53.450975"
+    },
+    "documentation_check": {
+      "gate_name": "documentation_check",
+      "status": "passed",
+      "severity": "low",
+      "execution_time": 0.006335258483886719,
+      "message": "Documentation check passed (score: 99.3)",
+      "details": {},
+      "metrics": {
+        "documentation_score": 99.31906614785993
+      },
+      "timestamp": "2025-08-15T03:14:53.457333"
+    },
+    "syntax_check": {
+      "gate_name": "syntax_check",
+      "status": "passed",
+      "severity": "critical",
+      "execution_time": 0.3835008144378662,
+      "message": "All Python files have valid syntax",
+      "details": {},
+      "metrics": {
+        "files_checked": 53
+      },
+      "timestamp": "2025-08-15T03:14:53.840873"
+    },
+    "code_quality": {
+      "gate_name": "code_quality",
+      "status": "warning",
+      "severity": "medium",
+      "execution_time": 0.019336223602294922,
+      "message": "Code quality issues detected (score: 0)",
+      "details": {
+        "issues": [
+          "Long line in /root/repo/src/llm_cost_tracker/__init__.py:1",
+          "Long line in /root/repo/src/llm_cost_tracker/adaptive_quantum_mesh.py:143",
+          "Long line in /root/repo/src/llm_cost_tracker/adaptive_quantum_mesh.py:221",
+          "Long line in /root/repo/src/llm_cost_tracker/adaptive_quantum_mesh.py:378",
+          "Long line in /root/repo/src/llm_cost_tracker/adaptive_quantum_mesh.py:951",
+          "Long line in /root/repo/src/llm_cost_tracker/adaptive_quantum_mesh.py:956",
+          "Long line in /root/repo/src/llm_cost_tracker/adaptive_quantum_mesh.py:1056",
+          "Debug print statement in /root/repo/src/llm_cost_tracker/adaptive_quantum_mesh.py:1083",
+          "Debug print statement in /root/repo/src/llm_cost_tracker/adaptive_quantum_mesh.py:1084",
+          "Debug print statement in /root/repo/src/llm_cost_tracker/adaptive_quantum_mesh.py:1085"
+        ]
+      },
+      "metrics": {
+        "quality_score": 0,
+        "issues_found": 206
+      },
+      "timestamp": "2025-08-15T03:14:53.860250"
+    },
+    "unit_tests": {
+      "gate_name": "unit_tests",
+      "status": "failed",
+      "severity": "critical",
+      "execution_time": 0.02929401397705078,
+      "message": "Unit tests failed (0/0 passed)",
+      "details": {
+        "stdout": "",
+        "stderr": "/usr/bin/python3: No module named pytest\n"
+      },
+      "metrics": {
+        "total_tests": 0,
+        "passed_tests": 0
+      },
+      "timestamp": "2025-08-15T03:14:53.889683"
     }
   },
-  "metrics": {},
   "recommendations": [
-    "Address identified security vulnerabilities immediately",
-    "Implement comprehensive input validation and error handling",
-    "Add security scanning to CI/CD pipeline",
-    "Optimize performance bottlenecks identified in benchmarks",
-    "Implement caching and memory optimization strategies",
-    "Maintain current quality standards with regular audits",
-    "Consider advanced optimization and scaling features",
-    "Implement continuous monitoring and alerting in production",
-    "Establish regular security audits and dependency updates",
-    "Create disaster recovery and business continuity plans"
-  ],
-  "overall_score": 77
+    "Address security vulnerabilities immediately",
+    "Fix failing unit tests to ensure code reliability"
+  ]
 }
