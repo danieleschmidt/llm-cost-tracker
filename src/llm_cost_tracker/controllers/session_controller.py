@@ -4,12 +4,12 @@ import logging
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional
 
-from fastapi import APIRouter, HTTPException, Query, Depends
+from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel
 
-from ..models.user_session import UserSession, SessionMetrics
-from ..services.session_service import SessionService
 from ..database import get_db_manager
+from ..models.user_session import SessionMetrics, UserSession
+from ..services.session_service import SessionService
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/v1/sessions")
@@ -17,18 +17,21 @@ router = APIRouter(prefix="/api/v1/sessions")
 
 class SessionStartRequest(BaseModel):
     """Request model for starting a session."""
+
     user_id: str
     application_name: Optional[str] = None
 
 
 class SessionStartResponse(BaseModel):
     """Response model for starting a session."""
+
     session_id: str
     message: str
 
 
 class SessionUpdateRequest(BaseModel):
     """Request model for updating a session."""
+
     cost: float
     tokens: int
     latency_ms: int
@@ -37,6 +40,7 @@ class SessionUpdateRequest(BaseModel):
 
 class UserBehaviorAnalysis(BaseModel):
     """User behavior analysis response."""
+
     user_id: str
     analysis_period_days: int
     total_sessions: int
@@ -54,17 +58,16 @@ async def get_session_service() -> SessionService:
 @router.post("/start", response_model=SessionStartResponse)
 async def start_session(
     request: SessionStartRequest,
-    session_service: SessionService = Depends(get_session_service)
+    session_service: SessionService = Depends(get_session_service),
 ):
     """Start a new user session."""
     try:
         session_id = await session_service.start_session(
-            request.user_id, 
-            request.application_name
+            request.user_id, request.application_name
         )
         return SessionStartResponse(
             session_id=session_id,
-            message=f"Session started successfully for user {request.user_id}"
+            message=f"Session started successfully for user {request.user_id}",
         )
     except Exception as e:
         logger.error(f"Error starting session: {e}")
@@ -75,7 +78,7 @@ async def start_session(
 async def update_session(
     session_id: str,
     request: SessionUpdateRequest,
-    session_service: SessionService = Depends(get_session_service)
+    session_service: SessionService = Depends(get_session_service),
 ):
     """Update session with new usage data."""
     try:
@@ -83,14 +86,14 @@ async def update_session(
             "cost": request.cost,
             "tokens": request.tokens,
             "latency_ms": request.latency_ms,
-            "model_name": request.model_name
+            "model_name": request.model_name,
         }
-        
+
         success = await session_service.update_session(session_id, usage_data)
-        
+
         if not success:
             raise HTTPException(status_code=404, detail="Session not found")
-        
+
         return {"message": "Session updated successfully"}
     except HTTPException:
         raise
@@ -101,16 +104,15 @@ async def update_session(
 
 @router.post("/{session_id}/end", response_model=UserSession)
 async def end_session(
-    session_id: str,
-    session_service: SessionService = Depends(get_session_service)
+    session_id: str, session_service: SessionService = Depends(get_session_service)
 ):
     """End a session and return final metrics."""
     try:
         session = await session_service.end_session(session_id)
-        
+
         if not session:
             raise HTTPException(status_code=404, detail="Session not found")
-        
+
         return session
     except HTTPException:
         raise
@@ -122,7 +124,7 @@ async def end_session(
 @router.get("/active", response_model=List[UserSession])
 async def get_active_sessions(
     user_id: Optional[str] = Query(None, description="Filter by user ID"),
-    session_service: SessionService = Depends(get_session_service)
+    session_service: SessionService = Depends(get_session_service),
 ):
     """Get currently active sessions."""
     try:
@@ -137,7 +139,7 @@ async def get_active_sessions(
 async def get_session_metrics(
     days: int = Query(7, ge=1, le=365, description="Number of days to analyze"),
     user_id: Optional[str] = Query(None, description="Filter by user ID"),
-    session_service: SessionService = Depends(get_session_service)
+    session_service: SessionService = Depends(get_session_service),
 ):
     """Get aggregated session metrics."""
     try:
@@ -152,15 +154,15 @@ async def get_session_metrics(
 async def analyze_user_behavior(
     user_id: str,
     days: int = Query(30, ge=1, le=365, description="Number of days to analyze"),
-    session_service: SessionService = Depends(get_session_service)
+    session_service: SessionService = Depends(get_session_service),
 ):
     """Analyze specific user's behavior patterns."""
     try:
         analysis = await session_service.analyze_user_behavior(user_id, days)
-        
+
         if "error" in analysis:
             raise HTTPException(status_code=400, detail=analysis["error"])
-        
+
         return UserBehaviorAnalysis(**analysis)
     except HTTPException:
         raise
@@ -171,16 +173,15 @@ async def analyze_user_behavior(
 
 @router.get("/{session_id}/cost-breakdown")
 async def get_session_cost_breakdown(
-    session_id: str,
-    session_service: SessionService = Depends(get_session_service)
+    session_id: str, session_service: SessionService = Depends(get_session_service)
 ):
     """Get detailed cost breakdown for a specific session."""
     try:
         breakdown = await session_service.get_session_cost_breakdown(session_id)
-        
+
         if "error" in breakdown:
             raise HTTPException(status_code=404, detail=breakdown["error"])
-        
+
         return breakdown
     except HTTPException:
         raise
@@ -193,19 +194,19 @@ async def get_session_cost_breakdown(
 async def get_sessions_summary(
     days: int = Query(7, ge=1, le=90, description="Number of days to analyze"),
     user_id: Optional[str] = Query(None, description="Filter by user ID"),
-    session_service: SessionService = Depends(get_session_service)
+    session_service: SessionService = Depends(get_session_service),
 ):
     """Get comprehensive sessions summary."""
     try:
         # Get session metrics
         metrics = await session_service.get_session_metrics(days, user_id)
-        
+
         # Get active sessions
         active_sessions = await session_service.get_active_sessions(user_id)
-        
+
         # Calculate additional summary data
         active_users = len(set(session.user_id for session in active_sessions))
-        
+
         # Determine session health
         if metrics.total_sessions == 0:
             health_status = "no_data"
@@ -217,23 +218,23 @@ async def get_sessions_summary(
             health_status = "fair"
         else:
             health_status = "needs_attention"
-        
+
         # Generate insights
         insights = []
         if metrics.avg_session_duration_minutes > 60:
             insights.append("Users have long engagement sessions")
         elif metrics.avg_session_duration_minutes < 5:
             insights.append("Sessions are very short - consider UX improvements")
-        
+
         if metrics.avg_cost_per_session > 5:
             insights.append("High cost per session - review pricing strategy")
-        
+
         if active_users > metrics.unique_users * 0.3:
             insights.append("High user activity - good engagement")
-        
+
         if not insights:
             insights.append("Session patterns appear normal")
-        
+
         return {
             "analysis_period_days": days,
             "health_status": health_status,
@@ -245,8 +246,8 @@ async def get_sessions_summary(
             "recommendations": [
                 "Monitor session duration trends",
                 "Track cost per session efficiency",
-                "Analyze user engagement patterns"
-            ]
+                "Analyze user engagement patterns",
+            ],
         }
     except Exception as e:
         logger.error(f"Error getting sessions summary: {e}")
@@ -257,17 +258,17 @@ async def get_sessions_summary(
 async def get_top_spending_users(
     days: int = Query(7, ge=1, le=90, description="Number of days to analyze"),
     limit: int = Query(10, ge=1, le=100, description="Number of top users to return"),
-    session_service: SessionService = Depends(get_session_service)
+    session_service: SessionService = Depends(get_session_service),
 ):
     """Get top spending users by session cost."""
     try:
         # This would require a direct database query since it's an aggregation
         # across all users rather than individual user analysis
         db_manager = session_service.db
-        
+
         end_date = datetime.utcnow()
         start_date = end_date - timedelta(days=days)
-        
+
         query = """
             SELECT 
                 user_id,
@@ -283,25 +284,33 @@ async def get_top_spending_users(
             ORDER BY total_cost DESC
             LIMIT %s
         """
-        
+
         result = await db_manager.execute_query(query, [start_date, end_date, limit])
-        
+
         top_users = []
         for row in result:
-            top_users.append({
-                "user_id": row['user_id'],
-                "session_count": row['session_count'],
-                "total_cost": round(float(row['total_cost']), 4),
-                "avg_cost_per_session": round(float(row['avg_cost_per_session']), 4),
-                "total_requests": row['total_requests'],
-                "avg_duration_minutes": round(float(row['avg_duration_minutes']), 1),
-                "cost_per_request": round(float(row['total_cost']) / max(row['total_requests'], 1), 6)
-            })
-        
+            top_users.append(
+                {
+                    "user_id": row["user_id"],
+                    "session_count": row["session_count"],
+                    "total_cost": round(float(row["total_cost"]), 4),
+                    "avg_cost_per_session": round(
+                        float(row["avg_cost_per_session"]), 4
+                    ),
+                    "total_requests": row["total_requests"],
+                    "avg_duration_minutes": round(
+                        float(row["avg_duration_minutes"]), 1
+                    ),
+                    "cost_per_request": round(
+                        float(row["total_cost"]) / max(row["total_requests"], 1), 6
+                    ),
+                }
+            )
+
         return {
             "analysis_period_days": days,
             "users_analyzed": len(top_users),
-            "top_spenders": top_users
+            "top_spenders": top_users,
         }
     except Exception as e:
         logger.error(f"Error getting top spending users: {e}")
