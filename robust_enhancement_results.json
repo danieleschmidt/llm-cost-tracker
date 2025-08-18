@@ -1,0 +1,115 @@
+{
+  "demo_start": "2025-08-18T03:54:56.661564",
+  "features_tested": [
+    "input_validation",
+    "circuit_breaker",
+    "health_monitoring",
+    "robust_execution",
+    "performance_monitoring",
+    "structured_logging"
+  ],
+  "overall_status": "SUCCESS",
+  "health_status": {
+    "overall_status": "HEALTHY",
+    "timestamp": "2025-08-18T03:54:56.662950",
+    "checks": {
+      "quantum_planner": {
+        "status": "PASS",
+        "response_time_ms": 0.2090930938720703,
+        "details": {
+          "status": "operational",
+          "task_count": 0,
+          "message": "Task health_check_task added successfully"
+        },
+        "critical": true
+      },
+      "memory_usage": {
+        "status": "PASS",
+        "response_time_ms": 0.22482872009277344,
+        "details": {
+          "usage_percent": 26.578649594109475,
+          "available_gb": 15.35384542460693,
+          "total_gb": 16.0,
+          "note": "Simulated - psutil not available"
+        },
+        "critical": false
+      },
+      "task_queue": {
+        "status": "PASS",
+        "response_time_ms": 0.0040531158447265625,
+        "details": {
+          "queue_size": 0,
+          "error_tasks": 0,
+          "status": "healthy"
+        },
+        "critical": true
+      }
+    }
+  },
+  "execution_results": {
+    "execution_id": "exec_1755489296",
+    "start_time": "2025-08-18T03:54:56.663733",
+    "tasks_processed": 2,
+    "tasks_successful": 2,
+    "tasks_failed": 0,
+    "errors": [],
+    "performance_metrics": {},
+    "schedule": [
+      "robust_test_2",
+      "robust_test_1"
+    ],
+    "health_status": {
+      "overall_status": "HEALTHY",
+      "timestamp": "2025-08-18T03:54:57.542530",
+      "checks": {
+        "quantum_planner": {
+          "status": "PASS",
+          "response_time_ms": 0.18143653869628906,
+          "details": {
+            "status": "operational",
+            "task_count": 2,
+            "message": "Task health_check_task added successfully"
+          },
+          "critical": true
+        },
+        "memory_usage": {
+          "status": "PASS",
+          "response_time_ms": 0.22172927856445312,
+          "details": {
+            "usage_percent": 33.32043763511906,
+            "available_gb": 15.246736955153398,
+            "total_gb": 16.0,
+            "note": "Simulated - psutil not available"
+          },
+          "critical": false
+        },
+        "task_queue": {
+          "status": "PASS",
+          "response_time_ms": 0.0069141387939453125,
+          "details": {
+            "queue_size": 2,
+            "error_tasks": 0,
+            "status": "healthy"
+          },
+          "critical": true
+        }
+      }
+    },
+    "end_time": "2025-08-18T03:54:57.542970",
+    "success_rate_percent": 100.0,
+    "execution_status": "SUCCESS"
+  },
+  "performance_metrics": {
+    "add_task": {
+      "avg_duration_ms": 0.07808208465576172,
+      "success_rate_percent": 100.0
+    },
+    "generate_schedule": {
+      "avg_duration_ms": 877.9447078704834,
+      "success_rate_percent": 100.0
+    }
+  },
+  "error_counts": {},
+  "demo_end": "2025-08-18T03:54:57.543307",
+  "features_count": 6
+}
