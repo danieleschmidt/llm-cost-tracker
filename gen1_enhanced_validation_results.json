@@ -1,0 +1,45 @@
+{
+  "timestamp": "2025-08-19T17:58:57.095988",
+  "generation": 1,
+  "tests": {
+    "task_creation": {
+      "status": "passed",
+      "execution_time_ms": 1.466512680053711,
+      "task_count": 1
+    },
+    "quantum_state": {
+      "status": "passed",
+      "execution_time_ms": 1.3115406036376953,
+      "initial_state": "superposition"
+    },
+    "schedule_generation": {
+      "status": "passed",
+      "execution_time_ms": 4.232168197631836,
+      "schedule_length": 1
+    },
+    "dependency_management": {
+      "status": "passed",
+      "execution_time_ms": 107.27596282958984,
+      "task_count": 3,
+      "schedule": [
+        "test_task_1",
+        "test_task_2",
+        "test_task_3"
+      ]
+    }
+  },
+  "performance_metrics": {
+    "total_tasks_created": 100,
+    "total_time_ms": 92112.63513565063,
+    "avg_task_creation_ms": 0.1488971710205078,
+    "tasks_per_second": 1.085627393600606,
+    "schedule_generation_ms": 92097.74541854858
+  },
+  "validation_results": {
+    "total_tests": 4,
+    "passed_tests": 4,
+    "success_rate": 100.0,
+    "generation_1_complete": true
+  },
+  "async_validation": true
+}

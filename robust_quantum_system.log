@@ -1,0 +1,12 @@
+2025-08-19 18:03:25,920 - llm_cost_tracker.quantum_task_planner - INFO - Added task robust_test_1: Robust Data Analysis
+2025-08-19 18:03:25,921 - __main__ - INFO - Task robust_test_1 created successfully in 1.18ms
+2025-08-19 18:03:25,921 - __main__ - ERROR - Task validation failed: Validation failed: Missing required field: id; Priority must be between 0.0 and 10.0; Potentially dangerous content in description; Task name too long (max 200 characters)
+2025-08-19 18:03:25,921 - llm_cost_tracker.quantum_task_planner - INFO - Added task dep_1: Base Task
+2025-08-19 18:03:25,921 - __main__ - INFO - Task dep_1 created successfully in 0.22ms
+2025-08-19 18:03:25,921 - llm_cost_tracker.quantum_task_planner - INFO - Added task dep_2: Mid Task
+2025-08-19 18:03:25,921 - __main__ - INFO - Task dep_2 created successfully in 0.18ms
+2025-08-19 18:03:25,922 - llm_cost_tracker.quantum_task_planner - INFO - Added task dep_3: Final Task
+2025-08-19 18:03:25,922 - __main__ - INFO - Task dep_3 created successfully in 0.16ms
+2025-08-19 18:03:25,922 - __main__ - INFO - Starting schedule generation with enhanced error handling
+2025-08-19 18:03:25,956 - llm_cost_tracker.quantum_task_planner - INFO - Advanced quantum annealing complete. Best cost: 29.9200, Pareto solutions: 56, Iterations: 50
+2025-08-19 18:03:25,956 - __main__ - INFO - Schedule generated successfully: 4 tasks

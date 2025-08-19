@@ -1,0 +1,233 @@
+{
+  "timestamp": "2025-08-19T18:10:04.057658",
+  "execution_time_ms": 61869.09008026123,
+  "gate_results": {
+    "unit_tests": {
+      "status": "passed",
+      "score": 100.0,
+      "max_score": 100,
+      "execution_time_ms": 159.06953811645508,
+      "details": {
+        "test_results": {
+          "test_task_creation": {
+            "passed": true,
+            "task_created": true,
+            "task_retrieved": true,
+            "error": "Task unit_test_task added successfully"
+          },
+          "test_task_validation": {
+            "passed": true,
+            "validation_rejected_invalid": true,
+            "error_message": "Task validation failed: id: Task ID cannot be empty; priority: Priority must be between 1.0 and 10.0"
+          },
+          "test_quantum_states": {
+            "passed": true,
+            "initial_state_correct": true,
+            "probability_valid": true,
+            "probability_value": 1.0
+          },
+          "test_dependency_management": {
+            "passed": true,
+            "task1_created": true,
+            "task2_created": true,
+            "dependency_order_correct": true,
+            "schedule": [
+              "dep_test_1",
+              "dep_test_2"
+            ]
+          },
+          "test_error_handling": {
+            "passed": true,
+            "first_task_added": true,
+            "duplicate_rejected": true,
+            "error_message": "Task with ID 'duplicate_test' already exists"
+          }
+        },
+        "passed_tests": 5,
+        "total_tests": 5,
+        "coverage_estimate": 95
+      },
+      "recommendations": []
+    },
+    "integration_tests": {
+      "status": "failed",
+      "score": 66.66666666666666,
+      "max_score": 100,
+      "execution_time_ms": 43853.50847244263,
+      "details": {
+        "test_results": {
+          "full_workflow_test": {
+            "passed": true,
+            "tasks_created": 4,
+            "total_tasks": 4,
+            "schedule_generated": true,
+            "schedule_valid": true,
+            "schedule": [
+              "wf_task_1",
+              "wf_task_3",
+              "wf_task_2",
+              "wf_task_4"
+            ]
+          },
+          "concurrent_operations": {
+            "passed": true,
+            "successful_operations": 5,
+            "total_operations": 5,
+            "results": [
+              {
+                "id": "0",
+                "success": true,
+                "error": "Task concurrent_0 added successfully"
+              },
+              {
+                "id": "1",
+                "success": true,
+                "error": "Task concurrent_1 added successfully"
+              },
+              {
+                "id": "2",
+                "success": true,
+                "error": "Task concurrent_2 added successfully"
+              },
+              {
+                "id": "3",
+                "success": true,
+                "error": "Task concurrent_3 added successfully"
+              },
+              {
+                "id": "4",
+                "success": true,
+                "error": "Task concurrent_4 added successfully"
+              }
+            ]
+          },
+          "system_integration": {
+            "passed": false,
+            "tasks_created": 100,
+            "target_tasks": 100,
+            "creation_success_rate": 100.0,
+            "schedule_length": 100,
+            "schedule_time_ms": 43746.82807922363
+          }
+        },
+        "passed_tests": 2,
+        "total_tests": 3
+      },
+      "recommendations": [
+        "Improve integration test coverage"
+      ]
+    },
+    "security_scan": {
+      "status": "passed",
+      "score": 100.0,
+      "max_score": 100,
+      "execution_time_ms": 0.7021427154541016,
+      "details": {
+        "security_checks": {
+          "input_validation": {
+            "passed": true,
+            "blocked_attacks": 3,
+            "total_attacks": 3,
+            "effectiveness": 100.0
+          },
+          "injection_prevention": {
+            "passed": true,
+            "sql_injection_protected": true,
+            "command_injection_protected": true,
+            "ldap_injection_protected": true
+          },
+          "access_control": {
+            "passed": true,
+            "authentication_required": true,
+            "authorization_enforced": true,
+            "privilege_escalation_prevented": true
+          },
+          "data_encryption": {
+            "passed": true,
+            "data_at_rest_encrypted": true,
+            "data_in_transit_encrypted": true,
+            "encryption_algorithms_strong": true
+          },
+          "error_information_leakage": {
+            "passed": true,
+            "error_message_safe": true,
+            "error_message": "Task validation failed: id: Task ID cannot be empty; priority: Priority must be between 1.0 and 10.0"
+          }
+        },
+        "passed_checks": 5,
+        "total_checks": 5,
+        "critical_issues": []
+      },
+      "recommendations": []
+    },
+    "performance_benchmark": {
+      "status": "failed",
+      "score": 50.0,
+      "max_score": 100,
+      "execution_time_ms": 17855.64661026001,
+      "details": {
+        "performance_tests": {
+          "task_creation_benchmark": {
+            "passed": true,
+            "score": 100,
+            "tasks_created": 100,
+            "target_tasks": 100,
+            "duration_ms": 19.507169723510742,
+            "tasks_per_second": 5126.320292352632,
+            "avg_task_creation_ms": 0.19507169723510742
+          },
+          "schedule_generation_benchmark": {
+            "passed": false,
+            "score": 0,
+            "tasks_scheduled": 50,
+            "total_tasks": 50,
+            "duration_ms": 16498.50630760193,
+            "tasks_per_ms": 0.0030305773788116665
+          },
+          "memory_usage_test": {
+            "passed": true,
+            "score": 0,
+            "initial_memory_mb": 26.51953125,
+            "final_memory_mb": 67.51171875,
+            "memory_increase_mb": 40.9921875,
+            "memory_per_task_kb": 41.976,
+            "tasks_created": 1000
+          },
+          "concurrency_benchmark": {
+            "passed": true,
+            "score": 100,
+            "total_success": 200,
+            "expected_tasks": 200,
+            "success_rate": 100.0,
+            "overall_duration": 0.10060501098632812,
+            "concurrent_operations": 20
+          }
+        },
+        "benchmark_summary": {
+          "overall_score": 50.0,
+          "execution_time_ms": 17855.64661026001
+        }
+      },
+      "recommendations": [
+        "Improve scheduling algorithm performance or reduce iterations"
+      ]
+    }
+  },
+  "overall_assessment": {
+    "quality_score": 80.83333333333333,
+    "status": "failed",
+    "gates_passed": 2,
+    "total_gates": 4,
+    "recommendations": [
+      "Address failures in: integration_tests, performance_benchmark",
+      "Improve integration test coverage",
+      "Improve scheduling algorithm performance or reduce iterations"
+    ]
+  },
+  "compliance": {
+    "minimum_quality_met": false,
+    "production_ready": false,
+    "security_compliant": true,
+    "performance_acceptable": false
+  }
+}

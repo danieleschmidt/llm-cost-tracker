@@ -1,0 +1,148 @@
+{
+  "timestamp": "2025-08-19T18:03:33.151394",
+  "generation": 2,
+  "security_tests": {
+    "threat_detection": [
+      {
+        "input": "'; DROP TABLE users; --",
+        "is_secure": false,
+        "threats_found": 2,
+        "threat_types": [
+          "sql_injection",
+          "command_injection"
+        ]
+      },
+      {
+        "input": "<script>alert('XSS')</script>",
+        "is_secure": false,
+        "threats_found": 1,
+        "threat_types": [
+          "xss_attack"
+        ]
+      },
+      {
+        "input": "cat /etc/passwd; rm -rf /",
+        "is_secure": false,
+        "threats_found": 2,
+        "threat_types": [
+          "command_injection",
+          "command_injection"
+        ]
+      },
+      {
+        "input": "../../../etc/passwd",
+        "is_secure": false,
+        "threats_found": 1,
+        "threat_types": [
+          "path_traversal"
+        ]
+      }
+    ],
+    "pii_detection": {
+      "original_content": "Contact John at john.doe@email.com or call 555-123-4567. SSN: 123-45-6789",
+      "pii_detected": true,
+      "pii_types": [
+        "email",
+        "phone",
+        "ssn"
+      ],
+      "confidence": 0.9666666666666667,
+      "sanitized_content": "Contact John at [REDACTED_EMAIL] or call [REDACTED_PHONE]. SSN: [REDACTED_SSN]"
+    },
+    "reporting": {
+      "total_events": 6,
+      "compliance_status": "compliant",
+      "supported_languages": 6
+    }
+  },
+  "compliance_tests": {
+    "validation": [
+      {
+        "scenario": {
+          "operation": "data_processing",
+          "has_consent": true,
+          "location": "EU"
+        },
+        "compliant": false,
+        "violations": [
+          "PDPA: Explicit consent required for data processing",
+          "PDPA: Data processing purpose not specified"
+        ]
+      },
+      {
+        "scenario": {
+          "operation": "data_processing",
+          "has_consent": false,
+          "location": "California"
+        },
+        "compliant": false,
+        "violations": [
+          "GDPR Article 6: No lawful basis for processing personal data",
+          "PDPA: Explicit consent required for data processing",
+          "PDPA: Data processing purpose not specified"
+        ]
+      },
+      {
+        "scenario": {
+          "operation": "data_collection",
+          "purpose_disclosed": true,
+          "location": "Singapore"
+        },
+        "compliant": false,
+        "violations": [
+          "GDPR Article 6: No lawful basis for processing personal data",
+          "PDPA: Explicit consent required for data processing",
+          "PDPA: Data processing purpose not specified"
+        ]
+      }
+    ],
+    "consent_management": {
+      "records_created": 5,
+      "total_consents": 5,
+      "granted_consents": 3
+    }
+  },
+  "i18n_tests": {
+    "language_support": {
+      "en": {
+        "language": "en",
+        "message": "Task created successfully",
+        "translated": true
+      },
+      "es": {
+        "language": "es",
+        "message": "Tarea creada exitosamente",
+        "translated": true
+      },
+      "fr": {
+        "language": "fr",
+        "message": "T\u00e2che cr\u00e9\u00e9e avec succ\u00e8s",
+        "translated": true
+      },
+      "de": {
+        "language": "de",
+        "message": "Aufgabe erfolgreich erstellt",
+        "translated": true
+      },
+      "ja": {
+        "language": "ja",
+        "message": "\u30bf\u30b9\u30af\u304c\u6b63\u5e38\u306b\u4f5c\u6210\u3055\u308c\u307e\u3057\u305f",
+        "translated": true
+      },
+      "zh": {
+        "language": "zh",
+        "message": "\u4efb\u52a1\u521b\u5efa\u6210\u529f",
+        "translated": true
+      }
+    }
+  },
+  "overall_assessment": {
+    "security_score": 25.0,
+    "compliance_score": 0.0,
+    "pii_detection_score": 25,
+    "internationalization_score": 25,
+    "total_score": 75.0,
+    "grade": "C",
+    "generation_2_security_complete": false
+  }
+}
