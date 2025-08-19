@@ -327,6 +327,10 @@ class QuantumTaskPlanner:
 
         return high_priority and resource_conflict
 
+    def generate_schedule(self, max_iterations: int = 100) -> List[str]:
+        """Generate optimal schedule using quantum annealing."""
+        return self.quantum_anneal_schedule(max_iterations)
+    
     def quantum_anneal_schedule(self, max_iterations: int = 1000) -> List[str]:
         """
         Advanced quantum annealing with multiple enhancement techniques:
