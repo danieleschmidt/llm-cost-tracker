@@ -1,20 +1,20 @@
 {
-  "execution_start": "2025-08-18T03:58:52.509397",
+  "execution_start": "2025-08-20T19:01:21.964198",
   "gates": {
     "security": {
       "status": "FAIL",
       "score": 70,
-      "duration_ms": 19.14072036743164,
+      "duration_ms": 17.846107482910156,
       "scan_results": [
         {
           "file": "src/llm_cost_tracker/main.py",
           "vulnerabilities": [],
-          "scan_time": "2025-08-18T03:58:52.516728"
+          "scan_time": "2025-08-20T19:01:21.971503"
         },
         {
           "file": "src/llm_cost_tracker/security.py",
           "vulnerabilities": [],
-          "scan_time": "2025-08-18T03:58:52.522880"
+          "scan_time": "2025-08-20T19:01:21.977248"
         },
         {
           "file": "src/llm_cost_tracker/validation.py",
@@ -26,11 +26,11 @@
               "severity": "CRITICAL"
             }
           ],
-          "scan_time": "2025-08-18T03:58:52.528365"
+          "scan_time": "2025-08-20T19:01:21.981863"
         }
       ],
       "security_controls": {
-        "timestamp": "2025-08-18T03:58:52.528535",
+        "timestamp": "2025-08-20T19:01:21.982084",
         "security_controls": {
           "security_module_security": true,
           "security_module_validation": true,
@@ -47,22 +47,22 @@
       "status": "PASS",
       "score": 100.0,
       "test_results": {
-        "test_start": "2025-08-18T03:58:52.528574",
+        "test_start": "2025-08-20T19:01:21.982128",
         "tests": {
           "response_time": {
-            "average_ms": 0.1204538345336914,
-            "maximum_ms": 0.9145736694335938,
+            "average_ms": 0.11460304260253906,
+            "maximum_ms": 0.7834434509277344,
             "samples": 50,
             "requirement_ms": 200
           },
           "throughput": {
-            "tasks_per_second": 4648.406866819608,
+            "tasks_per_second": 4887.383912653375,
             "total_tasks": 100,
-            "duration_seconds": 0.021512746810913086,
+            "duration_seconds": 0.020460844039916992,
             "requirement_tps": 100
           },
           "memory_usage": {
-            "usage_mb": 251.03479463417216,
+            "usage_mb": 355.7532942634444,
             "requirement_mb": 512
           },
           "load_test": {
@@ -70,7 +70,7 @@
             "successful_requests": 200,
             "failed_requests": 0,
             "error_rate_percent": 0.0,
-            "duration_seconds": 0.13512849807739258,
+            "duration_seconds": 0.10106730461120605,
             "requirement_error_rate": 1.0
           }
         },
@@ -81,7 +81,7 @@
           "load_test": true
         },
         "overall_pass": true,
-        "test_end": "2025-08-18T03:58:52.691433",
+        "test_end": "2025-08-20T19:01:22.109561",
         "performance_score": 100.0
       },
       "requirements_met": {
@@ -93,13 +93,13 @@
     },
     "code_quality": {
       "status": "FAIL",
-      "score": 68.8240733525546,
-      "duration_ms": 37.12105751037598,
+      "score": 68.82175436522196,
+      "duration_ms": 35.764455795288086,
       "metrics": {
-        "analysis_time": "2025-08-18T03:58:52.693981",
+        "analysis_time": "2025-08-20T19:01:22.112169",
         "total_files": 53,
-        "total_lines": 30124,
-        "total_functions": 1025,
+        "total_lines": 30128,
+        "total_functions": 1026,
         "total_classes": 227,
         "complexity_issues": [
           {
@@ -333,22 +333,22 @@
             "estimated_lines": 52
           }
         ],
-        "documentation_coverage": 96.3258785942492,
-        "test_coverage_estimate": 14.634146341463413,
-        "quality_score": 68.8240733525546,
+        "documentation_coverage": 96.32881085395051,
+        "test_coverage_estimate": 14.619883040935672,
+        "quality_score": 68.82175436522196,
         "quality_factors": {
-          "documentation": 0.963258785942492,
-          "test_coverage": 0.14634146341463414,
-          "complexity": 0.9551219512195122
+          "documentation": 0.9632881085395052,
+          "test_coverage": 0.14619883040935672,
+          "complexity": 0.9551656920077973
         }
       }
     },
     "compliance": {
       "status": "PASS",
       "score": 100.0,
-      "duration_ms": 34.39617156982422,
+      "duration_ms": 34.447431564331055,
       "compliance_results": {
-        "validation_time": "2025-08-18T03:58:52.731124",
+        "validation_time": "2025-08-20T19:01:22.147952",
         "regulations": {
           "gdpr": {
             "requirements": {
@@ -396,14 +396,14 @@
   "gate_scores": {
     "security": 70,
     "performance": 100.0,
-    "code_quality": 68.8240733525546,
+    "code_quality": 68.82175436522196,
     "compliance": 100.0
   },
   "recommendations": [
     "Improve security by addressing vulnerabilities and implementing additional security controls",
     "Improve code quality by adding documentation and reducing complexity"
   ],
-  "overall_score": 84.70601833813865,
+  "overall_score": 84.7054385913055,
   "gates_passed": "2/4",
-  "execution_end": "2025-08-18T03:58:52.765547"
+  "execution_end": "2025-08-20T19:01:22.182425"
 }
