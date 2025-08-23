@@ -1,0 +1,350 @@
+{
+  "timestamp": "2025-08-23T18:26:43.073734",
+  "validation_time_ms": 0.31566619873046875,
+  "overall_status": "FAILED",
+  "quality_score": 89.91,
+  "gates_passed": 10,
+  "gates_failed": 1,
+  "gates_warning": 1,
+  "quality_gates": {
+    "code_coverage": {
+      "gate_name": "code_coverage",
+      "status": "QualityGateStatus.PASSED",
+      "score": 87.5,
+      "threshold": 85.0,
+      "execution_time_ms": 0.00476837158203125,
+      "details": {
+        "line_coverage": 87.5,
+        "branch_coverage": 82.3,
+        "function_coverage": 94.1,
+        "uncovered_files": [
+          "src/legacy_module.py",
+          "src/experimental.py"
+        ],
+        "critical_uncovered_lines": 23,
+        "test_files_count": 45,
+        "total_lines": 12847
+      },
+      "recommendations": []
+    },
+    "static_analysis": {
+      "gate_name": "static_analysis",
+      "status": "QualityGateStatus.PASSED",
+      "score": 86.0,
+      "threshold": 75.0,
+      "execution_time_ms": 0.0040531158447265625,
+      "details": {
+        "critical_issues": 0,
+        "major_issues": 2,
+        "minor_issues": 8,
+        "code_smells": 15,
+        "maintainability_rating": "A",
+        "reliability_rating": "B",
+        "security_rating": "A",
+        "technical_debt_minutes": 45,
+        "duplicated_lines_percentage": 2.1
+      },
+      "recommendations": []
+    },
+    "code_complexity": {
+      "gate_name": "code_complexity",
+      "status": "QualityGateStatus.PASSED",
+      "score": 100,
+      "threshold": 10.0,
+      "execution_time_ms": 0.0050067901611328125,
+      "details": {
+        "average_complexity": 4.2,
+        "max_complexity": 8.5,
+        "high_complexity_functions": [
+          {
+            "function": "process_quantum_schedule",
+            "complexity": 8.5
+          },
+          {
+            "function": "validate_security_rules",
+            "complexity": 7.8
+          },
+          {
+            "function": "optimize_resource_allocation",
+            "complexity": 7.2
+          }
+        ],
+        "total_functions": 156,
+        "complex_functions_count": 3,
+        "complexity_distribution": {
+          "low_complexity": 132,
+          "medium_complexity": 21,
+          "high_complexity": 3
+        }
+      },
+      "recommendations": []
+    },
+    "code_duplication": {
+      "gate_name": "code_duplication",
+      "status": "QualityGateStatus.PASSED",
+      "score": 30.0,
+      "threshold": 3.0,
+      "execution_time_ms": 0.0035762786865234375,
+      "details": {
+        "duplication_percentage": 2.1,
+        "duplicated_blocks": 8,
+        "duplicated_lines": 245,
+        "total_lines": 11650,
+        "duplicated_files": [
+          "src/quantum_optimizer.py",
+          "src/security_validator.py"
+        ],
+        "largest_duplicate_block": {
+          "lines": 23,
+          "files": [
+            "src/utils.py",
+            "src/helpers.py"
+          ]
+        }
+      },
+      "recommendations": []
+    },
+    "security_scan": {
+      "gate_name": "security_scan",
+      "status": "QualityGateStatus.WARNING",
+      "score": 88.5,
+      "threshold": 90.0,
+      "execution_time_ms": 0.0040531158447265625,
+      "details": {
+        "critical_vulnerabilities": 0,
+        "high_vulnerabilities": 1,
+        "medium_vulnerabilities": 3,
+        "low_vulnerabilities": 5,
+        "total_vulnerabilities": 9,
+        "security_score": 88.5,
+        "vulnerable_components": [
+          {
+            "component": "requests",
+            "version": "2.25.1",
+            "severity": "high"
+          },
+          {
+            "component": "pyyaml",
+            "version": "5.4.1",
+            "severity": "medium"
+          }
+        ],
+        "compliance_checks": {
+          "owasp_top_10": 9,
+          "cwe_coverage": 87.3
+        }
+      },
+      "recommendations": [
+        "Address high-severity vulnerabilities"
+      ]
+    },
+    "dependency_vulnerabilities": {
+      "gate_name": "dependency_vulnerabilities",
+      "status": "QualityGateStatus.PASSED",
+      "score": 92.3,
+      "threshold": 85.0,
+      "execution_time_ms": 0.0030994415283203125,
+      "details": {
+        "total_dependencies": 47,
+        "vulnerable_dependencies": 2,
+        "outdated_dependencies": 8,
+        "security_advisories": [
+          {
+            "package": "requests",
+            "advisory": "CVE-2023-32681",
+            "severity": "medium"
+          },
+          {
+            "package": "cryptography",
+            "advisory": "CVE-2023-38325",
+            "severity": "low"
+          }
+        ],
+        "license_compliance": {
+          "incompatible_licenses": 0,
+          "unknown_licenses": 1
+        },
+        "dependency_health_score": 92.3
+      },
+      "recommendations": [
+        "Update vulnerable dependencies"
+      ]
+    },
+    "performance_benchmarks": {
+      "gate_name": "performance_benchmarks",
+      "status": "QualityGateStatus.PASSED",
+      "score": 84.2,
+      "threshold": 80.0,
+      "execution_time_ms": 0.00286102294921875,
+      "details": {
+        "api_response_time_p95": 145.5,
+        "api_response_time_avg": 67.2,
+        "throughput_requests_per_sec": 1247,
+        "memory_usage_peak_mb": 245.8,
+        "cpu_utilization_peak": 78.3,
+        "database_query_time_avg": 23.4,
+        "cache_hit_rate": 87.6,
+        "performance_score": 84.2,
+        "benchmarks": {
+          "quantum_scheduling": {
+            "time_ms": 12.3,
+            "throughput": 810
+          },
+          "cost_prediction": {
+            "time_ms": 8.7,
+            "throughput": 1150
+          },
+          "security_validation": {
+            "time_ms": 3.2,
+            "throughput": 3125
+          }
+        }
+      },
+      "recommendations": []
+    },
+    "load_testing": {
+      "gate_name": "load_testing",
+      "status": "QualityGateStatus.PASSED",
+      "score": 88.7,
+      "threshold": 85.0,
+      "execution_time_ms": 0.0026226043701171875,
+      "details": {
+        "max_concurrent_users": 500,
+        "test_duration_minutes": 10,
+        "total_requests": 25000,
+        "failed_requests": 23,
+        "error_rate_percentage": 0.092,
+        "avg_response_time_ms": 89.4,
+        "p95_response_time_ms": 178.6,
+        "p99_response_time_ms": 245.3,
+        "throughput_peak": 1345,
+        "resource_utilization": {
+          "cpu_peak": 85.2,
+          "memory_peak": 78.9,
+          "network_io_peak": 145.6
+        },
+        "load_test_score": 88.7
+      },
+      "recommendations": []
+    },
+    "integration_tests": {
+      "gate_name": "integration_tests",
+      "status": "QualityGateStatus.PASSED",
+      "score": 95.5,
+      "threshold": 95.0,
+      "execution_time_ms": 0.0021457672119140625,
+      "details": {
+        "total_tests": 67,
+        "passed_tests": 64,
+        "failed_tests": 2,
+        "skipped_tests": 1,
+        "success_rate_percentage": 95.5,
+        "total_execution_time_ms": 4560.2,
+        "average_test_time_ms": 68.1,
+        "failed_test_details": [
+          {
+            "test": "test_quantum_scheduler_integration",
+            "error": "Timeout waiting for response"
+          },
+          {
+            "test": "test_cost_optimizer_database",
+            "error": "Connection refused"
+          }
+        ],
+        "coverage_integration": 78.4
+      },
+      "recommendations": [
+        "Fix failing integration tests",
+        "Improve integration test coverage"
+      ]
+    },
+    "regression_tests": {
+      "gate_name": "regression_tests",
+      "status": "QualityGateStatus.FAILED",
+      "score": 97.8,
+      "threshold": 98.0,
+      "execution_time_ms": 0.00286102294921875,
+      "details": {
+        "total_regression_tests": 89,
+        "passed_tests": 87,
+        "failed_tests": 1,
+        "new_regressions": 1,
+        "fixed_regressions": 2,
+        "success_rate_percentage": 97.8,
+        "execution_time_ms": 7834.5,
+        "regression_details": [
+          {
+            "test": "test_api_backward_compatibility",
+            "status": "failed",
+            "regression": true
+          }
+        ],
+        "compatibility_score": 96.2
+      },
+      "recommendations": [
+        "Fix new regressions before deployment",
+        "Address failing regression tests"
+      ]
+    },
+    "documentation_coverage": {
+      "gate_name": "documentation_coverage",
+      "status": "QualityGateStatus.PASSED",
+      "score": 84.6,
+      "threshold": 80.0,
+      "execution_time_ms": 0.001430511474609375,
+      "details": {
+        "total_functions": 234,
+        "documented_functions": 198,
+        "documentation_coverage_percentage": 84.6,
+        "missing_docstrings": 36,
+        "incomplete_documentation": 12,
+        "outdated_documentation": 5,
+        "documentation_quality_score": 82.3,
+        "api_documentation_coverage": 91.2,
+        "readme_completeness": 95.0
+      },
+      "recommendations": [
+        "Add docstrings to undocumented functions",
+        "Update outdated documentation"
+      ]
+    },
+    "api_documentation": {
+      "gate_name": "api_documentation",
+      "status": "QualityGateStatus.PASSED",
+      "score": 94.1,
+      "threshold": 90.0,
+      "execution_time_ms": 0.00095367431640625,
+      "details": {
+        "total_endpoints": 34,
+        "documented_endpoints": 32,
+        "documentation_coverage_percentage": 94.1,
+        "missing_examples": 3,
+        "missing_error_codes": 5,
+        "openapi_compliance": 96.8,
+        "api_doc_quality_score": 91.5,
+        "interactive_docs_available": true
+      },
+      "recommendations": [
+        "Add examples to API documentation",
+        "Document error codes and responses"
+      ]
+    }
+  },
+  "recommendations": [
+    "[HIGH] regression_tests: Fix new regressions before deployment",
+    "[HIGH] regression_tests: Address failing regression tests",
+    "[MEDIUM] security_scan: Address high-severity vulnerabilities"
+  ],
+  "risk_assessment": {
+    "risk_level": "MEDIUM",
+    "risk_score": 50,
+    "deployment_recommendation": "CONDITIONAL",
+    "critical_failures": [
+      "regression_tests"
+    ],
+    "risk_factors": [
+      "Failed regression_tests"
+    ],
+    "mitigation_required": true
+  }
+}

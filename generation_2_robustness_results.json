@@ -1,122 +1,21 @@
 {
-  "timestamp": "2025-08-19T18:03:25.920004",
-  "generation": 2,
-  "tests": {
-    "valid_task_creation": {
-      "success": true,
-      "task_id": "robust_test_1",
-      "error": null
-    },
-    "invalid_task_handling": {
-      "success": false,
-      "task_id": null,
-      "error": "Validation failed: Missing required field: id; Priority must be between 0.0 and 10.0; Potentially dangerous content in description; Task name too long (max 200 characters)",
-      "properly_rejected": true
-    },
-    "dependency_management": [
-      {
-        "success": true,
-        "task_id": "dep_1",
-        "error": null
-      },
-      {
-        "success": true,
-        "task_id": "dep_2",
-        "error": null
-      },
-      {
-        "success": true,
-        "task_id": "dep_3",
-        "error": null
-      }
-    ],
-    "robust_scheduling": {
-      "success": true,
-      "schedule": [
-        "dep_1",
-        "dep_2",
-        "dep_3",
-        "robust_test_1"
-      ],
-      "error": null,
-      "task_count": 4
-    }
+  "timestamp": "2025-08-23T18:22:01.808159",
+  "generation": "Gen2_Robust",
+  "security_validation": {
+    "is_valid": false,
+    "security_score": 0.8666666666666667,
+    "validation_time_ms": 1.153707504272461,
+    "threat_indicators_count": 2
   },
-  "error_handling": {
-    "recovery_tests": [
-      {
-        "error_type": "task_creation_failed",
-        "resolved": false,
-        "recovery_time": null
-      },
-      {
-        "error_type": "schedule_generation_failed",
-        "resolved": false,
-        "recovery_time": null
-      },
-      {
-        "error_type": "dependency_cycle_detected",
-        "resolved": true,
-        "recovery_time": 2.1e-05
-      }
-    ]
+  "error_recovery": {
+    "operation_success": true,
+    "execution_time_ms": 1693.4401988983154
   },
-  "monitoring": {
-    "health_status": {
-      "timestamp": "2025-08-19T18:03:25.956897",
-      "uptime_seconds": 0.037157,
-      "system_status": "healthy",
-      "metrics": {
-        "tasks_created": 4,
-        "tasks_completed": 0,
-        "error_rate": 0.0,
-        "avg_task_creation_time": 0.4353523254394531
-      },
-      "components": {
-        "quantum_planner": "operational",
-        "error_handler": "operational",
-        "validation_system": "operational",
-        "monitoring": "operational"
-      },
-      "error_statistics": {
-        "total_errors": 3,
-        "resolved_errors": 1,
-        "error_types": {
-          "task_creation_failed": 1,
-          "schedule_generation_failed": 1,
-          "dependency_cycle_detected": 1
-        },
-        "recent_errors": [
-          {
-            "type": "task_creation_failed",
-            "severity": "medium",
-            "timestamp": "2025-08-19T18:03:25.956695",
-            "resolved": false
-          },
-          {
-            "type": "schedule_generation_failed",
-            "severity": "high",
-            "timestamp": "2025-08-19T18:03:25.956821",
-            "resolved": false
-          },
-          {
-            "type": "dependency_cycle_detected",
-            "severity": "medium",
-            "timestamp": "2025-08-19T18:03:25.956861",
-            "resolved": true
-          }
-        ]
-      }
-    }
+  "system_health": {
+    "overall_status": "healthy",
+    "cpu_usage": 62.15465863627342,
+    "memory_usage": 37.98548184750478,
+    "error_rate": 4.5
   },
-  "validation": {
-    "summary": {
-      "total_tests": 4,
-      "passed_tests": 3,
-      "success_rate": 75.0,
-      "generation_2_complete": false,
-      "robustness_score": 7.5,
-      "error_recovery_rate": 33.33333333333333
-    }
-  }
+  "status": "SUCCESS"
 }
