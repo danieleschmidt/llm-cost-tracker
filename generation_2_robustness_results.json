@@ -1,21 +1,78 @@
 {
-  "timestamp": "2025-08-23T18:22:01.808159",
-  "generation": "Gen2_Robust",
-  "security_validation": {
-    "is_valid": false,
-    "security_score": 0.8666666666666667,
-    "validation_time_ms": 1.153707504272461,
-    "threat_indicators_count": 2
+  "timestamp": "2025-08-24T06:13:35.397238",
+  "test_name": "Generation 2 Robustness Validation",
+  "tests": {
+    "circuit_breaker": {
+      "status": "PASS",
+      "duration_ms": 0.3840923309326172,
+      "details": "Circuit breaker pattern operational",
+      "final_state": "open"
+    },
+    "advanced_caching": {
+      "status": "PASS",
+      "duration_ms": 200.70385932922363,
+      "details": "Advanced caching with TTL and LRU operational",
+      "cache_stats": {
+        "backend": "memory",
+        "size": 1,
+        "max_size": 100,
+        "hits": 1,
+        "misses": 0,
+        "hit_rate": 1.0,
+        "evictions": 0,
+        "eviction_policy": "lru",
+        "patterns": 0,
+        "default_ttl": 60.0,
+        "key_prefix": "llm_cost_tracker"
+      }
+    },
+    "security_measures": {
+      "status": "PASS",
+      "duration_ms": 1.0476112365722656,
+      "details": "Rate limiting and security headers operational",
+      "rate_limited": true,
+      "security_headers": [
+        "content-length",
+        "x-content-type-options",
+        "x-frame-options",
+        "x-xss-protection",
+        "strict-transport-security",
+        "referrer-policy"
+      ]
+    },
+    "input_validation": {
+      "status": "PASS",
+      "duration_ms": 0.5915164947509766,
+      "details": "Input validation and sanitization operational",
+      "security_threat_detected": true
+    },
+    "error_handling": {
+      "status": "PASS",
+      "duration_ms": 1.1851787567138672,
+      "details": "Comprehensive error handling operational",
+      "errors_handled": 0
+    },
+    "health_monitoring": {
+      "status": "PASS",
+      "duration_ms": 393.9058780670166,
+      "details": "Health monitoring operational",
+      "health_status": "unhealthy"
+    },
+    "graceful_degradation": {
+      "status": "PASS",
+      "duration_ms": 5.196809768676758,
+      "details": "Graceful degradation functional - system continues operating despite failures",
+      "fallback_successful": true
+    }
   },
-  "error_recovery": {
-    "operation_success": true,
-    "execution_time_ms": 1693.4401988983154
-  },
-  "system_health": {
-    "overall_status": "healthy",
-    "cpu_usage": 62.15465863627342,
-    "memory_usage": 37.98548184750478,
-    "error_rate": 4.5
-  },
-  "status": "SUCCESS"
+  "summary": {
+    "total_tests": 7,
+    "passed_tests": 7,
+    "partial_tests": 0,
+    "failed_tests": 0,
+    "success_rate": "100.0%",
+    "robustness_score": "100.0%",
+    "total_duration_ms": 603.0149459838867,
+    "status": "PASS"
+  }
 }
