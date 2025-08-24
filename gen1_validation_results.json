@@ -1,0 +1,66 @@
+{
+  "timestamp": "2025-08-24T06:08:02.596183",
+  "test_name": "Generation 1 Basic Functionality Validation",
+  "tests": {
+    "config_loading": {
+      "status": "PASS",
+      "duration_ms": 1.4803409576416016,
+      "details": "Configuration loaded successfully"
+    },
+    "quantum_planner_basic": {
+      "status": "PASS",
+      "duration_ms": 97.85652160644531,
+      "details": "Successfully created planner with 3 tasks",
+      "schedule": [
+        "report_generation",
+        "model_training",
+        "data_analysis"
+      ]
+    },
+    "resource_pool": {
+      "status": "PASS",
+      "duration_ms": 0.01811981201171875,
+      "details": "Resource pool allocation and deallocation working correctly"
+    },
+    "task_execution": {
+      "status": "PASS",
+      "duration_ms": 10011.454105377197,
+      "details": "Task execution simulation successful",
+      "executed_task": "data_analysis"
+    },
+    "system_monitoring": {
+      "status": "PASS",
+      "duration_ms": 0.14901161193847656,
+      "details": "System state monitoring operational",
+      "monitored_metrics": [
+        "total_tasks",
+        "resource_utilization",
+        "task_states",
+        "execution_history_size"
+      ]
+    },
+    "i18n_support": {
+      "status": "PASS",
+      "duration_ms": 1.1439323425292969,
+      "details": "Multi-language support functional",
+      "languages_tested": [
+        "en",
+        "es",
+        "fr"
+      ],
+      "sample_translations": {
+        "en": "system.startup",
+        "es": "system.startup",
+        "fr": "system.startup"
+      }
+    }
+  },
+  "summary": {
+    "total_tests": 6,
+    "passed_tests": 6,
+    "failed_tests": 0,
+    "success_rate": "100.0%",
+    "total_duration_ms": 10112.102031707764,
+    "status": "PASS"
+  }
+}

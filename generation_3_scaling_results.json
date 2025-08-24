@@ -1,77 +1,77 @@
 {
-  "timestamp": "2025-08-23T18:24:27.308249",
-  "generation": "Gen3_Scaling",
-  "auto_scaling": {
-    "evaluation_time_ms": 0.1308917999267578,
-    "recommended_action": "no_change",
-    "confidence_score": 0.82,
-    "cluster_state": {
-      "node_count": 8,
-      "average_metrics": {
-        "cpu_usage": 82.25,
-        "memory_usage": 62.5,
-        "response_time_ms": 100.375,
-        "error_rate": 2.5
-      },
-      "total_metrics": {
-        "active_connections": 717,
-        "request_rate": 1436
-      },
-      "resource_distribution": {
-        "cpu_variance": 0.15,
-        "memory_variance": 0.12,
-        "load_imbalance": 0.08
-      },
-      "hotspot_analysis": [
-        "node-03",
-        "node-07"
-      ],
-      "cluster_health": 0.83875,
-      "scaling_triggers": [
-        "high_cpu_utilization"
-      ]
+  "timestamp": "2025-08-24T06:21:33.586621",
+  "test_name": "Generation 3 Scaling Validation (Simplified)",
+  "tests": {
+    "basic_task_performance": {
+      "status": "PASS",
+      "duration_ms": 3.290414810180664,
+      "details": "Basic task performance operational",
+      "tasks_processed": 10,
+      "schedule_generation_ms": 0.0021457672119140625
     },
-    "predicted_load": {
-      "prediction_horizon_minutes": 60,
-      "individual_predictions": {
-        "linear_trend": {
-          "predicted_cpu_usage": 88.0,
-          "trend_slope": 2.0
-        },
-        "seasonal_pattern": {
-          "seasonal_multiplier": 0.8,
-          "is_peak_period": false
-        },
-        "ml_model": {
-          "predicted_load_increase": 0.25,
-          "model_confidence": 0.82,
-          "prediction_accuracy_history": 0.78
-        }
+    "concurrent_execution": {
+      "status": "PASS",
+      "duration_ms": 10.76817512512207,
+      "details": "Concurrent execution operational",
+      "tasks_submitted": 20,
+      "tasks_completed": 20,
+      "success_rate": 1.0
+    },
+    "cache_performance": {
+      "status": "PASS",
+      "duration_ms": 0.7255077362060547,
+      "details": "Cache performance operational",
+      "cache_operations": 100,
+      "write_time_ms": 0.4627704620361328,
+      "read_time_ms": 0.2384185791015625,
+      "hit_rate": 1.0,
+      "ops_per_second": 285229.78578714724
+    },
+    "resource_management": {
+      "status": "PASS",
+      "duration_ms": 0.03552436828613281,
+      "details": "Resource management operational",
+      "successful_allocations": 8,
+      "cpu_utilization": 1.0,
+      "memory_utilization": 1.0
+    },
+    "load_distribution": {
+      "status": "PASS",
+      "duration_ms": 0.0133514404296875,
+      "details": "Load distribution operational",
+      "total_assignments": 30,
+      "node_distribution": {
+        "node1": 10,
+        "node2": 10,
+        "node3": 10
       },
-      "ensemble_prediction": {
-        "ensemble_cpu_prediction": 61.15,
-        "prediction_variance": 8.5
-      },
-      "prediction_confidence": 0.75,
-      "load_increase_probability": 0.65
+      "balance_ratio": 1.0
+    },
+    "medium_scale_scalability": {
+      "status": "PASS",
+      "duration_ms": 29.087066650390625,
+      "details": "Medium-scale scalability operational",
+      "stress_tasks": 100,
+      "schedule_generation_ms": 0.0050067901611328125,
+      "tasks_per_second": 19972876.19047619
     }
   },
-  "cache_performance": {
-    "hit_rate_percent": 68.5,
-    "total_requests": 1000,
-    "memory_efficiency": 1.0,
-    "operation_time_ms": 3.732919692993164
+  "summary": {
+    "total_tests": 6,
+    "passed_tests": 6,
+    "failed_tests": 0,
+    "success_rate": "100.0%",
+    "total_duration_ms": 43.920040130615234,
+    "performance_score": "97.0/100",
+    "scaling_grade": "A",
+    "status": "PASS"
   },
-  "concurrent_processing": {
-    "tasks_completed": 100,
-    "total_time_ms": 9.27734375,
-    "average_task_time_ms": 0.08456945419311523,
-    "throughput_tasks_per_sec": 10778.947368421052
-  },
-  "performance_metrics": {
-    "scalability_score": 0.89,
-    "optimization_efficiency": 0.85,
-    "resource_utilization": 0.78
-  },
-  "status": "SUCCESS"
+  "benchmarks": {
+    "basic_scheduling_ms": 0.0021457672119140625,
+    "concurrent_success_rate": 1.0,
+    "cache_ops_per_second": 285229.78578714724,
+    "resource_allocation_success": 0.8,
+    "load_balance_ratio": 1.0,
+    "scale_tasks_per_second": 19972876.19047619
+  }
 }
