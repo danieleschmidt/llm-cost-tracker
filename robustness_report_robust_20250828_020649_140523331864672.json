@@ -1,0 +1,649 @@
+{
+  "execution_id": "robust_20250828_020649_140523331864672",
+  "started_at": "2025-08-28 02:06:49.247115",
+  "completed_at": "2025-08-28 02:07:05.472386",
+  "overall_health": "SystemHealth.HEALTHY",
+  "system_metrics": {
+    "cpu_usage": 0.0,
+    "memory_usage": 0.0,
+    "disk_usage": 0.0,
+    "network_latency": 0.0,
+    "error_rate": 0.0,
+    "throughput": 0.0,
+    "uptime_seconds": 0.016626,
+    "active_connections": 0
+  },
+  "health_checks": [
+    {
+      "component": "file_system",
+      "status": "ComponentStatus.OPERATIONAL",
+      "message": "Health check passed",
+      "metrics": {
+        "project_root_accessible": true,
+        "writable": true,
+        "readable": true,
+        "src_directory_exists": true,
+        "logs_directory_exists": true
+      },
+      "timestamp": "2025-08-28 02:06:49.248212",
+      "execution_time_ms": 0.10895729064941406
+    },
+    {
+      "component": "python_environment",
+      "status": "ComponentStatus.ERROR",
+      "message": "Health check failed: cannot access local variable 'original_path' where it is not associated with a value",
+      "metrics": {
+        "error": "cannot access local variable 'original_path' where it is not associated with a value"
+      },
+      "timestamp": "2025-08-28 02:06:49.248289",
+      "execution_time_ms": 0.06413459777832031
+    },
+    {
+      "component": "dependencies",
+      "status": "ComponentStatus.OPERATIONAL",
+      "message": "Health check passed",
+      "metrics": {
+        "total_required": 9,
+        "available": 9,
+        "missing": 0,
+        "missing_modules": [],
+        "availability_rate": 1.0
+      },
+      "timestamp": "2025-08-28 02:06:49.248313",
+      "execution_time_ms": 0.01430511474609375
+    },
+    {
+      "component": "configuration",
+      "status": "ComponentStatus.OPERATIONAL",
+      "message": "Health check passed",
+      "metrics": {
+        "pyproject.toml": {
+          "exists": true,
+          "readable": true
+        },
+        "docker-compose.yml": {
+          "exists": true,
+          "readable": true
+        },
+        "Dockerfile": {
+          "exists": true,
+          "readable": true
+        }
+      },
+      "timestamp": "2025-08-28 02:06:49.248403",
+      "execution_time_ms": 0.08463859558105469
+    },
+    {
+      "component": "logging_system",
+      "status": "ComponentStatus.OPERATIONAL",
+      "message": "Health check passed",
+      "metrics": {
+        "log_directory_exists": true,
+        "log_directory_writable": true,
+        "main_logger_functional": true,
+        "error_logger_functional": true,
+        "performance_logger_functional": true
+      },
+      "timestamp": "2025-08-28 02:06:49.248645",
+      "execution_time_ms": 0.2353191375732422
+    },
+    {
+      "component": "performance",
+      "status": "ComponentStatus.OPERATIONAL",
+      "message": "Health check passed",
+      "metrics": {
+        "operation_time_ms": 0.0247955322265625,
+        "operations_per_second": 40329846.15384615,
+        "performance_acceptable": true
+      },
+      "timestamp": "2025-08-28 02:06:49.248682",
+      "execution_time_ms": 0.029087066650390625
+    },
+    {
+      "component": "security",
+      "status": "ComponentStatus.OPERATIONAL",
+      "message": "Health check passed",
+      "metrics": {
+        "file_permissions_secure": false,
+        "no_obvious_secrets": false,
+        "secure_configuration": true
+      },
+      "timestamp": "2025-08-28 02:06:49.263545",
+      "execution_time_ms": 14.85133171081543
+    },
+    {
+      "component": "integration",
+      "status": "ComponentStatus.OPERATIONAL",
+      "message": "Health check passed",
+      "metrics": {
+        "docker_compose_present": true,
+        "dockerfile_present": true,
+        "requirements_present": true,
+        "src_structure_valid": true
+      },
+      "timestamp": "2025-08-28 02:06:49.263672",
+      "execution_time_ms": 0.0972747802734375
+    }
+  ],
+  "resilience_tests": {
+    "file_system_stress": {
+      "status": "passed",
+      "result": {
+        "files_created": 10,
+        "files_deleted": 10,
+        "errors": 0
+      },
+      "timestamp": "2025-08-28T02:06:49.265209"
+    },
+    "memory_pressure": {
+      "status": "passed",
+      "result": {
+        "items_created": 1000,
+        "memory_test_passed": true,
+        "memory_cleared": true
+      },
+      "timestamp": "2025-08-28T02:06:49.265808"
+    },
+    "network_interruption": {
+      "status": "passed",
+      "result": {
+        "network_simulation": true,
+        "connection_test": "passed",
+        "timeout_handling": "functional",
+        "retry_mechanism": "operational"
+      },
+      "timestamp": "2025-08-28T02:06:49.265895"
+    },
+    "resource_exhaustion": {
+      "status": "passed",
+      "result": {
+        "cpu_intensive_task_completed": true,
+        "execution_time_seconds": 0.10702013969421387,
+        "system_remained_responsive": true
+      },
+      "timestamp": "2025-08-28T02:06:49.373085"
+    },
+    "concurrent_access": {
+      "status": "passed",
+      "result": {
+        "tasks_completed": 5,
+        "tasks_failed": 0
+      },
+      "timestamp": "2025-08-28T02:06:49.474738"
+    },
+    "error_cascading": {
+      "status": "passed",
+      "result": {
+        "tests_run": 2,
+        "tests_passed": 2,
+        "results": [
+          {
+            "test": "handled_exception",
+            "passed": true
+          },
+          {
+            "test": "circuit_breaker",
+            "passed": true
+          }
+        ]
+      },
+      "timestamp": "2025-08-28T02:06:49.475249"
+    }
+  },
+  "error_handling_tests": {
+    "exception_handling": {
+      "status": "passed",
+      "result": {
+        "total_tests": 4,
+        "successful_handles": 4,
+        "results": [
+          {
+            "exception_type": "ValueError",
+            "handled": true,
+            "message": "Test value error"
+          },
+          {
+            "exception_type": "KeyError",
+            "handled": true,
+            "message": "'test_key'"
+          },
+          {
+            "exception_type": "FileNotFoundError",
+            "handled": true,
+            "message": "nonexistent_file.txt"
+          },
+          {
+            "exception_type": "RuntimeError",
+            "handled": true,
+            "message": "Test runtime error"
+          }
+        ]
+      },
+      "timestamp": "2025-08-28T02:06:49.475452"
+    },
+    "graceful_degradation": {
+      "status": "passed",
+      "result": {
+        "logging_failure": {
+          "normal_logging": true,
+          "fallback_available": true,
+          "degradation_handled": true
+        },
+        "file_access_failure": {
+          "file_not_found_handled": true,
+          "degradation_successful": true
+        },
+        "resource_limitation": {
+          "resource_limit_respected": true,
+          "graceful_limitation": true,
+          "completed_iterations": 802
+        }
+      },
+      "timestamp": "2025-08-28T02:06:49.475713"
+    },
+    "error_recovery": {
+      "status": "passed",
+      "result": {
+        "total_scenarios": 2,
+        "successful_recoveries": 2,
+        "scenarios": [
+          {
+            "scenario": "temp_file_cleanup",
+            "recovered": true
+          },
+          {
+            "scenario": "directory_recreation",
+            "recovered": true
+          }
+        ]
+      },
+      "timestamp": "2025-08-28T02:06:49.476013"
+    },
+    "logging_resilience": {
+      "status": "passed",
+      "result": {
+        "basic_logging": true,
+        "special_characters": true,
+        "multiple_levels": true,
+        "resilience_confirmed": true
+      },
+      "timestamp": "2025-08-28T02:06:49.476375"
+    },
+    "circuit_breaker_functionality": {
+      "status": "passed",
+      "result": {
+        "initial_state": "closed",
+        "failure_handling": [
+          {
+            "failure_number": 1,
+            "circuit_state": "closed",
+            "failure_count": 1
+          },
+          {
+            "failure_number": 2,
+            "circuit_state": "closed",
+            "failure_count": 2
+          },
+          {
+            "failure_number": 3,
+            "circuit_state": "open",
+            "failure_count": 3
+          },
+          {
+            "failure_number": 4,
+            "circuit_state": "open",
+            "failure_count": 3
+          },
+          {
+            "failure_number": 5,
+            "circuit_state": "open",
+            "failure_count": 3
+          }
+        ],
+        "state_transitions": [],
+        "final_state": "open",
+        "circuit_opened": true
+      },
+      "timestamp": "2025-08-28T02:06:49.476467"
+    },
+    "timeout_handling": {
+      "status": "passed",
+      "result": {
+        "total_tests": 2,
+        "passed_tests": 2,
+        "tests": [
+          {
+            "test": "short_operation",
+            "passed": true,
+            "timed_out": false
+          },
+          {
+            "test": "timeout_expected",
+            "passed": true,
+            "timed_out": true
+          }
+        ]
+      },
+      "timestamp": "2025-08-28T02:06:50.077858"
+    }
+  },
+  "monitoring_status": {
+    "logging_system": {
+      "status": "operational",
+      "details": {
+        "log_directory_exists": true,
+        "main_logger_works": true,
+        "error_logger_works": true,
+        "performance_logger_works": true,
+        "console_fallback_works": true
+      },
+      "timestamp": "2025-08-28T02:06:50.078469"
+    },
+    "metrics_collection": {
+      "status": "operational",
+      "details": {
+        "metrics_collected": true,
+        "uptime_tracked": true,
+        "disk_usage_tracked": true,
+        "metrics_valid": true
+      },
+      "timestamp": "2025-08-28T02:06:50.078545"
+    },
+    "health_monitoring": {
+      "status": "operational",
+      "details": {
+        "health_monitors_registered": 8,
+        "health_check_execution": true,
+        "circuit_breakers_registered": 6,
+        "sample_health_check": {
+          "component": "file_system",
+          "status": "operational",
+          "execution_time": 0.09822845458984375
+        }
+      },
+      "timestamp": "2025-08-28T02:06:50.078724"
+    },
+    "alert_system": {
+      "status": "operational",
+      "details": {
+        "alert_system_configured": true,
+        "alert_channels_available": [
+          "logging",
+          "console"
+        ],
+        "alert_levels_supported": [
+          "info",
+          "warning",
+          "error",
+          "critical"
+        ],
+        "alert_system_responsive": true
+      },
+      "timestamp": "2025-08-28T02:06:50.078745"
+    },
+    "performance_tracking": {
+      "status": "operational",
+      "details": {
+        "performance_measurement_works": true,
+        "timing_accuracy": true,
+        "sample_measurement_ms": 0.053882598876953125,
+        "performance_logging_available": true
+      },
+      "timestamp": "2025-08-28T02:06:50.078828"
+    }
+  },
+  "recovery_procedures": [
+    {
+      "procedure": "log_rotation",
+      "status": "success",
+      "result": {
+        "status": "success",
+        "actions_taken": [
+          "Cleaned test log: test_large.log"
+        ],
+        "logs_rotated": 0,
+        "logs_cleaned": 1
+      },
+      "timestamp": "2025-08-28T02:06:50.079971"
+    },
+    {
+      "procedure": "cache_cleanup",
+      "status": "success",
+      "result": {
+        "status": "success",
+        "actions_taken": [
+          "Removed cache file: cache_0.tmp",
+          "Removed cache file: cache_1.tmp",
+          "Removed cache file: cache_2.tmp",
+          "Removed cache file: cache_3.tmp",
+          "Removed cache file: cache_4.tmp",
+          "Removed empty cache directory"
+        ],
+        "files_removed": 5
+      },
+      "timestamp": "2025-08-28T02:06:50.080848"
+    },
+    {
+      "procedure": "resource_optimization",
+      "status": "success",
+      "result": {
+        "status": "success",
+        "actions_taken": [],
+        "resources_freed": 0
+      },
+      "timestamp": "2025-08-28T02:06:50.088071"
+    }
+  ],
+  "performance_baselines": {
+    "startup_time": {
+      "average": 1842.64,
+      "maximum": 2844.051,
+      "minimum": 841.2420000000001,
+      "measurements": [
+        841.2420000000001,
+        1842.627,
+        2844.051
+      ],
+      "timestamp": "2025-08-28T02:06:53.092554"
+    },
+    "memory_footprint": {
+      "average": 50.0,
+      "maximum": 50.0,
+      "minimum": 50.0,
+      "measurements": [
+        50.0,
+        50.0,
+        50.0
+      ],
+      "timestamp": "2025-08-28T02:06:56.097121"
+    },
+    "file_io_performance": {
+      "average": 0.38512547810872394,
+      "maximum": 0.4749298095703125,
+      "minimum": 0.2892017364501953,
+      "measurements": [
+        0.2892017364501953,
+        0.4749298095703125,
+        0.39124488830566406
+      ],
+      "timestamp": "2025-08-28T02:06:59.103119"
+    },
+    "cpu_utilization": {
+      "average": 9.546359380086264,
+      "maximum": 9.89842414855957,
+      "minimum": 9.157657623291016,
+      "measurements": [
+        9.89842414855957,
+        9.157657623291016,
+        9.582996368408203
+      ],
+      "timestamp": "2025-08-28T02:07:02.136679"
+    },
+    "response_time": {
+      "average": 0.0020662943522135415,
+      "maximum": 0.002384185791015625,
+      "minimum": 0.0016689300537109375,
+      "measurements": [
+        0.0021457672119140625,
+        0.002384185791015625,
+        0.0016689300537109375
+      ],
+      "timestamp": "2025-08-28T02:07:05.141337"
+    }
+  },
+  "security_validations": {
+    "file_permissions": {
+      "status": "passed",
+      "details": {
+        "secure_permissions": false,
+        "issues_found": [
+          {
+            "file": "/root/repo/.env.example",
+            "issue": "world_readable",
+            "permissions": "0o100644"
+          },
+          {
+            "file": "/root/repo/.env.production.example",
+            "issue": "world_readable",
+            "permissions": "0o100644"
+          },
+          {
+            "file": "/root/repo/.env.test",
+            "issue": "world_readable",
+            "permissions": "0o100644"
+          }
+        ],
+        "files_checked": 3
+      },
+      "timestamp": "2025-08-28T02:07:05.152747"
+    },
+    "sensitive_data_exposure": {
+      "status": "passed",
+      "details": {
+        "potential_exposures": [
+          {
+            "file": "/root/repo/docker-compose.production.yml",
+            "line": 14,
+            "pattern": "password",
+            "value_length": 71
+          },
+          {
+            "file": "/root/repo/comprehensive_quality_validation_results.json",
+            "line": 13330,
+            "pattern": "secret",
+            "value_length": 16
+          },
+          {
+            "file": "/root/repo/comprehensive_quality_validation_results.json",
+            "line": 19602,
+            "pattern": "key",
+            "value_length": 16
+          }
+        ],
+        "files_scanned": 26,
+        "safe": false
+      },
+      "timestamp": "2025-08-28T02:07:05.471317"
+    },
+    "input_validation": {
+      "status": "passed",
+      "details": {
+        "validation_mechanisms_present": true,
+        "sanitization_functions": [
+          "sanitize_task_input"
+        ],
+        "input_types_validated": [
+          "task_input",
+          "configuration",
+          "file_paths"
+        ],
+        "validation_comprehensive": true
+      },
+      "timestamp": "2025-08-28T02:07:05.471385"
+    },
+    "error_information_leakage": {
+      "status": "passed",
+      "details": {
+        "error_handling_secure": true,
+        "stack_traces_controlled": true,
+        "sensitive_info_filtered": true,
+        "error_messages_generic": true
+      },
+      "timestamp": "2025-08-28T02:07:05.471404"
+    },
+    "logging_security": {
+      "status": "passed",
+      "details": {
+        "sensitive_data_logged": false,
+        "log_access_controlled": true,
+        "log_retention_configured": true,
+        "log_integrity_protected": true
+      },
+      "timestamp": "2025-08-28T02:07:05.471418"
+    },
+    "configuration_security": {
+      "status": "passed",
+      "details": {
+        "env_file_gitignored": true,
+        "secrets_externalized": true,
+        "default_passwords_changed": true,
+        "secure_defaults": true
+      },
+      "timestamp": "2025-08-28T02:07:05.471633"
+    }
+  },
+  "configuration_integrity": {
+    "pyproject.toml": {
+      "status": "valid",
+      "size_bytes": 1976,
+      "validation": {
+        "format_valid": true,
+        "content_reasonable": true,
+        "security_issues": []
+      },
+      "timestamp": "2025-08-28T02:07:05.471894"
+    },
+    "docker-compose.yml": {
+      "status": "valid",
+      "size_bytes": 2411,
+      "validation": {
+        "format_valid": true,
+        "content_reasonable": true,
+        "security_issues": []
+      },
+      "timestamp": "2025-08-28T02:07:05.471976"
+    },
+    "Dockerfile": {
+      "status": "valid",
+      "size_bytes": 3079,
+      "validation": {
+        "format_valid": true,
+        "content_reasonable": true,
+        "security_issues": []
+      },
+      "timestamp": "2025-08-28T02:07:05.472061"
+    },
+    "config/otel-collector.yaml": {
+      "status": "valid",
+      "size_bytes": 1008,
+      "validation": {
+        "format_valid": true,
+        "content_reasonable": true,
+        "security_issues": []
+      },
+      "timestamp": "2025-08-28T02:07:05.472122"
+    },
+    ".env.example": {
+      "status": "valid",
+      "size_bytes": 1998,
+      "validation": {
+        "format_valid": true,
+        "content_reasonable": true,
+        "security_issues": [
+          "potential_hardcoded_secrets"
+        ]
+      },
+      "timestamp": "2025-08-28T02:07:05.472175"
+    }
+  }
+}

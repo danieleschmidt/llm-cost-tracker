@@ -1,0 +1,78 @@
+{
+  "execution_id": "gen1_20250828_020204",
+  "timestamp": "2025-08-28T02:02:04.194835",
+  "overall_score": 71.42857142857143,
+  "passed_gates": 4,
+  "total_gates": 5,
+  "success_rate": 80.0,
+  "execution_time": 0.7133567333221436,
+  "results": [
+    {
+      "name": "Python Syntax Check",
+      "status": "QualityGateStatus.PASSED",
+      "score": 10.0,
+      "max_score": 10.0,
+      "details": {
+        "total_files": 135,
+        "valid_files": 135,
+        "errors": []
+      },
+      "execution_time": 0.7120094299316406
+    },
+    {
+      "name": "File Structure Check",
+      "status": "QualityGateStatus.PASSED",
+      "score": 8.0,
+      "max_score": 8.0,
+      "details": {
+        "existing_files": [
+          "README.md",
+          "pyproject.toml",
+          "src/llm_cost_tracker/__init__.py",
+          "src/llm_cost_tracker/main.py"
+        ],
+        "missing_files": [],
+        "structure_score": 100.0
+      },
+      "execution_time": 0.0001430511474609375
+    },
+    {
+      "name": "Configuration Check",
+      "status": "QualityGateStatus.PASSED",
+      "score": 7.0,
+      "max_score": 7.0,
+      "details": {
+        "pyproject.toml": "Valid Poetry configuration",
+        "docker-compose.yml": "Valid Docker Compose",
+        "Dockerfile": "Valid Dockerfile"
+      },
+      "execution_time": 0.00014448165893554688
+    },
+    {
+      "name": "Import Validation",
+      "status": "QualityGateStatus.FAILED",
+      "score": 0.0,
+      "max_score": 12.0,
+      "details": {
+        "src.llm_cost_tracker": "\u274c Import failed: No module named 'llm_cost_tracker'",
+        "src.llm_cost_tracker.main": "\u274c Import failed: No module named 'llm_cost_tracker'",
+        "src.llm_cost_tracker.quantum_task_planner": "\u274c Import failed: No module named 'llm_cost_tracker'"
+      },
+      "execution_time": 0.0004718303680419922
+    },
+    {
+      "name": "Documentation Check",
+      "status": "QualityGateStatus.PASSED",
+      "score": 5.0,
+      "max_score": 5.0,
+      "details": {
+        "README.md": "\u2705 Present (10375 chars)",
+        "docs/API_REFERENCE.md": "\u2705 Present (12890 chars)",
+        "CHANGELOG.md": "\u2705 Present (3813 chars)",
+        "CONTRIBUTING.md": "\u2705 Present (828 chars)"
+      },
+      "execution_time": 0.00026702880859375
+    }
+  ],
+  "status": "PARTIAL"
+}
