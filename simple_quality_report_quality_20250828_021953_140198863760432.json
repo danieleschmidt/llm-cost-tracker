@@ -1,0 +1,194 @@
+{
+  "execution_id": "quality_20250828_021953_140198863760432",
+  "started_at": "2025-08-28 02:19:53.156485",
+  "completed_at": "2025-08-28 02:19:55.308885",
+  "quality_level": "QualityLevel.COMPREHENSIVE",
+  "overall_score": 75.0,
+  "max_possible_score": 100.0,
+  "validation_results": [
+    {
+      "test_name": "Python Syntax Validation",
+      "category": "ValidationCategory.SYNTAX",
+      "result": "TestResult.PASSED",
+      "execution_time_ms": 726.7723083496094,
+      "details": {
+        "total_files": 138,
+        "valid_files": 138,
+        "syntax_errors": 0,
+        "error_details": []
+      },
+      "error_message": null,
+      "score": 20.0,
+      "max_score": 20.0
+    },
+    {
+      "test_name": "Import Structure Validation",
+      "category": "ValidationCategory.IMPORTS",
+      "result": "TestResult.PASSED",
+      "execution_time_ms": 1315.6895637512207,
+      "details": {
+        "total_imports": 1540,
+        "unique_imports": 186,
+        "import_errors": 0,
+        "error_details": []
+      },
+      "error_message": null,
+      "score": 15.0,
+      "max_score": 15.0
+    },
+    {
+      "test_name": "Security Validation",
+      "category": "ValidationCategory.SECURITY",
+      "result": "TestResult.FAILED",
+      "execution_time_ms": 109.09605026245117,
+      "details": {
+        "security_issues": 480,
+        "high_severity": 465,
+        "medium_severity": 15,
+        "issue_details": [
+          {
+            "file": "/root/repo/advanced_scaling_optimization_system.py",
+            "line": 85,
+            "issue": "Potential hardcoded key",
+            "severity": "high"
+          },
+          {
+            "file": "/root/repo/advanced_scaling_optimization_system.py",
+            "line": 99,
+            "issue": "Potential hardcoded key",
+            "severity": "high"
+          },
+          {
+            "file": "/root/repo/advanced_scaling_optimization_system.py",
+            "line": 104,
+            "issue": "Potential hardcoded key",
+            "severity": "high"
+          },
+          {
+            "file": "/root/repo/advanced_scaling_optimization_system.py",
+            "line": 116,
+            "issue": "Potential hardcoded key",
+            "severity": "high"
+          },
+          {
+            "file": "/root/repo/advanced_scaling_optimization_system.py",
+            "line": 119,
+            "issue": "Potential hardcoded key",
+            "severity": "high"
+          }
+        ]
+      },
+      "error_message": "480 security issues found",
+      "score": 0.0,
+      "max_score": 25.0
+    },
+    {
+      "test_name": "Basic Functionality Test",
+      "category": "ValidationCategory.FUNCTIONALITY",
+      "result": "TestResult.PASSED",
+      "execution_time_ms": 0.4086494445800781,
+      "details": {
+        "total_tests": 3,
+        "passed_tests": 3,
+        "test_results": [
+          {
+            "test": "basic_imports",
+            "passed": true
+          },
+          {
+            "test": "file_operations",
+            "passed": true
+          },
+          {
+            "test": "json_operations",
+            "passed": true
+          }
+        ]
+      },
+      "error_message": null,
+      "score": 20.0,
+      "max_score": 20.0
+    },
+    {
+      "test_name": "Integration Test",
+      "category": "ValidationCategory.INTEGRATION",
+      "result": "TestResult.PASSED",
+      "execution_time_ms": 0.18715858459472656,
+      "details": {
+        "total_tests": 3,
+        "passed_tests": 3,
+        "integration_results": [
+          {
+            "test": "configuration_files",
+            "passed": true,
+            "configs_found": 2
+          },
+          {
+            "test": "directory_structure",
+            "passed": true,
+            "directories_found": 2
+          },
+          {
+            "test": "package_structure",
+            "passed": true,
+            "packages_found": 1
+          }
+        ]
+      },
+      "error_message": null,
+      "score": 20.0,
+      "max_score": 20.0
+    }
+  ],
+  "category_scores": {
+    "syntax": {
+      "score": 20.0,
+      "max_score": 20.0,
+      "percentage": 100.0,
+      "test_count": 1
+    },
+    "imports": {
+      "score": 15.0,
+      "max_score": 15.0,
+      "percentage": 100.0,
+      "test_count": 1
+    },
+    "security": {
+      "score": 0.0,
+      "max_score": 25.0,
+      "percentage": 0.0,
+      "test_count": 1
+    },
+    "functionality": {
+      "score": 20.0,
+      "max_score": 20.0,
+      "percentage": 100.0,
+      "test_count": 1
+    },
+    "integration": {
+      "score": 20.0,
+      "max_score": 20.0,
+      "percentage": 100.0,
+      "test_count": 1
+    }
+  },
+  "critical_failures": [
+    "Security Validation: 480 security issues found"
+  ],
+  "recommendations": [
+    {
+      "type": "security",
+      "priority": "critical",
+      "title": "Address Security Vulnerabilities",
+      "description": "Fix security issues including hardcoded secrets and unsafe patterns",
+      "category": "security"
+    },
+    {
+      "type": "general",
+      "priority": "medium",
+      "title": "Quality Enhancement Recommended",
+      "description": "Quality score is 75.0%. Consider addressing remaining issues.",
+      "category": "general"
+    }
+  ]
+}

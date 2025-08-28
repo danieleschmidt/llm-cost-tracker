@@ -1,0 +1,118 @@
+{
+  "deployment_id": "prod_deploy_20250828_023010",
+  "started_at": "2025-08-28T02:30:10.095939",
+  "environments": {
+    "staging": {
+      "environment": "staging",
+      "started_at": "2025-08-28T02:30:10.096297",
+      "config": {
+        "region": "us-west-2",
+        "replicas": 2,
+        "auto_scaling": true
+      },
+      "steps": [
+        {
+          "step": "generate_manifests",
+          "status": "completed",
+          "artifacts_count": 8
+        },
+        {
+          "step": "create_namespace",
+          "status": "completed",
+          "timestamp": "2025-08-28T02:30:10.597399"
+        },
+        {
+          "step": "apply_secrets",
+          "status": "completed",
+          "timestamp": "2025-08-28T02:30:11.098514"
+        },
+        {
+          "step": "apply_configmaps",
+          "status": "completed",
+          "timestamp": "2025-08-28T02:30:11.599609"
+        },
+        {
+          "step": "deploy_application",
+          "status": "completed",
+          "timestamp": "2025-08-28T02:30:12.100702"
+        },
+        {
+          "step": "setup_monitoring",
+          "status": "completed",
+          "timestamp": "2025-08-28T02:30:12.601775"
+        },
+        {
+          "step": "verify_deployment",
+          "status": "completed",
+          "timestamp": "2025-08-28T02:30:13.103038"
+        }
+      ],
+      "status": "completed",
+      "completed_at": "2025-08-28T02:30:13.103056"
+    },
+    "production": {
+      "environment": "production",
+      "started_at": "2025-08-28T02:30:13.103508",
+      "config": {
+        "region": "eu-west-1",
+        "replicas": 5,
+        "auto_scaling": true
+      },
+      "steps": [
+        {
+          "step": "generate_manifests",
+          "status": "completed",
+          "artifacts_count": 8
+        },
+        {
+          "step": "create_namespace",
+          "status": "completed",
+          "timestamp": "2025-08-28T02:30:13.604537"
+        },
+        {
+          "step": "apply_secrets",
+          "status": "completed",
+          "timestamp": "2025-08-28T02:30:14.105630"
+        },
+        {
+          "step": "apply_configmaps",
+          "status": "completed",
+          "timestamp": "2025-08-28T02:30:14.606750"
+        },
+        {
+          "step": "deploy_application",
+          "status": "completed",
+          "timestamp": "2025-08-28T02:30:15.107927"
+        },
+        {
+          "step": "setup_monitoring",
+          "status": "completed",
+          "timestamp": "2025-08-28T02:30:15.609070"
+        },
+        {
+          "step": "verify_deployment",
+          "status": "completed",
+          "timestamp": "2025-08-28T02:30:16.110339"
+        }
+      ],
+      "status": "completed",
+      "completed_at": "2025-08-28T02:30:16.110372"
+    }
+  },
+  "artifacts_generated": 38,
+  "deployment_summary": {
+    "total_environments": 2,
+    "successful_deployments": 2,
+    "failed_deployments": 0
+  },
+  "global_validation": {
+    "multi_region_deployment": true,
+    "load_balancing_verified": true,
+    "monitoring_active": true,
+    "security_compliance": true,
+    "disaster_recovery_ready": true
+  },
+  "completed_at": "2025-08-28T02:30:17.112151",
+  "status": "completed",
+  "duration_seconds": 7.016212
+}

@@ -1,0 +1,26 @@
+2025-08-28 02:30:10,095 - ProductionDeployment - INFO - Starting production deployment automation
+2025-08-28 02:30:10,095 - ProductionDeployment - INFO - Generating deployment artifacts...
+2025-08-28 02:30:10,096 - ProductionDeployment - INFO - Generated Dockerfile with security hardening
+2025-08-28 02:30:10,096 - ProductionDeployment - INFO - Generated 38 deployment artifacts
+2025-08-28 02:30:10,096 - ProductionDeployment - INFO - Deploying to staging environment...
+2025-08-28 02:30:10,096 - ProductionDeployment - INFO - Starting deployment to staging
+2025-08-28 02:30:10,096 - ProductionDeployment - INFO - Generating Kubernetes manifests...
+2025-08-28 02:30:10,096 - ProductionDeployment - INFO - Executing deployment step: create_namespace
+2025-08-28 02:30:10,597 - ProductionDeployment - INFO - Executing deployment step: apply_secrets
+2025-08-28 02:30:11,098 - ProductionDeployment - INFO - Executing deployment step: apply_configmaps
+2025-08-28 02:30:11,599 - ProductionDeployment - INFO - Executing deployment step: deploy_application
+2025-08-28 02:30:12,100 - ProductionDeployment - INFO - Executing deployment step: setup_monitoring
+2025-08-28 02:30:12,601 - ProductionDeployment - INFO - Executing deployment step: verify_deployment
+2025-08-28 02:30:13,103 - ProductionDeployment - INFO - Successfully deployed to staging
+2025-08-28 02:30:13,103 - ProductionDeployment - INFO - Deploying to production environment...
+2025-08-28 02:30:13,103 - ProductionDeployment - INFO - Starting deployment to production
+2025-08-28 02:30:13,103 - ProductionDeployment - INFO - Generating Kubernetes manifests...
+2025-08-28 02:30:13,103 - ProductionDeployment - INFO - Executing deployment step: create_namespace
+2025-08-28 02:30:13,604 - ProductionDeployment - INFO - Executing deployment step: apply_secrets
+2025-08-28 02:30:14,105 - ProductionDeployment - INFO - Executing deployment step: apply_configmaps
+2025-08-28 02:30:14,606 - ProductionDeployment - INFO - Executing deployment step: deploy_application
+2025-08-28 02:30:15,107 - ProductionDeployment - INFO - Executing deployment step: setup_monitoring
+2025-08-28 02:30:15,609 - ProductionDeployment - INFO - Executing deployment step: verify_deployment
+2025-08-28 02:30:16,110 - ProductionDeployment - INFO - Successfully deployed to production
+2025-08-28 02:30:16,110 - ProductionDeployment - INFO - Validating global deployment...
+2025-08-28 02:30:17,112 - ProductionDeployment - INFO - Production deployment automation completed successfully
