@@ -1,26 +1,17 @@
-"""LLM Cost Tracker - OpenTelemetry-based cost tracking for LLM applications with Quantum-Inspired Task Planning."""
+"""LLM Cost Tracker — stdlib-only cost tracking and budgeting for LLM APIs."""
 
-__version__ = "0.1.0"
-
-from .quantum_compliance import anonymize_data, compliance_manager, record_processing
-from .quantum_i18n import SupportedLanguage, quantum_i18n, set_language, t
-from .quantum_task_planner import (
-    QuantumTask,
-    QuantumTaskPlanner,
-    ResourcePool,
-    TaskState,
-)
+from .pricing import ModelPricing, ModelRate
+from .tracker import CostTracker, UsageRecord, BudgetGuard, BudgetExceeded
+from .report import CostReport
 
 __all__ = [
-    "QuantumTaskPlanner",
-    "QuantumTask",
-    "TaskState",
-    "ResourcePool",
-    "quantum_i18n",
-    "t",
-    "set_language",
-    "SupportedLanguage",
-    "compliance_manager",
-    "record_processing",
-    "anonymize_data",
+    "ModelPricing",
+    "ModelRate",
+    "CostTracker",
+    "UsageRecord",
+    "BudgetGuard",
+    "BudgetExceeded",
+    "CostReport",
 ]
+
+__version__ = "1.0.0"

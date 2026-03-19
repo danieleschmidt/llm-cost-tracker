@@ -1,149 +1,166 @@
-"""CLI for autonomous backlog management."""
+#!/usr/bin/env python3
+"""
+llm-cost CLI — track and report LLM API spending.
 
-import asyncio
+Usage:
+  llm-cost add --model gpt-4o --input 1000 --output 500 [--tag myproject]
+  llm-cost report [--since 7d] [--format text|json] [--period daily|weekly|monthly]
+  llm-cost models [--provider openai]
+  llm-cost budget set --tag myproject --limit 5.00
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
 import sys
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-import typer
-from rich.console import Console
-from rich.table import Table
-
-from .backlog_manager import AutonomousBacklogManager
-
-app = typer.Typer(help="Autonomous Backlog Management CLI")
-console = Console()
+from .pricing import ModelPricing
+from .tracker import CostTracker, UsageRecord, BudgetGuard
+from .report import CostReport
 
 
-@app.command()
-def discover():
-    """Run discovery cycle to find new backlog items."""
-    asyncio.run(_discover())
+# ── time parsing ─────────────────────────────────────────────────────────────
+
+def parse_since(s: str) -> datetime:
+    """Parse '7d', '30d', '1w', '1m', or ISO datetime string."""
+    now = datetime.now(timezone.utc)
+    s = s.strip().lower()
+    if s.endswith("d"):
+        return now - timedelta(days=int(s[:-1]))
+    if s.endswith("w"):
+        return now - timedelta(weeks=int(s[:-1]))
+    if s.endswith("m"):
+        return now - timedelta(days=30 * int(s[:-1]))
+    if s.endswith("h"):
+        return now - timedelta(hours=int(s[:-1]))
+    # ISO
+    return datetime.fromisoformat(s)
 
 
-async def _discover():
-    """Async discovery implementation."""
-    console.print("[bold blue]Running backlog discovery...[/bold blue]")
+# ── CLI commands ─────────────────────────────────────────────────────────────
 
-    manager = AutonomousBacklogManager()
-    items, metrics = await manager.run_discovery_cycle()
+def cmd_add(args: argparse.Namespace, tracker: CostTracker) -> None:
+    record = tracker.add_call(
+        model=args.model,
+        input_tokens=args.input,
+        output_tokens=args.output,
+        tag=args.tag,
+    )
+    pricing = ModelPricing()
+    try:
+        cost = pricing.compute_cost(args.model, args.input, args.output)
+        cost_str = f"${cost:.6f}"
+    except KeyError:
+        cost_str = "unknown (model not in pricing DB)"
 
-    console.print(f"[green]✓[/green] Discovery complete!")
-    console.print(f"  Total items: {metrics.total_items}")
-    console.print(f"  Average WSJF: {metrics.avg_wsjf_score}")
-
-    # Show top priorities
-    active_items = [i for i in items if i.status not in ["DONE", "BLOCKED"]][:5]
-    if active_items:
-        table = Table(title="Top Priorities")
-        table.add_column("ID", style="cyan")
-        table.add_column("Title", style="magenta")
-        table.add_column("WSJF", style="green")
-        table.add_column("Status", style="yellow")
-
-        for item in active_items:
-            table.add_row(item.id, item.title, str(item.wsjf_score), item.status)
-
-        console.print(table)
+    print(f"✓ Logged: {args.model}  {args.input:,} in / {args.output:,} out  cost={cost_str}  tag={args.tag}")
+    print(f"  record_id={record.record_id}  db={tracker.db_path}")
 
 
-@app.command()
-def status():
-    """Show current backlog status."""
-    asyncio.run(_status())
+def cmd_report(args: argparse.Namespace, tracker: CostTracker) -> None:
+    since = parse_since(args.since) if args.since else None
+    report = CostReport(tracker)
+
+    if args.format == "json":
+        print(report.to_json(since=since, period=args.period))
+    else:
+        print(report.to_text(since=since, period=args.period))
 
 
-async def _status():
-    """Async status implementation."""
-    manager = AutonomousBacklogManager()
-    items, metrics = await manager.load_backlog()
-
-    console.print(f"[bold]Backlog Status[/bold]")
-    console.print(f"Total items: {metrics.total_items}")
-    console.print(f"Last updated: {metrics.last_updated}")
-
-    # Status breakdown
-    table = Table(title="Status Breakdown")
-    table.add_column("Status", style="cyan")
-    table.add_column("Count", style="green")
-
-    for status, count in metrics.by_status.items():
-        table.add_row(status, str(count))
-
-    console.print(table)
+def cmd_models(args: argparse.Namespace) -> None:
+    pricing = ModelPricing()
+    models = pricing.list_models(provider=args.provider)
+    if not models:
+        print("No models found.")
+        return
+    print(f"\n{'Model':<45} {'Provider':<12} {'Input $/1M':>12} {'Output $/1M':>12}")
+    print("─" * 85)
+    for m in models:
+        print(f"  {m.model:<43} {m.provider:<12} ${m.input_per_1m:>10.3f}  ${m.output_per_1m:>10.3f}")
+    print()
 
 
-@app.command()
-def execute():
-    """Run autonomous execution loop."""
-    asyncio.run(_execute())
+def cmd_budget(args: argparse.Namespace, tracker: CostTracker) -> None:
+    if args.budget_cmd == "set":
+        guard = BudgetGuard(tag=args.tag, limit_usd=args.limit)
+        tracker.set_budget(guard)
+        print(f"✓ Budget set: tag={args.tag}  limit=${args.limit:.2f}")
+
+        # current spend check
+        spent = tracker.total_cost(tag=args.tag)
+        pct = (spent / args.limit * 100) if args.limit > 0 else 0
+        print(f"  Current spend: ${spent:.4f} ({pct:.1f}% of budget)")
+
+    elif args.budget_cmd == "check":
+        spent = tracker.total_cost(tag=args.tag)
+        print(f"  Tag '{args.tag}': ${spent:.4f} spent")
+    else:
+        print("Usage: llm-cost budget set --tag TAG --limit AMOUNT")
 
 
-async def _execute():
-    """Async execution implementation."""
-    console.print("[bold yellow]⚠️  Autonomous execution is experimental[/bold yellow]")
-    console.print("This would execute backlog items automatically.")
-    console.print("For safety, only discovery mode is currently enabled.")
+# ── main ─────────────────────────────────────────────────────────────────────
 
-    manager = AutonomousBacklogManager()
-    await manager.run_discovery_cycle()
-
-
-@app.command()
-def add_item(
-    title: str = typer.Argument(..., help="Item title"),
-    description: str = typer.Option("", help="Item description"),
-    effort: int = typer.Option(3, help="Effort estimate (1-13)"),
-    value: int = typer.Option(5, help="Business value (1-13)"),
-    time_criticality: int = typer.Option(3, help="Time criticality (1-13)"),
-    risk_reduction: int = typer.Option(2, help="Risk reduction (1-13)"),
-):
-    """Add a new backlog item."""
-    asyncio.run(
-        _add_item(title, description, effort, value, time_criticality, risk_reduction)
+def main() -> None:
+    parser = argparse.ArgumentParser(
+        prog="llm-cost",
+        description="LLM cost tracker — log API calls, report spending, guard budgets.",
+    )
+    parser.add_argument(
+        "--db", type=Path, default=None,
+        help="Path to usage DB (default: ~/.config/llm-cost-tracker/usage.jsonl)"
     )
 
+    sub = parser.add_subparsers(dest="command")
 
-async def _add_item(
-    title: str,
-    description: str,
-    effort: int,
-    value: int,
-    time_criticality: int,
-    risk_reduction: int,
-):
-    """Async add item implementation."""
-    from datetime import datetime
+    # ── add ──────────────────────────────────────────────────────────────────
+    p_add = sub.add_parser("add", help="Log an LLM API call")
+    p_add.add_argument("--model", required=True, help="Model name, e.g. gpt-4o")
+    p_add.add_argument("--input", type=int, required=True, help="Input token count")
+    p_add.add_argument("--output", type=int, required=True, help="Output token count")
+    p_add.add_argument("--tag", default="default", help="Project/tag label")
+    p_add.add_argument("--timestamp", default=None, help="ISO timestamp (default: now)")
 
-    from .backlog_manager import BacklogItem
+    # ── report ───────────────────────────────────────────────────────────────
+    p_rep = sub.add_parser("report", help="Show cost report")
+    p_rep.add_argument("--since", default="30d", help="e.g. 7d, 1w, 1m, or ISO date")
+    p_rep.add_argument("--format", choices=["text", "json"], default="text")
+    p_rep.add_argument("--period", choices=["daily", "weekly", "monthly"], default="daily")
 
-    manager = AutonomousBacklogManager()
-    items, metrics = await manager.load_backlog()
+    # ── models ───────────────────────────────────────────────────────────────
+    p_mod = sub.add_parser("models", help="List pricing database")
+    p_mod.add_argument("--provider", default=None, help="Filter by provider")
 
-    # Generate new ID
-    item_id = f"MANUAL-{len(items) + 1:03d}"
+    # ── budget ───────────────────────────────────────────────────────────────
+    p_bud = sub.add_parser("budget", help="Budget guard commands")
+    budget_sub = p_bud.add_subparsers(dest="budget_cmd")
+    p_bset = budget_sub.add_parser("set", help="Set a budget for a tag")
+    p_bset.add_argument("--tag", required=True)
+    p_bset.add_argument("--limit", type=float, required=True, help="Budget in USD")
+    p_bchk = budget_sub.add_parser("check", help="Check spending for a tag")
+    p_bchk.add_argument("--tag", required=True)
 
-    new_item = BacklogItem(
-        id=item_id,
-        title=title,
-        type="manual",
-        description=description or f"Manually added item: {title}",
-        acceptance_criteria=[f"Complete {title}"],
-        effort=effort,
-        value=value,
-        time_criticality=time_criticality,
-        risk_reduction=risk_reduction,
-        created_at=datetime.now().isoformat(),
-    )
+    args = parser.parse_args()
 
-    new_item.wsjf_score = new_item.calculate_wsjf()
-    items.append(new_item)
+    if not args.command:
+        parser.print_help()
+        sys.exit(0)
 
-    # Update metrics
-    updated_metrics = await manager.update_metrics(items)
-    await manager.save_backlog(items, updated_metrics)
+    tracker = CostTracker(db_path=args.db)
 
-    console.print(f"[green]✓[/green] Added item: {title} (WSJF: {new_item.wsjf_score})")
+    if args.command == "add":
+        cmd_add(args, tracker)
+    elif args.command == "report":
+        cmd_report(args, tracker)
+    elif args.command == "models":
+        cmd_models(args)
+    elif args.command == "budget":
+        cmd_budget(args, tracker)
+    else:
+        parser.print_help()
 
 
 if __name__ == "__main__":
-    app()
+    main()
